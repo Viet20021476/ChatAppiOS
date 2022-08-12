@@ -72,8 +72,6 @@
 		02C7915028A53D4800E3EE7B = {
 			isa = PBXGroup;
 			children = (
-				02C7918228A53F4900E3EE7B /* Custom View */,
-				02C7918128A53F3100E3EE7B /* Resources */,
 				02C7915B28A53D4800E3EE7B /* ChatAppIOS */,
 				02C7915A28A53D4800E3EE7B /* Products */,
 			);
@@ -90,6 +88,8 @@
 		02C7915B28A53D4800E3EE7B /* ChatAppIOS */ = {
 			isa = PBXGroup;
 			children = (
+				02C7918128A53F3100E3EE7B /* Resources */,
+				02C7918228A53F4900E3EE7B /* Custom View */,
 				02C7917228A53D6200E3EE7B /* Controller */,
 				02C7917128A53D5E00E3EE7B /* View */,
 				02C7917028A53D5800E3EE7B /* Model */,
