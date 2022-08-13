@@ -5,8 +5,6 @@
 //
 
 import UIKit
-import SimpleCheckbox
-import LTHRadioButton
 import Toast
 import Firebase
 class RegisterVC: BaseViewController {
@@ -24,8 +22,6 @@ class RegisterVC: BaseViewController {
     var lbTerms = UILabel()
     var imgLine = UIImageView()
     var lbAl = UILabel()
-    var lbSave = UILabel()
-    var radiBtnSave = LTHRadioButton(diameter: 30, selectedColor: .red)
     
     var imgPicker = UIImagePickerController()
     var chosenAvatar: UIImage?
@@ -42,7 +38,7 @@ class RegisterVC: BaseViewController {
         setupViews()
         setupEvent()
     }
-    
+  
     func setupViews() {
         navigationController?.navigationBar.isHidden = true
         view.backgroundColor = .white
@@ -52,7 +48,6 @@ class RegisterVC: BaseViewController {
         setupBigLB()
         setupImgAvatar()
         setupLInputView()
-        setupCheckbox()
         setupBtnRegister()
         setupLbTerms()
     }
@@ -97,7 +92,7 @@ class RegisterVC: BaseViewController {
         ivBack.isUserInteractionEnabled = true
         let backTapGesture = UITapGestureRecognizer(target: self, action: #selector(backScreen))
         ivBack.addGestureRecognizer(backTapGesture)
-
+        
     }
     
     func setupBigLB() {
@@ -190,41 +185,11 @@ class RegisterVC: BaseViewController {
         
     }
     
-    func setupCheckbox() {
-        contentView.addSubview(lbSave)
-        lbSave.translatesAutoresizingMaskIntoConstraints = false
-        
-        lbSave.topAnchor.constraint(equalTo: registerConfirmPasswordInput.bottomAnchor, constant: 20).isActive = true
-        lbSave.leadingAnchor.constraint(equalTo: registerConfirmPasswordInput.leadingAnchor).isActive = true
-        
-        lbSave.text = "Save"
-        lbSave.textColor = .black.withAlphaComponent(0.7)
-        lbSave.font = .boldSystemFont(ofSize: view.frame.width / 23)
-        
-        
-        contentView.addSubview(radiBtnSave)
-        radiBtnSave.translatesAutoresizingMaskIntoConstraints = false
-        
-        radiBtnSave.centerYAnchor.constraint(equalTo: lbSave.centerYAnchor).isActive = true
-        radiBtnSave.leadingAnchor.constraint(equalTo: lbSave.trailingAnchor, constant: 10).isActive = true
-        radiBtnSave.widthAnchor.constraint(equalToConstant: 30).isActive = true
-        radiBtnSave.heightAnchor.constraint(equalToConstant: 30).isActive = true
-        
-        
-        radiBtnSave.onSelect {
-            print("I'm selected.")
-        }
-        
-        radiBtnSave.onDeselect {
-            print("I'm deselected.")
-        }
-    }
-    
     func setupBtnRegister() {
         contentView.addSubview(btnRegister)
         btnRegister.translatesAutoresizingMaskIntoConstraints = false
         
-        btnRegister.topAnchor.constraint(equalTo: lbSave.bottomAnchor, constant: 35).isActive = true
+        btnRegister.topAnchor.constraint(equalTo: registerConfirmPasswordInput.bottomAnchor, constant: 35).isActive = true
         btnRegister.leadingAnchor.constraint(equalTo: registerConfirmPasswordInput.leadingAnchor).isActive = true
         btnRegister.trailingAnchor.constraint(equalTo: registerConfirmPasswordInput.trailingAnchor).isActive = true
         btnRegister.heightAnchor.constraint(equalToConstant: 60).isActive = true
@@ -239,6 +204,8 @@ class RegisterVC: BaseViewController {
         btnRegister.layer.borderColor = UIColor.red.cgColor
         
         btnRegister.addTarget(self, action: #selector(tapToRegister), for: .touchUpInside)
+        
+        view.bringSubviewToFront(viewIndicator)
     }
     
     func setupLbTerms() {
@@ -291,7 +258,7 @@ class RegisterVC: BaseViewController {
         let lbTermsTapGesture = UITapGestureRecognizer(target: self, action: #selector(navToTerms))
         lbTerms.addGestureRecognizer(lbTermsTapGesture)
         
-        let lbLoginTapGesture = UITapGestureRecognizer(target: self, action: #selector(navToRegister))
+        let lbLoginTapGesture = UITapGestureRecognizer(target: self, action: #selector(navToLogin))
         lbAl.addGestureRecognizer(lbLoginTapGesture)
     }
     
@@ -299,7 +266,7 @@ class RegisterVC: BaseViewController {
         print("Reading Terms and Conditions.....")
     }
     
-    @objc func navToRegister() {
+    @objc func navToLogin() {
         
         if let viewControllers = self.navigationController?.viewControllers {
             for viewController in viewControllers {
@@ -312,10 +279,6 @@ class RegisterVC: BaseViewController {
             let loginVC = LoginVC()
             navigationController?.pushViewController(loginVC, animated: true)
         }
-    }
-    
-    @objc func hideKeyboard() {
-        view.endEditing(true)
     }
     
     @objc func pickImg() {
@@ -387,7 +350,7 @@ class RegisterVC: BaseViewController {
                                     return
                                 } else {
                                     // POST DATA
-                                    let value = ["id": userId, "email": res?.user.email, "avatar": "\(url!)", "name": name]
+                                    let value = ["id": userId, "email": res?.user.email, "avatar": "\(url!)", "name": name, "timeStamp": 0] as [String : Any]
                                     self.dbRef.child("Users").child(userId!).setValue(value)
                                 }
                             }

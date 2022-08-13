@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import LTHRadioButton
 
 class LoginVC: BaseViewController {
     
@@ -16,6 +17,9 @@ class LoginVC: BaseViewController {
     var lbForgot = UILabel()
     var imgLine = UIImageView()
     var lbRegister = UILabel()
+    var lbSave = UILabel()
+    var radiBtnSave = LTHRadioButton(diameter: 30, selectedColor: .red)
+    var saveSelected = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -28,11 +32,10 @@ class LoginVC: BaseViewController {
     func setupViews() {
         ivBack.isHidden = false
         navigationController?.navigationBar.isHidden = true
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(hideKeyboard))
-        view.addGestureRecognizer(tapGesture)
         
         setupBigLB()
         setupLInputView()
+        setupCheckbox()
         setupBtnLogin()
         setupLbForgotNRegister()
     }
@@ -68,13 +71,47 @@ class LoginVC: BaseViewController {
         
         loginPasswordInput.lbInput.text = "PASSWORD :"
         loginPasswordInput.tfInput.isSecureTextEntry = true
+        
+        if let info = userDefault.object(forKey: ACCOUNT) as? String {
+            let arrInfo = info.split(separator: " ")
+            loginEmailInput.tfInput.text = String(arrInfo[0])
+            loginPasswordInput.tfInput.text = String(arrInfo[1])
+        }
+    }
+    
+    func setupCheckbox() {
+        view.addSubview(lbSave)
+        lbSave.translatesAutoresizingMaskIntoConstraints = false
+        
+        lbSave.topAnchor.constraint(equalTo: loginPasswordInput.bottomAnchor, constant: 20).isActive = true
+        lbSave.leadingAnchor.constraint(equalTo: loginPasswordInput.leadingAnchor).isActive = true
+        
+        lbSave.text = "Save"
+        lbSave.textColor = .black.withAlphaComponent(0.7)
+        lbSave.font = .boldSystemFont(ofSize: view.frame.width / 23)
+        
+        
+        view.addSubview(radiBtnSave)
+        radiBtnSave.translatesAutoresizingMaskIntoConstraints = false
+        
+        radiBtnSave.centerYAnchor.constraint(equalTo: lbSave.centerYAnchor).isActive = true
+        radiBtnSave.leadingAnchor.constraint(equalTo: lbSave.trailingAnchor, constant: 10).isActive = true
+        radiBtnSave.widthAnchor.constraint(equalToConstant: 30).isActive = true
+        radiBtnSave.heightAnchor.constraint(equalToConstant: 30).isActive = true
+        
+        radiBtnSave.onSelect {
+            self.saveSelected = true
+        }
+        radiBtnSave.onDeselect {
+            self.saveSelected = false
+        }
     }
     
     func setupBtnLogin() {
         view.addSubview(btnLogin)
         btnLogin.translatesAutoresizingMaskIntoConstraints = false
         
-        btnLogin.topAnchor.constraint(equalTo: loginPasswordInput.bottomAnchor, constant: 35).isActive = true
+        btnLogin.topAnchor.constraint(equalTo: lbSave.bottomAnchor, constant: 35).isActive = true
         btnLogin.leadingAnchor.constraint(equalTo: loginPasswordInput.leadingAnchor).isActive = true
         btnLogin.trailingAnchor.constraint(equalTo: loginPasswordInput.trailingAnchor).isActive = true
         btnLogin.heightAnchor.constraint(equalToConstant: 60).isActive = true
@@ -91,6 +128,9 @@ class LoginVC: BaseViewController {
         btnLogin.layer.borderColor = UIColor.red.cgColor
         
         btnLogin.addTarget(self, action: #selector(tapToLogin), for: .touchUpInside)
+        
+        view.bringSubviewToFront(viewIndicator)
+
     }
     
     func setupLbForgotNRegister() {
@@ -137,6 +177,7 @@ class LoginVC: BaseViewController {
         
         let lbRegisterTapGesture = UITapGestureRecognizer(target: self, action: #selector(navToRegister))
         lbRegister.addGestureRecognizer(lbRegisterTapGesture)
+        
     }
     
     @objc func navToForgotPassword() {
@@ -159,11 +200,7 @@ class LoginVC: BaseViewController {
             navigationController?.pushViewController(registerVC, animated: true)
         }
     }
-    
-    @objc func hideKeyboard() {
-        view.endEditing(true)
-    }
-    
+
     @objc func tapToLogin() {
         view.endEditing(true)
         startAnimating()
@@ -183,11 +220,20 @@ class LoginVC: BaseViewController {
                 self.stopAnimating()
                 return
             }
+            
+            if self.saveSelected == true {
+                self.userDefault.set("\(email) \(password)", forKey: ACCOUNT)
+            }
+            
             self.view.makeToast("Login successfully")
             self.stopAnimating()
             
             self.loginEmailInput.tfInput.text = ""
             self.loginPasswordInput.tfInput.text = ""
+            
+            let vc = HomeVC(nibName: "HomeVC", bundle: nil)
+            self.navigationController?.pushViewController(vc, animated: true)
+            
         }
     }
     

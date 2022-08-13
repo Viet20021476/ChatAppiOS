@@ -25,7 +25,6 @@ class ForgotPasswordVC: BaseViewController {
         setupBtnConfirm()
     }
     
-    
     func setupEmailInput() {
         emailInput = InputView(parentView: view)
             
@@ -55,6 +54,8 @@ class ForgotPasswordVC: BaseViewController {
         roundCorner(views: [btnConfirm], radius: 30)
         
         btnConfirm.addTarget(self, action: #selector(confirmResetPassword), for: .touchUpInside)
+        
+        view.bringSubviewToFront(viewIndicator)
     }
     
     @objc func confirmResetPassword() {

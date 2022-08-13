@@ -21,11 +21,15 @@ class BaseViewController: UIViewController {
     let auth = Auth.auth()
     let dbRef = Database.database().reference()
     let storageRef = Storage.storage().reference()
+    var currUser: User?
     
     var ivBack = UIImageView()
     
     var lightGrayFont:[NSAttributedString.Key : NSObject]?
     var redFont:[NSAttributedString.Key : NSObject]?
+    
+    var userDefault = UserDefaults()
+    var tapGesture: UITapGestureRecognizer?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -50,6 +54,9 @@ class BaseViewController: UIViewController {
         ivBack.isUserInteractionEnabled = true
         let backTapGesture = UITapGestureRecognizer(target: self, action: #selector(backScreen))
         ivBack.addGestureRecognizer(backTapGesture)
+        
+        tapGesture = UITapGestureRecognizer(target: self, action:#selector(hideKeyboard))
+        view.addGestureRecognizer(tapGesture!)
     }
     
     func setupIndicator() {
@@ -66,6 +73,7 @@ class BaseViewController: UIViewController {
         let frame = CGRect(x: 15, y: 15, width: 30, height: 30)
         loadingIndicator = NVActivityIndicatorView(frame: frame, type: .lineScale, color: .white, padding: 0)
         viewIndicator.addSubview(loadingIndicator!)
+        
     }
     
     func startAnimating() {
@@ -119,6 +127,10 @@ class BaseViewController: UIViewController {
     
     @objc func backScreen() {
         navigationController?.popViewController(animated: true)
+    }
+    
+    @objc func hideKeyboard() {
+        view.endEditing(true)
     }
     
     func setupCons() {

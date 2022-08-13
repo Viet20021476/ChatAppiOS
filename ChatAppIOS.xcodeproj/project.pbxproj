@@ -7,9 +7,20 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		02280D3028A5F112008EA27A /* HomeVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02280D2E28A5F112008EA27A /* HomeVC.swift */; };
+		02280D3128A5F112008EA27A /* HomeVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 02280D2F28A5F112008EA27A /* HomeVC.xib */; };
+		02280D3328A5F420008EA27A /* Constant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02280D3228A5F420008EA27A /* Constant.swift */; };
+		02280D3728A60443008EA27A /* UserCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02280D3528A60443008EA27A /* UserCell.swift */; };
+		02280D3828A60443008EA27A /* UserCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 02280D3628A60443008EA27A /* UserCell.xib */; };
+		02280D3B28A60710008EA27A /* SDWebImage in Frameworks */ = {isa = PBXBuildFile; productRef = 02280D3A28A60710008EA27A /* SDWebImage */; };
+		02280D3E28A64872008EA27A /* ChatVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02280D3C28A64872008EA27A /* ChatVC.swift */; };
+		02280D3F28A64872008EA27A /* ChatVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 02280D3D28A64872008EA27A /* ChatVC.xib */; };
+		02280D4228A64983008EA27A /* MessageKit in Frameworks */ = {isa = PBXBuildFile; productRef = 02280D4128A64983008EA27A /* MessageKit */; };
+		02280D4428A64A12008EA27A /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02280D4328A64A12008EA27A /* Message.swift */; };
+		02280D4728A65F23008EA27A /* InputBarAccessoryView in Frameworks */ = {isa = PBXBuildFile; productRef = 02280D4628A65F23008EA27A /* InputBarAccessoryView */; };
+		02280D4928A780AC008EA27A /* Todo in Resources */ = {isa = PBXBuildFile; fileRef = 02280D4828A780AC008EA27A /* Todo */; };
 		02C7915D28A53D4800E3EE7B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02C7915C28A53D4800E3EE7B /* AppDelegate.swift */; };
 		02C7915F28A53D4800E3EE7B /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02C7915E28A53D4800E3EE7B /* SceneDelegate.swift */; };
-		02C7916128A53D4800E3EE7B /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02C7916028A53D4800E3EE7B /* ViewController.swift */; };
 		02C7916428A53D4800E3EE7B /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 02C7916228A53D4800E3EE7B /* Main.storyboard */; };
 		02C7916628A53D4800E3EE7B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 02C7916528A53D4800E3EE7B /* Assets.xcassets */; };
 		02C7916928A53D4800E3EE7B /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 02C7916728A53D4800E3EE7B /* LaunchScreen.storyboard */; };
@@ -32,10 +43,18 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		02280D2E28A5F112008EA27A /* HomeVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeVC.swift; sourceTree = "<group>"; };
+		02280D2F28A5F112008EA27A /* HomeVC.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = HomeVC.xib; sourceTree = "<group>"; };
+		02280D3228A5F420008EA27A /* Constant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constant.swift; sourceTree = "<group>"; };
+		02280D3528A60443008EA27A /* UserCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserCell.swift; sourceTree = "<group>"; };
+		02280D3628A60443008EA27A /* UserCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = UserCell.xib; sourceTree = "<group>"; };
+		02280D3C28A64872008EA27A /* ChatVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatVC.swift; sourceTree = "<group>"; };
+		02280D3D28A64872008EA27A /* ChatVC.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ChatVC.xib; sourceTree = "<group>"; };
+		02280D4328A64A12008EA27A /* Message.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
+		02280D4828A780AC008EA27A /* Todo */ = {isa = PBXFileReference; lastKnownFileType = text; path = Todo; sourceTree = "<group>"; };
 		02C7915928A53D4800E3EE7B /* ChatAppIOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ChatAppIOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		02C7915C28A53D4800E3EE7B /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		02C7915E28A53D4800E3EE7B /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		02C7916028A53D4800E3EE7B /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		02C7916328A53D4800E3EE7B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		02C7916528A53D4800E3EE7B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		02C7916828A53D4800E3EE7B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -58,17 +77,29 @@
 				02C7919B28A551A800E3EE7B /* Toast in Frameworks */,
 				02C791A628A560D300E3EE7B /* FirebaseAuth in Frameworks */,
 				02C7918028A53ED800E3EE7B /* IQKeyboardManagerSwift in Frameworks */,
+				02280D4728A65F23008EA27A /* InputBarAccessoryView in Frameworks */,
 				02C7919828A54F4C00E3EE7B /* LTHRadioButton in Frameworks */,
 				02C791A428A560D300E3EE7B /* FirebaseAnalytics in Frameworks */,
 				02C791AA28A560D300E3EE7B /* FirebaseStorage in Frameworks */,
+				02280D3B28A60710008EA27A /* SDWebImage in Frameworks */,
 				02C791A828A560D300E3EE7B /* FirebaseDatabase in Frameworks */,
 				02C7918728A53FDC00E3EE7B /* NVActivityIndicatorView in Frameworks */,
+				02280D4228A64983008EA27A /* MessageKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		02280D3428A60420008EA27A /* TableCell */ = {
+			isa = PBXGroup;
+			children = (
+				02280D3528A60443008EA27A /* UserCell.swift */,
+				02280D3628A60443008EA27A /* UserCell.xib */,
+			);
+			path = TableCell;
+			sourceTree = "<group>";
+		};
 		02C7915028A53D4800E3EE7B = {
 			isa = PBXGroup;
 			children = (
@@ -88,6 +119,7 @@
 		02C7915B28A53D4800E3EE7B /* ChatAppIOS */ = {
 			isa = PBXGroup;
 			children = (
+				02280D3428A60420008EA27A /* TableCell */,
 				02C7918128A53F3100E3EE7B /* Resources */,
 				02C7918228A53F4900E3EE7B /* Custom View */,
 				02C7917228A53D6200E3EE7B /* Controller */,
@@ -98,6 +130,8 @@
 				02C7916728A53D4800E3EE7B /* LaunchScreen.storyboard */,
 				02C7916A28A53D4800E3EE7B /* Info.plist */,
 				02C791A028A5608500E3EE7B /* GoogleService-Info.plist */,
+				02280D3228A5F420008EA27A /* Constant.swift */,
+				02280D4828A780AC008EA27A /* Todo */,
 			);
 			path = ChatAppIOS;
 			sourceTree = "<group>";
@@ -106,6 +140,7 @@
 			isa = PBXGroup;
 			children = (
 				02C7919C28A55D8C00E3EE7B /* User.swift */,
+				02280D4328A64A12008EA27A /* Message.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -121,12 +156,15 @@
 		02C7917228A53D6200E3EE7B /* Controller */ = {
 			isa = PBXGroup;
 			children = (
-				02C7916028A53D4800E3EE7B /* ViewController.swift */,
 				02C7918328A53F8800E3EE7B /* BaseViewController.swift */,
 				02C7918828A5405A00E3EE7B /* InitialScreenVC.swift */,
 				02C7918A28A5441500E3EE7B /* RegisterVC.swift */,
 				02C7918C28A5442000E3EE7B /* LoginVC.swift */,
 				02C791AB28A565DA00E3EE7B /* ForgotPasswordVC.swift */,
+				02280D2E28A5F112008EA27A /* HomeVC.swift */,
+				02280D2F28A5F112008EA27A /* HomeVC.xib */,
+				02280D3C28A64872008EA27A /* ChatVC.swift */,
+				02280D3D28A64872008EA27A /* ChatVC.xib */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -172,6 +210,9 @@
 				02C791A528A560D300E3EE7B /* FirebaseAuth */,
 				02C791A728A560D300E3EE7B /* FirebaseDatabase */,
 				02C791A928A560D300E3EE7B /* FirebaseStorage */,
+				02280D3A28A60710008EA27A /* SDWebImage */,
+				02280D4128A64983008EA27A /* MessageKit */,
+				02280D4628A65F23008EA27A /* InputBarAccessoryView */,
 			);
 			productName = ChatAppIOS;
 			productReference = 02C7915928A53D4800E3EE7B /* ChatAppIOS.app */;
@@ -207,6 +248,9 @@
 				02C7919628A54F4C00E3EE7B /* XCRemoteSwiftPackageReference "LTHRadioButton" */,
 				02C7919928A551A800E3EE7B /* XCRemoteSwiftPackageReference "Toast-Swift" */,
 				02C791A228A560D300E3EE7B /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+				02280D3928A60710008EA27A /* XCRemoteSwiftPackageReference "SDWebImage" */,
+				02280D4028A64983008EA27A /* XCRemoteSwiftPackageReference "MessageKit" */,
+				02280D4528A65F23008EA27A /* XCRemoteSwiftPackageReference "InputBarAccessoryView" */,
 			);
 			productRefGroup = 02C7915A28A53D4800E3EE7B /* Products */;
 			projectDirPath = "";
@@ -224,6 +268,10 @@
 			files = (
 				02C7916928A53D4800E3EE7B /* LaunchScreen.storyboard in Resources */,
 				02C791A128A5608500E3EE7B /* GoogleService-Info.plist in Resources */,
+				02280D4928A780AC008EA27A /* Todo in Resources */,
+				02280D3F28A64872008EA27A /* ChatVC.xib in Resources */,
+				02280D3828A60443008EA27A /* UserCell.xib in Resources */,
+				02280D3128A5F112008EA27A /* HomeVC.xib in Resources */,
 				02C7916628A53D4800E3EE7B /* Assets.xcassets in Resources */,
 				02C7916428A53D4800E3EE7B /* Main.storyboard in Resources */,
 			);
@@ -237,15 +285,19 @@
 			buildActionMask = 2147483647;
 			files = (
 				02C7918928A5405A00E3EE7B /* InitialScreenVC.swift in Sources */,
-				02C7916128A53D4800E3EE7B /* ViewController.swift in Sources */,
+				02280D3028A5F112008EA27A /* HomeVC.swift in Sources */,
 				02C7918D28A5442000E3EE7B /* LoginVC.swift in Sources */,
 				02C7918428A53F8800E3EE7B /* BaseViewController.swift in Sources */,
 				02C791AC28A565DA00E3EE7B /* ForgotPasswordVC.swift in Sources */,
 				02C7918B28A5441500E3EE7B /* RegisterVC.swift in Sources */,
 				02C7919D28A55D8C00E3EE7B /* User.swift in Sources */,
 				02C7918F28A5447E00E3EE7B /* InputView.swift in Sources */,
+				02280D3728A60443008EA27A /* UserCell.swift in Sources */,
+				02280D3328A5F420008EA27A /* Constant.swift in Sources */,
 				02C7915D28A53D4800E3EE7B /* AppDelegate.swift in Sources */,
+				02280D3E28A64872008EA27A /* ChatVC.swift in Sources */,
 				02C7915F28A53D4800E3EE7B /* SceneDelegate.swift in Sources */,
+				02280D4428A64A12008EA27A /* Message.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -465,6 +517,30 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		02280D3928A60710008EA27A /* XCRemoteSwiftPackageReference "SDWebImage" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SDWebImage/SDWebImage.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.0.0;
+			};
+		};
+		02280D4028A64983008EA27A /* XCRemoteSwiftPackageReference "MessageKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/MessageKit/MessageKit.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 4.0.0;
+			};
+		};
+		02280D4528A65F23008EA27A /* XCRemoteSwiftPackageReference "InputBarAccessoryView" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/nathantannar4/InputBarAccessoryView.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 6.0.0;
+			};
+		};
 		02C7917E28A53ED800E3EE7B /* XCRemoteSwiftPackageReference "IQKeyboardManager" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/hackiftekhar/IQKeyboardManager.git";
@@ -508,6 +584,21 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		02280D3A28A60710008EA27A /* SDWebImage */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 02280D3928A60710008EA27A /* XCRemoteSwiftPackageReference "SDWebImage" */;
+			productName = SDWebImage;
+		};
+		02280D4128A64983008EA27A /* MessageKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 02280D4028A64983008EA27A /* XCRemoteSwiftPackageReference "MessageKit" */;
+			productName = MessageKit;
+		};
+		02280D4628A65F23008EA27A /* InputBarAccessoryView */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 02280D4528A65F23008EA27A /* XCRemoteSwiftPackageReference "InputBarAccessoryView" */;
+			productName = InputBarAccessoryView;
+		};
 		02C7917F28A53ED800E3EE7B /* IQKeyboardManagerSwift */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 02C7917E28A53ED800E3EE7B /* XCRemoteSwiftPackageReference "IQKeyboardManager" */;
