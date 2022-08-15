@@ -34,6 +34,11 @@ class HomeVC: BaseViewController {
     override func viewWillAppear(_ animated: Bool) {
         navigationController?.navigationBar.isHidden = true
     }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        dbRef.child("Users").child(currUser!.senderId).child("beingInRoom").setValue("")
+    }
+    
     func setupViews() {
         setupImgAvatar()
         setupViewUserList()
@@ -51,6 +56,10 @@ class HomeVC: BaseViewController {
         imgAvatar.clipsToBounds = true
         
         imgAvatar.contentMode = .scaleToFill
+        
+        imgAvatar.isUserInteractionEnabled = true
+        let profileTapGes = UITapGestureRecognizer(target: self, action: #selector(getToProfile))
+        imgAvatar.addGestureRecognizer(profileTapGes)
     }
     
     func setupViewUserList() {
@@ -78,9 +87,10 @@ class HomeVC: BaseViewController {
                 self.lbName.text = self.currUser?.displayName
                 let url = URL(string: self.currUser!.avatar)
                 self.imgAvatar.sd_setImage(with: url)
+                globalCurrUser = self.currUser
             }
-            self.stopAnimating()
         }
+        dbRef.child("Users").child(auth.currentUser!.uid).child("isOnline").setValue(true)
     }
     
     func getUserListData() {
@@ -98,10 +108,14 @@ class HomeVC: BaseViewController {
                 }
                 
             }
+            self.stopAnimating()
         }
     }
     
-    
+    @objc func getToProfile() {
+        let vc = ProfileVC(nibName: "ProfileVC", bundle: nil)
+        navigationController?.pushViewController(vc, animated: true)
+    }
     
 }
 
@@ -116,6 +130,10 @@ extension HomeVC : UITableViewDelegate, UITableViewDataSource {
         
         cell.imgAvatar.sd_setImage(with: URL(string: data.avatar))
         cell.lbName.text = data.displayName
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+            self.stopAnimating()
+       }
         
         let senderRoom = "\(currUser?.senderId as! String)\(data.senderId)"
         

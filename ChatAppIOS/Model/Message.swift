@@ -21,8 +21,9 @@ class Message : MessageType {
     var kind: MessageKind
     var type = ""
     var textContent = ""
+    var isSeen = false
     
-    init(sender: SenderType, messageId: String, senderId: String, receiverId: String, strSentDate: String, kind: MessageKind, type: String, textContent: String, sentDate: Date) {
+    init(sender: SenderType, messageId: String, senderId: String, receiverId: String, strSentDate: String, kind: MessageKind, type: String, textContent: String, sentDate: Date, isSeen: Bool) {
         self.sender = sender
         self.messageId = messageId
         self.senderId = senderId
@@ -32,6 +33,7 @@ class Message : MessageType {
         self.type = type
         self.textContent = textContent
         self.sentDate = sentDate
+        self.isSeen = isSeen
     }
     
     init(dict: [String: Any]) {
@@ -42,8 +44,9 @@ class Message : MessageType {
         self.strSentDate = dict["strSentDate"] as! String
         self.type = dict["type"] as! String
         self.textContent = dict["textContent"] as! String
+        self.isSeen = dict["isSeen"] as! Bool
         
-        self.sender = User(dict: ["id": "userId", "email": "email", "avatar": "avatar", "name": "name", "timeStamp": 0.0])
+        self.sender = User(dict: ["id": "userId", "email": "email", "avatar": "avatar", "name": "name", "timeStamp": 0.0, "beingInRoom": "room", "isOnline": false, "lastOnline": ""])
         self.kind = .text("")
                 
     }

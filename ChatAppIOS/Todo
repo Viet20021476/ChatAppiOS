@@ -1,3 +1,7 @@
-- Seen tin nhắn
+
+
+- Seen tin nhắn -> chưa real time, phải thoát ra vào lại mới check được seen chưa
 - Dấu chấm xanh, chữ đậm khi chưa đọc
-- Online/Offline
+- Online/Offline -> Basically done
+
+-Thêm nút log out để dễ check online/offline

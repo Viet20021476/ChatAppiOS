@@ -350,7 +350,7 @@ class RegisterVC: BaseViewController {
                                     return
                                 } else {
                                     // POST DATA
-                                    let value = ["id": userId, "email": res?.user.email, "avatar": "\(url!)", "name": name, "timeStamp": 0] as [String : Any]
+                                    let value = ["id": userId, "email": res?.user.email, "avatar": "\(url!)", "name": name, "timeStamp": 0, "beingInRoom": "", "isOnline": false, "lastOnline": ""] as [String : Any]
                                     self.dbRef.child("Users").child(userId!).setValue(value)
                                 }
                             }

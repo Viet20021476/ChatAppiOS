@@ -14,6 +14,9 @@ class User : SenderType {
     var avatar = ""
     var displayName = ""
     var timeStamp = 0.0
+    var beingInRoom = ""
+    var isOnline = false
+    var lastOnline = ""
     
     init(dict: [String: Any]) {
         self.senderId = dict["id"] as! String
@@ -21,6 +24,9 @@ class User : SenderType {
         self.avatar = dict["avatar"] as! String
         self.displayName = dict["name"] as! String
         self.timeStamp = dict["timeStamp"] as! Double
+        self.beingInRoom = dict["beingInRoom"] as! String
+        self.isOnline = dict["isOnline"] as! Bool
+        self.lastOnline = dict["lastOnline"] as! String
     }
     
     init(senderId: String, displayName: String) {

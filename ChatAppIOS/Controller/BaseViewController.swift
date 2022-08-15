@@ -137,6 +137,16 @@ class BaseViewController: UIViewController {
         lightGrayFont = [NSAttributedString.Key.foregroundColor: UIColor.lightGray, NSAttributedString.Key.font: UIFont.systemFont(ofSize: view.frame.width / 25)]
         redFont = [NSAttributedString.Key.foregroundColor: UIColor.red, NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: view.frame.width / 25)]
     }
+    
+    func getStringFromDate(format: String, date: Date) -> String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = format
+        //dateFormatter.dateFormat = "YYYY,MMM d,HH:mm:ss"
+        
+        return dateFormatter.string(from: date)
+    }
+    
+    
 }
 
 extension UITextField {
@@ -208,4 +218,5 @@ extension String {
         return String(self[start ..< end])
     }
 }
+
 

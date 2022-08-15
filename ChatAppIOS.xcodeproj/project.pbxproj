@@ -19,6 +19,8 @@
 		02280D4428A64A12008EA27A /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02280D4328A64A12008EA27A /* Message.swift */; };
 		02280D4728A65F23008EA27A /* InputBarAccessoryView in Frameworks */ = {isa = PBXBuildFile; productRef = 02280D4628A65F23008EA27A /* InputBarAccessoryView */; };
 		02280D4928A780AC008EA27A /* Todo in Resources */ = {isa = PBXBuildFile; fileRef = 02280D4828A780AC008EA27A /* Todo */; };
+		02A8788E28AAA73F00C4CB2D /* ProfileVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02A8788C28AAA73F00C4CB2D /* ProfileVC.swift */; };
+		02A8788F28AAA73F00C4CB2D /* ProfileVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 02A8788D28AAA73F00C4CB2D /* ProfileVC.xib */; };
 		02C7915D28A53D4800E3EE7B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02C7915C28A53D4800E3EE7B /* AppDelegate.swift */; };
 		02C7915F28A53D4800E3EE7B /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02C7915E28A53D4800E3EE7B /* SceneDelegate.swift */; };
 		02C7916428A53D4800E3EE7B /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 02C7916228A53D4800E3EE7B /* Main.storyboard */; };
@@ -52,6 +54,8 @@
 		02280D3D28A64872008EA27A /* ChatVC.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ChatVC.xib; sourceTree = "<group>"; };
 		02280D4328A64A12008EA27A /* Message.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
 		02280D4828A780AC008EA27A /* Todo */ = {isa = PBXFileReference; lastKnownFileType = text; path = Todo; sourceTree = "<group>"; };
+		02A8788C28AAA73F00C4CB2D /* ProfileVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileVC.swift; sourceTree = "<group>"; };
+		02A8788D28AAA73F00C4CB2D /* ProfileVC.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ProfileVC.xib; sourceTree = "<group>"; };
 		02C7915928A53D4800E3EE7B /* ChatAppIOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ChatAppIOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		02C7915C28A53D4800E3EE7B /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		02C7915E28A53D4800E3EE7B /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -91,13 +95,13 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		02280D3428A60420008EA27A /* TableCell */ = {
+		02280D3428A60420008EA27A /* Cell */ = {
 			isa = PBXGroup;
 			children = (
 				02280D3528A60443008EA27A /* UserCell.swift */,
 				02280D3628A60443008EA27A /* UserCell.xib */,
 			);
-			path = TableCell;
+			path = Cell;
 			sourceTree = "<group>";
 		};
 		02C7915028A53D4800E3EE7B = {
@@ -119,7 +123,7 @@
 		02C7915B28A53D4800E3EE7B /* ChatAppIOS */ = {
 			isa = PBXGroup;
 			children = (
-				02280D3428A60420008EA27A /* TableCell */,
+				02280D3428A60420008EA27A /* Cell */,
 				02C7918128A53F3100E3EE7B /* Resources */,
 				02C7918228A53F4900E3EE7B /* Custom View */,
 				02C7917228A53D6200E3EE7B /* Controller */,
@@ -165,6 +169,8 @@
 				02280D2F28A5F112008EA27A /* HomeVC.xib */,
 				02280D3C28A64872008EA27A /* ChatVC.swift */,
 				02280D3D28A64872008EA27A /* ChatVC.xib */,
+				02A8788C28AAA73F00C4CB2D /* ProfileVC.swift */,
+				02A8788D28AAA73F00C4CB2D /* ProfileVC.xib */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -267,6 +273,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				02C7916928A53D4800E3EE7B /* LaunchScreen.storyboard in Resources */,
+				02A8788F28AAA73F00C4CB2D /* ProfileVC.xib in Resources */,
 				02C791A128A5608500E3EE7B /* GoogleService-Info.plist in Resources */,
 				02280D4928A780AC008EA27A /* Todo in Resources */,
 				02280D3F28A64872008EA27A /* ChatVC.xib in Resources */,
@@ -284,6 +291,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				02A8788E28AAA73F00C4CB2D /* ProfileVC.swift in Sources */,
 				02C7918928A5405A00E3EE7B /* InitialScreenVC.swift in Sources */,
 				02280D3028A5F112008EA27A /* HomeVC.swift in Sources */,
 				02C7918D28A5442000E3EE7B /* LoginVC.swift in Sources */,
