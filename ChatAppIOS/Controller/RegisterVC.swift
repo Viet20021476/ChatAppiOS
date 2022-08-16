@@ -130,7 +130,7 @@ class RegisterVC: BaseViewController {
         imgAvatar.clipsToBounds = true
         
         imgAvatar.image = UIImage(named: "img_placeholder")
-        
+                
         imgAvatar.isUserInteractionEnabled = true
         let pickImgTapGes = UITapGestureRecognizer(target: self, action: #selector(pickImg))
         imgAvatar.addGestureRecognizer(pickImgTapGes)
@@ -350,7 +350,7 @@ class RegisterVC: BaseViewController {
                                     return
                                 } else {
                                     // POST DATA
-                                    let value = ["id": userId, "email": res?.user.email, "avatar": "\(url!)", "name": name, "timeStamp": 0, "beingInRoom": "", "isOnline": false, "lastOnline": ""] as [String : Any]
+                                    let value = ["id": userId, "email": res?.user.email, "avatar": "\(url!)", "name": name, "timeStamp": 0, "beingInRoom": "", "isOnline": false, "lastOnline": "", "birthDate": "", "phoneNumber": "", "feeling": ""] as [String : Any]
                                     self.dbRef.child("Users").child(userId!).setValue(value)
                                 }
                             }

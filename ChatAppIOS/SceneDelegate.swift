@@ -48,6 +48,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // This may occur due to temporary interruptions (ex. an incoming phone call).
         Database.database().reference().child("Users").child(globalCurrUser!.senderId).child("beingInRoom").setValue("")
         Database.database().reference().child("Users").child(globalCurrUser!.senderId).child("isOnline").setValue(false)
+        Database.database().reference().child("Users").child(globalCurrUser!.senderId).child("lastOnline").setValue(Util.getStringFromDate(format: "HH:mm:ss dd/MM/YYYY", date:Date()))
     }
     
     func sceneWillEnterForeground(_ scene: UIScene) {

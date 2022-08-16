@@ -5,3 +5,7 @@
 - Online/Offline -> Basically done
 
 -Thêm nút log out để dễ check online/offline
+
+
+-Problem:
++ Khi đăng ký xong load lần đầu không hiện indicator

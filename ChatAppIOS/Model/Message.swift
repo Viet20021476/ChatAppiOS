@@ -46,7 +46,7 @@ class Message : MessageType {
         self.textContent = dict["textContent"] as! String
         self.isSeen = dict["isSeen"] as! Bool
         
-        self.sender = User(dict: ["id": "userId", "email": "email", "avatar": "avatar", "name": "name", "timeStamp": 0.0, "beingInRoom": "room", "isOnline": false, "lastOnline": ""])
+        self.sender = User(dict: ["id": "userId", "email": "email", "avatar": "avatar", "name": "name", "timeStamp": 0.0, "beingInRoom": "room", "isOnline": false, "lastOnline": "", "birthDate": "", "phoneNumber": "", "feeling": ""])
         self.kind = .text("")
                 
     }

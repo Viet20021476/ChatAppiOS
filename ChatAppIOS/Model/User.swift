@@ -17,6 +17,9 @@ class User : SenderType {
     var beingInRoom = ""
     var isOnline = false
     var lastOnline = ""
+    var birthDate = ""
+    var phoneNumber = ""
+    var feeling = ""
     
     init(dict: [String: Any]) {
         self.senderId = dict["id"] as! String
@@ -27,6 +30,9 @@ class User : SenderType {
         self.beingInRoom = dict["beingInRoom"] as! String
         self.isOnline = dict["isOnline"] as! Bool
         self.lastOnline = dict["lastOnline"] as! String
+        self.birthDate = dict["birthDate"] as! String
+        self.phoneNumber = dict["phoneNumber"] as! String
+        self.feeling = dict["feeling"] as! String
     }
     
     init(senderId: String, displayName: String) {

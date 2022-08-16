@@ -29,6 +29,7 @@ class HomeVC: BaseViewController {
         ivBack.isHidden = true
         setupViews()
         getData()
+                
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -48,7 +49,6 @@ class HomeVC: BaseViewController {
         getCurrUserData()
         getUserListData()
     }
-    
     
     func setupImgAvatar() {
         imgAvatar.layer.masksToBounds = false
@@ -114,6 +114,7 @@ class HomeVC: BaseViewController {
     
     @objc func getToProfile() {
         let vc = ProfileVC(nibName: "ProfileVC", bundle: nil)
+        vc.currUser = currUser
         navigationController?.pushViewController(vc, animated: true)
     }
     
@@ -131,15 +132,26 @@ extension HomeVC : UITableViewDelegate, UITableViewDataSource {
         cell.imgAvatar.sd_setImage(with: URL(string: data.avatar))
         cell.lbName.text = data.displayName
         
+        dbRef.child("Users").child(data.senderId).child("isOnline").observe(.value) { snapshot in
+            let isOn = snapshot.value as! Bool
+            if isOn {
+                cell.imgOnOff.image = UIImage(named: "green_dot")
+            } else {
+                cell.imgOnOff.image = UIImage(named: "gray_dot")
+                
+            }
+        }
+        
         DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
             self.stopAnimating()
-       }
+        }
         
         let senderRoom = "\(currUser?.senderId as! String)\(data.senderId)"
         
         dbRef.child("Messages").child(senderRoom).observe(.childAdded) { snapshot in
             self.startAnimating()
             self.dbRef.child("Messages").child(senderRoom).child(snapshot.key).observe(.value) { data in
+                self.dbRef.child("Messages").child(senderRoom).child(snapshot.key).removeAllObservers()
                 let dict = data.value as? [String: Any]
                 let msg = Message(dict: dict!)
                 if msg.senderId == self.currUser?.senderId {

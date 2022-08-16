@@ -60,11 +60,6 @@ class InputView: UIView {
                 
         tfInput.disableAutoFill()
         tfInput.autocapitalizationType = .none
-        
-                
-        
-        
-        
     }
 
 }

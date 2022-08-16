@@ -36,11 +36,14 @@ class ChatVC: MessagesViewController {
     var receiverRoom = ""
     var numberOfMsg = 0
     
+    var refHandleSenderMsgCount: DatabaseHandle?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         // Do any additional setup after loading the view.
         navigationController?.navigationBar.isHidden = false
+        setupRightBarBtnItem()
         
         senderRoom = "\(currUser?.senderId as! String)\(otherUser?.senderId as! String)"
         receiverRoom = "\(otherUser?.senderId as! String)\(currUser?.senderId as! String)"
@@ -51,33 +54,43 @@ class ChatVC: MessagesViewController {
         messagesCollectionView.messagesLayoutDelegate = self
         messagesCollectionView.messagesDisplayDelegate = self
         
-        
         messagesCollectionView.addGestureRecognizer(tapGesture)
         
         messageInputBar.delegate = self
         
+        dbRef.child("Users").child(currUser!.senderId).child("beingInRoom").setValue(senderRoom)
+        dbRef.child("Users").child(currUser!.senderId).child("beingInRoom").observe(.value) { snapshot in
+            self.dbRef.child("Users").child(self.currUser!.senderId).child("beingInRoom").removeAllObservers()
+            self.currUser?.beingInRoom = snapshot.value as! String
+        }
         setupTitleView()
         getMsgData()
         
-        dbRef.child("Users").child(currUser!.senderId).child("beingInRoom").setValue(senderRoom)
-        
         setupOnlineState()
         
-
     }
-    
-//    override func viewWillAppear(_ animated: Bool) {
-//        DispatchQueue.main.async {
-//            self.messagesCollectionView.scrollToLastItem()
-//        }
-//    }
     
     override func viewDidDisappear(_ animated: Bool) {
         dbRef.child("Users").child(currUser!.senderId).child("beingInRoom").setValue("")
+        currUser?.beingInRoom = ""
+    }
+    
+    func setupRightBarBtnItem() {
+        let rightItemBtn = UIButton(type: .custom)
+        rightItemBtn.translatesAutoresizingMaskIntoConstraints = false
+        rightItemBtn.setImage(UIImage(systemName: "info.circle"), for: .normal)
+        rightItemBtn.contentVerticalAlignment = .fill
+        rightItemBtn.contentHorizontalAlignment = .fill
+        rightItemBtn.imageEdgeInsets = UIEdgeInsets(top: 5, left: 5, bottom: 5, right: 5)
+        rightItemBtn.widthAnchor.constraint(equalToConstant: 40).isActive = true
+        rightItemBtn.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        
+        navigationItem.rightBarButtonItem = UIBarButtonItem(customView: rightItemBtn)
+        
+        rightItemBtn.addTarget(self, action: #selector(getToOtherUserProfile), for: .touchUpInside)
     }
     
     func setupOnlineState() {
-        
         dbRef.child("Users").child(otherUser!.senderId).child("isOnline").observe(.value) { snapshot in
             let isOnline = snapshot.value as! Bool
             if isOnline {
@@ -102,7 +115,6 @@ class ChatVC: MessagesViewController {
             titleLbOnOff.text = "Online"
         } else {
             titleImgOnOff.image = UIImage(named: "gray_dot")
-            //titleLbOnOff.text = "Offline, last online: \(otherUser?.lastOnline)"
         }
         titleLbOnOff.font = .systemFont(ofSize: 14)
         titleImgOnOff.translatesAutoresizingMaskIntoConstraints = false
@@ -134,7 +146,7 @@ class ChatVC: MessagesViewController {
                     let msg = Message(dict: dict)
                     msg.sender = User(senderId: msg.senderId, displayName: msg.senderName)
                     msg.kind = .text(msg.textContent)
-                    if msg.receiverId == self.currUser?.senderId {
+                    if msg.receiverId == self.currUser?.senderId && self.currUser!.beingInRoom != "" {
                         msg.isSeen = true
                         self.dbRef.child("Messages").child(self.senderRoom).child(msg.messageId).child("isSeen").setValue(true)
                         self.dbRef.child("Messages").child(self.receiverRoom).child(msg.messageId).child("isSeen").setValue(true)
@@ -147,9 +159,11 @@ class ChatVC: MessagesViewController {
             }
         }
         
-        dbRef.child("Messages").child(senderRoom).observe(.value) { snapshot in
+        refHandleSenderMsgCount = dbRef.child("Messages").child(senderRoom).observe(.value) { snapshot in
             self.numberOfMsg = Int(snapshot.childrenCount)
         }
+        
+
     }
     
     @objc func hideKeyboard() {
@@ -166,12 +180,11 @@ class ChatVC: MessagesViewController {
         return false
     }
     
-    func getStringFromDate(format: String, date: Date) -> String {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = format
-        //dateFormatter.dateFormat = "YYYY,MMM d,HH:mm:ss"
-        
-        return dateFormatter.string(from: date)
+    @objc func getToOtherUserProfile() {
+        let vc = ProfileVC(nibName: "ProfileVC", bundle: nil)
+        vc.currUser = otherUser
+        vc.isOtherUserProfile = true
+        navigationController?.pushViewController(vc, animated: true)
     }
 }
 
@@ -241,15 +254,15 @@ extension ChatVC : InputBarAccessoryViewDelegate {
     func inputBar(_ inputBar: InputBarAccessoryView, didPressSendButtonWith text: String) {
         let key = dbRef.childByAutoId().key
         let currDate = Date()
-        let date = getStringFromDate(format: "YYYY,MM dd,HH:mm:ss", date: currDate)
+        let date = Util.getStringFromDate(format: "YYYY,MM dd,HH:mm:ss", date: currDate)
         
         let msg = Message(sender: currUser!, messageId: key!, senderId: currUser!.senderId, receiverId: otherUser!.senderId, strSentDate: date, kind: .text(text), type: MessageKind.text(text).msgKind, textContent: text, sentDate: currDate, isSeen: false)
         
-        let val = ["messageId": msg.messageId, "senderId": msg.senderId, "senderName": currUser?.displayName, "receiverId": msg.receiverId, "strSentDate": msg.strSentDate, "type": msg.type, "textContent": msg.textContent, "isSeen": false] as [String : Any]
-                
+        let val = ["messageId": msg.messageId, "senderId": msg.senderId, "senderName": currUser?.displayName, "receiverId": msg.receiverId, "strSentDate": msg.strSentDate, "type": msg.type, "textContent": msg.textContent, "isSeen": msg.isSeen] as [String : Any]
+        
         dbRef.child("Messages").child(senderRoom).child(key!).setValue(val)
         dbRef.child("Messages").child(receiverRoom).child(key!).setValue(val)
-
+        
         
         dbRef.child("Users").child(currUser!.senderId).removeAllObservers()
         dbRef.child("Users").child(otherUser!.senderId).removeAllObservers()

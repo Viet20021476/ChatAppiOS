@@ -10,6 +10,7 @@ import UIKit
 class UserCell: UITableViewCell {
 
     @IBOutlet weak var imgAvatar: UIImageView!
+    @IBOutlet weak var imgOnOff: UIImageView!
     @IBOutlet weak var lbName: UILabel!
     @IBOutlet weak var lbLastMsg: UILabel!
     
@@ -25,6 +26,8 @@ class UserCell: UITableViewCell {
         imgAvatar.clipsToBounds = true
         
         imgAvatar.contentMode = .scaleToFill
+        
+        imgOnOff.contentMode = .scaleAspectFill
     }
     
     override func setSelected(_ selected: Bool, animated: Bool) {
