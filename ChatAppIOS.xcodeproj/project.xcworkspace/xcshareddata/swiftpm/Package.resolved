@@ -145,12 +145,30 @@
       }
     },
     {
+      "identity" : "prynttrimmerview",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/HHK1/PryntTrimmerView",
+      "state" : {
+        "revision" : "ac1b60a22c7e6a6514de7a66d2f3d5b537c956d5",
+        "version" : "4.0.2"
+      }
+    },
+    {
       "identity" : "sdwebimage",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/SDWebImage/SDWebImage.git",
       "state" : {
         "revision" : "3e48cb68d8e668d146dc59c73fb98cb628616236",
         "version" : "5.13.2"
+      }
+    },
+    {
+      "identity" : "stevia",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/freshOS/Stevia",
+      "state" : {
+        "revision" : "87dd17a86240f16788239a78dd8be11c4b013150",
+        "version" : "4.8.0"
       }
     },
     {
@@ -169,6 +187,15 @@
       "state" : {
         "revision" : "0c9493eeacb102cc614da385cfaaf475379f4ab4",
         "version" : "5.0.1"
+      }
+    },
+    {
+      "identity" : "ypimagepicker",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/Yummypets/YPImagePicker.git",
+      "state" : {
+        "revision" : "4dbae7a1f69db3d65c47f4106d0ca09f678edeaf",
+        "version" : "5.2.1"
       }
     }
   ],

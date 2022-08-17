@@ -22,8 +22,9 @@ class Message : MessageType {
     var type = ""
     var textContent = ""
     var isSeen = false
+    var downloadURL = ""
     
-    init(sender: SenderType, messageId: String, senderId: String, receiverId: String, strSentDate: String, kind: MessageKind, type: String, textContent: String, sentDate: Date, isSeen: Bool) {
+    init(sender: SenderType, messageId: String, senderId: String, receiverId: String, strSentDate: String, kind: MessageKind, type: String, textContent: String, sentDate: Date, downloadURL: String, isSeen: Bool) {
         self.sender = sender
         self.messageId = messageId
         self.senderId = senderId
@@ -33,6 +34,7 @@ class Message : MessageType {
         self.type = type
         self.textContent = textContent
         self.sentDate = sentDate
+        self.downloadURL = downloadURL
         self.isSeen = isSeen
     }
     
@@ -44,21 +46,13 @@ class Message : MessageType {
         self.strSentDate = dict["strSentDate"] as! String
         self.type = dict["type"] as! String
         self.textContent = dict["textContent"] as! String
+        self.downloadURL = dict["downloadURL"] as! String
         self.isSeen = dict["isSeen"] as! Bool
         
         self.sender = User(dict: ["id": "userId", "email": "email", "avatar": "avatar", "name": "name", "timeStamp": 0.0, "beingInRoom": "room", "isOnline": false, "lastOnline": "", "birthDate": "", "phoneNumber": "", "feeling": ""])
         self.kind = .text("")
                 
     }
-    
-//    init(messageId: String, sender: SenderType, receiverId: String, sentDate: Date, kind: MessageKind, textContent: String) {
-//        self.messageId = messageId
-//        self.sender = sender
-//        self.receiverId = receiverId
-//        self.sentDate = sentDate
-//        self.kind = kind
-//        self.textContent = textContent
-//    }
 }
 
 extension MessageKind {

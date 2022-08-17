@@ -9,7 +9,10 @@ import UIKit
 import MessageKit
 import FirebaseAuth
 import FirebaseDatabase
+import FirebaseStorage
 import InputBarAccessoryView
+import YPImagePicker
+import SDWebImage
 
 protocol ChatVCDelegate {
     func removeAllUser()
@@ -38,23 +41,32 @@ class ChatVC: MessagesViewController {
     
     var refHandleSenderMsgCount: DatabaseHandle?
     
+    var imgPicker = YPImagePicker()
+    var btnPickImg = InputBarButtonItem()
+    
+    let currDate = Date()
+    var imageCache: SDImageCache = SDImageCache()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         // Do any additional setup after loading the view.
         navigationController?.navigationBar.isHidden = false
+        UINavigationBar.appearance().titleTextAttributes = [NSAttributedString.Key.foregroundColor : UIColor.red ] // Title color
+        
         setupRightBarBtnItem()
+        customInputView()
         
         senderRoom = "\(currUser?.senderId as! String)\(otherUser?.senderId as! String)"
         receiverRoom = "\(otherUser?.senderId as! String)\(currUser?.senderId as! String)"
         
-        let tapGesture = UITapGestureRecognizer(target: self, action:#selector(hideKeyboard))
+        //        let tapGesture = UITapGestureRecognizer(target: self, action:#selector(hideKeyboard))
+        //        messagesCollectionView.addGestureRecognizer(tapGesture)
         
         messagesCollectionView.messagesDataSource = self
         messagesCollectionView.messagesLayoutDelegate = self
         messagesCollectionView.messagesDisplayDelegate = self
-        
-        messagesCollectionView.addGestureRecognizer(tapGesture)
+        messagesCollectionView.messageCellDelegate = self
         
         messageInputBar.delegate = self
         
@@ -65,8 +77,8 @@ class ChatVC: MessagesViewController {
         }
         setupTitleView()
         getMsgData()
-        
         setupOnlineState()
+        handleEvent()
         
     }
     
@@ -145,16 +157,27 @@ class ChatVC: MessagesViewController {
                 if let dict = data.value as? [String: Any] {
                     let msg = Message(dict: dict)
                     msg.sender = User(senderId: msg.senderId, displayName: msg.senderName)
-                    msg.kind = .text(msg.textContent)
+                    if msg.type == "image" {
+                        SDWebImageManager.shared.loadImage(with: URL(string: msg.downloadURL), options: .allowInvalidSSLCertificates) { int1, int2, int3 in
+                        } completed: { img, data, err, type, bool1, url in
+                            msg.kind = .photo(Media(url: URL(string: msg.downloadURL)!, image: img!, placeholderImage: UIImage(named: "ic_pickimg")!, size: CGSize(width: 200, height: 200)))
+                            self.arrMessage.append(msg)
+                            self.messagesCollectionView.insertSections([self.arrMessage.count - 1])
+                            self.messagesCollectionView.scrollToLastItem()
+                        }
+                    } else {
+                        msg.kind = .text(msg.textContent)
+                        self.arrMessage.append(msg)
+                        self.messagesCollectionView.insertSections([self.arrMessage.count - 1])
+                        self.messagesCollectionView.scrollToLastItem()
+                    }
                     if msg.receiverId == self.currUser?.senderId && self.currUser!.beingInRoom != "" {
                         msg.isSeen = true
                         self.dbRef.child("Messages").child(self.senderRoom).child(msg.messageId).child("isSeen").setValue(true)
                         self.dbRef.child("Messages").child(self.receiverRoom).child(msg.messageId).child("isSeen").setValue(true)
                         
                     }
-                    self.arrMessage.append(msg)
-                    self.messagesCollectionView.insertSections([self.arrMessage.count - 1])
-                    self.messagesCollectionView.scrollToLastItem()
+                    
                 }
             }
         }
@@ -163,7 +186,7 @@ class ChatVC: MessagesViewController {
             self.numberOfMsg = Int(snapshot.childrenCount)
         }
         
-
+        
     }
     
     @objc func hideKeyboard() {
@@ -186,9 +209,127 @@ class ChatVC: MessagesViewController {
         vc.isOtherUserProfile = true
         navigationController?.pushViewController(vc, animated: true)
     }
+    
+    func customInputView() {
+        
+        messageInputBar.sendButton.setSize(CGSize(width: 36, height: 36), animated: true)
+        messageInputBar.sendButton.image = UIImage(named: "ic_send")
+        messageInputBar.sendButton.imageView?.layer.cornerRadius = 10
+        messageInputBar.sendButton.backgroundColor = .clear
+        
+        messageInputBar.middleContentViewPadding = UIEdgeInsets(top: 0, left: 15, bottom: 0, right: 0)
+        
+        btnPickImg = makeButton(image: UIImage(named: "ic_pickimg")!)
+        let items = [btnPickImg]
+        
+        messageInputBar.setLeftStackViewWidthConstant(to: 40, animated: true)
+        messageInputBar.setStackViewItems(items, forStack: .left, animated: true)
+    }
+    
+    func makeButton(image: UIImage) -> InputBarButtonItem {
+        return InputBarButtonItem()
+            .configure {
+                $0.spacing = .fixed(10)
+                $0.image = image
+                $0.setSize(CGSize(width: 36, height: 36), animated: false)
+            }
+    }
+    
+    func handleEvent() {
+        var config = YPImagePickerConfiguration()
+        config.library.maxNumberOfItems = 3
+        imgPicker = YPImagePicker(configuration: config)
+        
+        btnPickImg.onSelected {_ in
+            self.imgPicker.didFinishPicking { items, cancelled in
+                for item in items {
+                    switch item {
+                    case .photo(let photo):
+                        self.uploadMediaItemToStorage(image: photo.image)
+                        
+                    case .video(let video):
+                        print(video)
+                    }
+                }
+                self.imgPicker.dismiss(animated: true, completion: nil)
+            }
+            self.present(self.imgPicker, animated: true, completion: nil)
+        }
+    }
+    
+    func uploadMediaItemToStorage(image: UIImage){
+        var downloadURl = ""
+        let storageRef = Storage.storage().reference()
+        
+        let date = Util.getStringFromDate(format: "YYYY,MM dd,HH:mm:ss", date: currDate)
+        let imgName = date
+        
+        let data = image.jpegData(compressionQuality: 0.3)
+        // DUONG DAN CHO THU MUC CHUA AVATAR
+        let imgStorageRef = storageRef
+        let imgFolder = imgStorageRef.child(senderRoom).child(imgName)//-> DUONG DAN LUU AVATAR
+        
+        imgFolder.putData(data!, metadata: nil) { meta, err in
+            if err != nil {
+                return
+            } else {
+                imgFolder.downloadURL { url, err in
+                    if err != nil {
+                        return
+                    } else {
+                        // POST DATA
+                        let key = self.dbRef.childByAutoId().key
+                        let msg = Message(sender: self.currUser!,
+                                          messageId: key!,
+                                          senderId: self.currUser!.senderId,
+                                          receiverId: self.otherUser!.senderId,
+                                          strSentDate: date,
+                                          kind: .photo(Media(url: URL(string: "https://dantri.com.vn/")!, image: image, placeholderImage: image, size: CGSize(width: 200, height: 200))),
+                                          type: "image", textContent: "",
+                                          sentDate: self.currDate,
+                                          downloadURL: "\(url!)",
+                                          isSeen: false)
+                        
+                        let val = ["messageId": msg.messageId,
+                                   "senderId": msg.senderId,
+                                   "senderName": self.currUser?.displayName,
+                                   "receiverId": msg.receiverId,
+                                   "strSentDate": msg.strSentDate,
+                                   "type": msg.type,
+                                   "textContent": msg.textContent,
+                                   "downloadURL": msg.downloadURL,
+                                   "isSeen": msg.isSeen] as [String : Any]
+                        
+                        self.dbRef.child("Messages").child(self.senderRoom).child(key!).setValue(val)
+                        self.dbRef.child("Messages").child(self.receiverRoom).child(key!).setValue(val)
+                        
+                        
+                        self.dbRef.child("Users").child(self.currUser!.senderId).removeAllObservers()
+                        self.dbRef.child("Users").child(self.otherUser!.senderId).removeAllObservers()
+                        
+                        self.delegate?.removeAllUser()
+                        
+                        let dictTimeStamp = ["timeStamp": NSDate().timeIntervalSince1970]
+                        self.dbRef.child("Users").child(self.currUser!.senderId).updateChildValues(dictTimeStamp)
+                        self.dbRef.child("Users").child(self.otherUser!.senderId).updateChildValues(dictTimeStamp)
+                        
+                        self.messageInputBar.inputTextView.text = ""
+                        
+                        self.delegate?.reloadUserList()
+                        downloadURl = "\(url!)"
+                    }
+                }
+                
+            }
+        }
+    }
 }
 
 extension ChatVC : MessagesDataSource, MessagesLayoutDelegate, MessagesDisplayDelegate {
+    
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        return true
+    }
     
     var currentSender: SenderType {
         return currUser!
@@ -248,6 +389,14 @@ extension ChatVC : MessagesDataSource, MessagesLayoutDelegate, MessagesDisplayDe
         }
     }
     
+    //    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+    //        let msg = arrMessage[indexPath.section]
+    //        if  msg.type == "image" {
+    //            let vc = MediaViewVC(nibName: "MediaViewVC", bundle: nil)
+    //            vc.mediaView.sd_setImage(with: URL(string: msg.downloadURL))
+    //            navigationController?.pushViewController(vc, animated: true)
+    //        }
+    //    }
 }
 
 extension ChatVC : InputBarAccessoryViewDelegate {
@@ -256,9 +405,27 @@ extension ChatVC : InputBarAccessoryViewDelegate {
         let currDate = Date()
         let date = Util.getStringFromDate(format: "YYYY,MM dd,HH:mm:ss", date: currDate)
         
-        let msg = Message(sender: currUser!, messageId: key!, senderId: currUser!.senderId, receiverId: otherUser!.senderId, strSentDate: date, kind: .text(text), type: MessageKind.text(text).msgKind, textContent: text, sentDate: currDate, isSeen: false)
+        let msg = Message(sender: currUser!,
+                          messageId: key!,
+                          senderId: currUser!.senderId,
+                          receiverId: otherUser!.senderId,
+                          strSentDate: date,
+                          kind: .text(text),
+                          type: MessageKind.text(text).msgKind,
+                          textContent: text,
+                          sentDate: currDate,
+                          downloadURL: "",
+                          isSeen: false)
         
-        let val = ["messageId": msg.messageId, "senderId": msg.senderId, "senderName": currUser?.displayName, "receiverId": msg.receiverId, "strSentDate": msg.strSentDate, "type": msg.type, "textContent": msg.textContent, "isSeen": msg.isSeen] as [String : Any]
+        let val = ["messageId": msg.messageId,
+                   "senderId": msg.senderId,
+                   "senderName": currUser?.displayName,
+                   "receiverId": msg.receiverId,
+                   "strSentDate": msg.strSentDate,
+                   "type": msg.type,
+                   "textContent": msg.textContent,
+                   "downloadURL": msg.downloadURL,
+                   "isSeen": msg.isSeen] as [String : Any]
         
         dbRef.child("Messages").child(senderRoom).child(key!).setValue(val)
         dbRef.child("Messages").child(receiverRoom).child(key!).setValue(val)
@@ -280,3 +447,13 @@ extension ChatVC : InputBarAccessoryViewDelegate {
     }
     
 }
+
+extension ChatVC : MessageCellDelegate {
+    func didTapImage(in cell: MessageCollectionViewCell) {
+        let indexPath = messagesCollectionView.indexPath(for: cell)
+        let vc = MediaViewVC(nibName: "MediaViewVC", bundle: nil)
+        vc.mediaView.sd_setImage(with: URL(string: "\(arrMessage[indexPath!.section].downloadURL)"))
+        navigationController?.pushViewController(vc, animated: true)
+    }
+}
+

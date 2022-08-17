@@ -24,6 +24,10 @@
 		02A8789228AB888C00C4CB2D /* Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02A8789128AB888C00C4CB2D /* Util.swift */; };
 		02A8789428AB902200C4CB2D /* InfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02A8789328AB902200C4CB2D /* InfoView.swift */; };
 		02A8789628ABB26700C4CB2D /* EditInfoAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02A8789528ABB26700C4CB2D /* EditInfoAlert.swift */; };
+		02A8789A28AD0F0000C4CB2D /* YPImagePicker in Frameworks */ = {isa = PBXBuildFile; productRef = 02A8789928AD0F0000C4CB2D /* YPImagePicker */; };
+		02A8789C28AD228500C4CB2D /* Media.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02A8789B28AD228400C4CB2D /* Media.swift */; };
+		02A8789F28AD460800C4CB2D /* MediaViewVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02A8789D28AD460800C4CB2D /* MediaViewVC.swift */; };
+		02A878A028AD460800C4CB2D /* MediaViewVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 02A8789E28AD460800C4CB2D /* MediaViewVC.xib */; };
 		02C7915D28A53D4800E3EE7B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02C7915C28A53D4800E3EE7B /* AppDelegate.swift */; };
 		02C7915F28A53D4800E3EE7B /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02C7915E28A53D4800E3EE7B /* SceneDelegate.swift */; };
 		02C7916428A53D4800E3EE7B /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 02C7916228A53D4800E3EE7B /* Main.storyboard */; };
@@ -62,6 +66,9 @@
 		02A8789128AB888C00C4CB2D /* Util.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Util.swift; sourceTree = "<group>"; };
 		02A8789328AB902200C4CB2D /* InfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoView.swift; sourceTree = "<group>"; };
 		02A8789528ABB26700C4CB2D /* EditInfoAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditInfoAlert.swift; sourceTree = "<group>"; };
+		02A8789B28AD228400C4CB2D /* Media.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Media.swift; sourceTree = "<group>"; };
+		02A8789D28AD460800C4CB2D /* MediaViewVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaViewVC.swift; sourceTree = "<group>"; };
+		02A8789E28AD460800C4CB2D /* MediaViewVC.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MediaViewVC.xib; sourceTree = "<group>"; };
 		02C7915928A53D4800E3EE7B /* ChatAppIOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ChatAppIOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		02C7915C28A53D4800E3EE7B /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		02C7915E28A53D4800E3EE7B /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -91,6 +98,7 @@
 				02C7919828A54F4C00E3EE7B /* LTHRadioButton in Frameworks */,
 				02C791A428A560D300E3EE7B /* FirebaseAnalytics in Frameworks */,
 				02C791AA28A560D300E3EE7B /* FirebaseStorage in Frameworks */,
+				02A8789A28AD0F0000C4CB2D /* YPImagePicker in Frameworks */,
 				02280D3B28A60710008EA27A /* SDWebImage in Frameworks */,
 				02C791A828A560D300E3EE7B /* FirebaseDatabase in Frameworks */,
 				02C7918728A53FDC00E3EE7B /* NVActivityIndicatorView in Frameworks */,
@@ -160,6 +168,7 @@
 			children = (
 				02C7919C28A55D8C00E3EE7B /* User.swift */,
 				02280D4328A64A12008EA27A /* Message.swift */,
+				02A8789B28AD228400C4CB2D /* Media.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -187,6 +196,8 @@
 				02A8788C28AAA73F00C4CB2D /* ProfileVC.swift */,
 				02A8788D28AAA73F00C4CB2D /* ProfileVC.xib */,
 				02A8789528ABB26700C4CB2D /* EditInfoAlert.swift */,
+				02A8789D28AD460800C4CB2D /* MediaViewVC.swift */,
+				02A8789E28AD460800C4CB2D /* MediaViewVC.xib */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -236,6 +247,7 @@
 				02280D3A28A60710008EA27A /* SDWebImage */,
 				02280D4128A64983008EA27A /* MessageKit */,
 				02280D4628A65F23008EA27A /* InputBarAccessoryView */,
+				02A8789928AD0F0000C4CB2D /* YPImagePicker */,
 			);
 			productName = ChatAppIOS;
 			productReference = 02C7915928A53D4800E3EE7B /* ChatAppIOS.app */;
@@ -274,6 +286,7 @@
 				02280D3928A60710008EA27A /* XCRemoteSwiftPackageReference "SDWebImage" */,
 				02280D4028A64983008EA27A /* XCRemoteSwiftPackageReference "MessageKit" */,
 				02280D4528A65F23008EA27A /* XCRemoteSwiftPackageReference "InputBarAccessoryView" */,
+				02A8789828AD0F0000C4CB2D /* XCRemoteSwiftPackageReference "YPImagePicker" */,
 			);
 			productRefGroup = 02C7915A28A53D4800E3EE7B /* Products */;
 			projectDirPath = "";
@@ -291,6 +304,7 @@
 			files = (
 				02C7916928A53D4800E3EE7B /* LaunchScreen.storyboard in Resources */,
 				02A8788F28AAA73F00C4CB2D /* ProfileVC.xib in Resources */,
+				02A878A028AD460800C4CB2D /* MediaViewVC.xib in Resources */,
 				02C791A128A5608500E3EE7B /* GoogleService-Info.plist in Resources */,
 				02280D4928A780AC008EA27A /* Todo in Resources */,
 				02280D3F28A64872008EA27A /* ChatVC.xib in Resources */,
@@ -308,6 +322,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				02A8789C28AD228500C4CB2D /* Media.swift in Sources */,
 				02A8788E28AAA73F00C4CB2D /* ProfileVC.swift in Sources */,
 				02C7918928A5405A00E3EE7B /* InitialScreenVC.swift in Sources */,
 				02280D3028A5F112008EA27A /* HomeVC.swift in Sources */,
@@ -323,6 +338,7 @@
 				02280D3728A60443008EA27A /* UserCell.swift in Sources */,
 				02280D3328A5F420008EA27A /* Constant.swift in Sources */,
 				02C7915D28A53D4800E3EE7B /* AppDelegate.swift in Sources */,
+				02A8789F28AD460800C4CB2D /* MediaViewVC.swift in Sources */,
 				02280D3E28A64872008EA27A /* ChatVC.swift in Sources */,
 				02C7915F28A53D4800E3EE7B /* SceneDelegate.swift in Sources */,
 				02280D4428A64A12008EA27A /* Message.swift in Sources */,
@@ -569,6 +585,14 @@
 				minimumVersion = 6.0.0;
 			};
 		};
+		02A8789828AD0F0000C4CB2D /* XCRemoteSwiftPackageReference "YPImagePicker" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Yummypets/YPImagePicker.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.0.0;
+			};
+		};
 		02C7917E28A53ED800E3EE7B /* XCRemoteSwiftPackageReference "IQKeyboardManager" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/hackiftekhar/IQKeyboardManager.git";
@@ -626,6 +650,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 02280D4528A65F23008EA27A /* XCRemoteSwiftPackageReference "InputBarAccessoryView" */;
 			productName = InputBarAccessoryView;
+		};
+		02A8789928AD0F0000C4CB2D /* YPImagePicker */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 02A8789828AD0F0000C4CB2D /* XCRemoteSwiftPackageReference "YPImagePicker" */;
+			productName = YPImagePicker;
 		};
 		02C7917F28A53ED800E3EE7B /* IQKeyboardManagerSwift */ = {
 			isa = XCSwiftPackageProductDependency;
