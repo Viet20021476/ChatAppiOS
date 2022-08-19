@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="20037" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="20020"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="VideoPlayer" customModule="ChatAppIOS" customModuleProvider="target">
+            <connections>
+                <outlet property="playBackView" destination="kFa-AC-ang" id="ylY-PY-hWZ"/>
+                <outlet property="videoView" destination="gWG-e0-Hg3" id="mfe-7a-te8"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB">
+            <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gWG-e0-Hg3">
+                    <rect key="frame" x="0.0" y="336.5" width="414" height="233"/>
+                    <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <constraints>
+                        <constraint firstAttribute="width" secondItem="gWG-e0-Hg3" secondAttribute="height" multiplier="16:9" id="9Cb-kF-a4h"/>
+                    </constraints>
+                </view>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="kFa-AC-ang" customClass="PlayBackView" customModule="ChatAppIOS" customModuleProvider="target">
+                    <rect key="frame" x="16" y="799" width="382" height="47"/>
+                    <color key="backgroundColor" name="PlayBackColor"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="47" id="W15-50-U6t"/>
+                    </constraints>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                            <real key="value" value="20"/>
+                        </userDefinedRuntimeAttribute>
+                    </userDefinedRuntimeAttributes>
+                </view>
+            </subviews>
+            <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
+            <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <constraints>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="kFa-AC-ang" secondAttribute="trailing" constant="16" id="54J-bk-j3A"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="bottom" secondItem="kFa-AC-ang" secondAttribute="bottom" constant="16" id="9ro-kw-4MN"/>
+                <constraint firstItem="gWG-e0-Hg3" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" id="B6J-dE-L1u"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="gWG-e0-Hg3" secondAttribute="trailing" id="LmH-3l-7JS"/>
+                <constraint firstItem="gWG-e0-Hg3" firstAttribute="centerY" secondItem="vUN-kp-3ea" secondAttribute="centerY" id="n7d-pp-HLa"/>
+                <constraint firstItem="kFa-AC-ang" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" constant="16" id="oko-a5-dnY"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <point key="canvasLocation" x="141" y="145"/>
+        </view>
+    </objects>
+    <resources>
+        <namedColor name="PlayBackColor">
+            <color red="0.14100000262260437" green="0.14100000262260437" blue="0.14100000262260437" alpha="0.5" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+    </resources>
+</document>

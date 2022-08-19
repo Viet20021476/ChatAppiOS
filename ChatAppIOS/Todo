@@ -10,3 +10,4 @@
 -Problem:
 + Khi đăng ký xong load lần đầu không hiện indicator
 + Chưa hide keyboard được trong chatVC
++ Thứ tự hiển thị tin nhắn chưa đúng, tin nhắn text ở trên tin nhắn image, video -> Có thể do image, video cần thời gian để load??

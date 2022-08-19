@@ -7,7 +7,7 @@
 
 import UIKit
 
-class MediaViewVC: BaseViewController {
+class ImageViewVC: BaseViewController {
     
     var mediaView = UIImageView()
 

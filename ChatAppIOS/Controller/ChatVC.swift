@@ -13,6 +13,7 @@ import FirebaseStorage
 import InputBarAccessoryView
 import YPImagePicker
 import SDWebImage
+import AVFoundation
 
 protocol ChatVCDelegate {
     func removeAllUser()
@@ -46,6 +47,7 @@ class ChatVC: MessagesViewController {
     
     let currDate = Date()
     var imageCache: SDImageCache = SDImageCache()
+    var thumbnailImg = UIImage()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -60,8 +62,7 @@ class ChatVC: MessagesViewController {
         senderRoom = "\(currUser?.senderId as! String)\(otherUser?.senderId as! String)"
         receiverRoom = "\(otherUser?.senderId as! String)\(currUser?.senderId as! String)"
         
-        //        let tapGesture = UITapGestureRecognizer(target: self, action:#selector(hideKeyboard))
-        //        messagesCollectionView.addGestureRecognizer(tapGesture)
+        messagesCollectionView.showsVerticalScrollIndicator = false
         
         messagesCollectionView.messagesDataSource = self
         messagesCollectionView.messagesLayoutDelegate = self
@@ -157,15 +158,26 @@ class ChatVC: MessagesViewController {
                 if let dict = data.value as? [String: Any] {
                     let msg = Message(dict: dict)
                     msg.sender = User(senderId: msg.senderId, displayName: msg.senderName)
-                    if msg.type == "image" {
-                        SDWebImageManager.shared.loadImage(with: URL(string: msg.downloadURL), options: .allowInvalidSSLCertificates) { int1, int2, int3 in
+                    if msg.type == IMAGE {
+                        SDWebImageManager.shared.loadImage(with: URL(string: msg.downloadURL),
+                                                           options: .allowInvalidSSLCertificates) { int1, int2, int3 in
                         } completed: { img, data, err, type, bool1, url in
                             msg.kind = .photo(Media(url: URL(string: msg.downloadURL)!, image: img!, placeholderImage: UIImage(named: "ic_pickimg")!, size: CGSize(width: 200, height: 200)))
                             self.arrMessage.append(msg)
                             self.messagesCollectionView.insertSections([self.arrMessage.count - 1])
                             self.messagesCollectionView.scrollToLastItem()
                         }
-                    } else {
+                    } else if msg.type == VIDEO {
+                        // LUU ANH THUMBNAIL CUA VIDEO VAO CACHE
+                        SDWebImageManager.shared.loadImage(with: URL(string: msg.thumbnailDownloadURL),
+                                                           options: .allowInvalidSSLCertificates) { int1, int2, int3 in
+                        } completed: { img, data, err, type, bool1, url in
+                            msg.kind = .photo(Media(url: URL(string: msg.thumbnailDownloadURL)!, image: img!, placeholderImage: UIImage(named: "ic_pickimg")!, size: CGSize(width: 200, height: 200)))
+                            self.arrMessage.append(msg)
+                            self.messagesCollectionView.insertSections([self.arrMessage.count - 1])
+                            self.messagesCollectionView.scrollToLastItem()
+                        }
+                    } else if msg.type == TEXT {
                         msg.kind = .text(msg.textContent)
                         self.arrMessage.append(msg)
                         self.messagesCollectionView.insertSections([self.arrMessage.count - 1])
@@ -238,6 +250,8 @@ class ChatVC: MessagesViewController {
     func handleEvent() {
         var config = YPImagePickerConfiguration()
         config.library.maxNumberOfItems = 3
+        config.screens = [.library, .photo, .video]
+        config.library.mediaType = .photoAndVideo
         imgPicker = YPImagePicker(configuration: config)
         
         btnPickImg.onSelected {_ in
@@ -245,10 +259,11 @@ class ChatVC: MessagesViewController {
                 for item in items {
                     switch item {
                     case .photo(let photo):
-                        self.uploadMediaItemToStorage(image: photo.image)
+                        self.uploadImageToStorage(image: photo.image)
                         
                     case .video(let video):
-                        print(video)
+                        self.thumbnailImg = self.generateThumbnail(url: video.url)!
+                        self.uploadVideoToStorage(file: video.url)
                     }
                 }
                 self.imgPicker.dismiss(animated: true, completion: nil)
@@ -257,7 +272,7 @@ class ChatVC: MessagesViewController {
         }
     }
     
-    func uploadMediaItemToStorage(image: UIImage){
+    func uploadImageToStorage(image: UIImage) {
         var downloadURl = ""
         let storageRef = Storage.storage().reference()
         
@@ -265,11 +280,14 @@ class ChatVC: MessagesViewController {
         let imgName = date
         
         let data = image.jpegData(compressionQuality: 0.3)
-        // DUONG DAN CHO THU MUC CHUA AVATAR
+        // DUONG DAN CHO THU MUC CHUA IMAGE
         let imgStorageRef = storageRef
         let imgFolder = imgStorageRef.child(senderRoom).child(imgName)//-> DUONG DAN LUU AVATAR
         
-        imgFolder.putData(data!, metadata: nil) { meta, err in
+        let metaData = StorageMetadata()
+        metaData.contentType = "image/jpeg"
+        
+        imgFolder.putData(data!, metadata: metaData) { meta, err in
             if err != nil {
                 return
             } else {
@@ -284,10 +302,12 @@ class ChatVC: MessagesViewController {
                                           senderId: self.currUser!.senderId,
                                           receiverId: self.otherUser!.senderId,
                                           strSentDate: date,
-                                          kind: .photo(Media(url: URL(string: "https://dantri.com.vn/")!, image: image, placeholderImage: image, size: CGSize(width: 200, height: 200))),
-                                          type: "image", textContent: "",
+                                          kind: .photo(Media(url: url!, image: image, placeholderImage: image, size: CGSize(width: 200, height: 200))),
+                                          type: IMAGE,
+                                          textContent: "",
                                           sentDate: self.currDate,
                                           downloadURL: "\(url!)",
+                                          thumbnailDownloadURL: "",
                                           isSeen: false)
                         
                         let val = ["messageId": msg.messageId,
@@ -298,6 +318,7 @@ class ChatVC: MessagesViewController {
                                    "type": msg.type,
                                    "textContent": msg.textContent,
                                    "downloadURL": msg.downloadURL,
+                                   "thumbnailDownloadURL": "",
                                    "isSeen": msg.isSeen] as [String : Any]
                         
                         self.dbRef.child("Messages").child(self.senderRoom).child(key!).setValue(val)
@@ -321,6 +342,127 @@ class ChatVC: MessagesViewController {
                 }
                 
             }
+        }
+    }
+    
+    func uploadVideoToStorage(file: URL) {
+        var thumbnailDownloadURl = ""
+        let storageRef = Storage.storage().reference()
+        
+        let date = Util.getStringFromDate(format: "YYYY,MM dd,HH:mm:ss", date: currDate)
+        let videoName = date
+        
+        let dataVideo = try! Data(contentsOf: file)
+        // DUONG DAN CHO THU MUC CHUA VIDEO
+        let videoStorageRef = storageRef
+        let videoSpecificPath = videoStorageRef.child(senderRoom).child("Video \(date)").child(videoName)
+        
+        let metaDataVideo = StorageMetadata()
+        metaDataVideo.contentType = "video/mp4"
+        
+        let dataThumbnail = thumbnailImg.jpegData(compressionQuality: 0.3)
+        let meteDataThumbnail = StorageMetadata()
+        meteDataThumbnail.contentType = "image/jpeg"
+        
+        let thumbnailImageSpecificPath = videoStorageRef.child(senderRoom).child("Video \(date)").child("thumbnail")
+        
+        thumbnailImageSpecificPath.putData(dataThumbnail!, metadata: meteDataThumbnail) { meta, err in
+            if err != nil {
+                print(err?.localizedDescription)
+            } else {
+                thumbnailImageSpecificPath.downloadURL { url, err in
+                    if err != nil {
+                        print(err?.localizedDescription)
+                    } else {
+                        thumbnailDownloadURl = "\(url!)"
+                    }
+                }
+            }
+        }
+        
+        videoSpecificPath.putData(dataVideo, metadata: metaDataVideo) { meta, err in
+            if err != nil {
+                return
+            } else {
+                videoSpecificPath.downloadURL { url, err in
+                    if err != nil {
+                        return
+                    } else {
+                        // POST DATA
+                        let key = self.dbRef.childByAutoId().key
+                        let msg = Message(sender: self.currUser!,
+                                          messageId: key!,
+                                          senderId: self.currUser!.senderId,
+                                          receiverId: self.otherUser!.senderId,
+                                          strSentDate: date,
+                                          kind: .video(Media(url: url!, image: UIImage(named: "img_video_placeholder")!, placeholderImage: UIImage(named: "img_video_placeholder")!, size: CGSize(width: 200, height: 200))),
+                                          type: VIDEO,
+                                          textContent: "",
+                                          sentDate: self.currDate,
+                                          downloadURL: "\(url!)",
+                                          thumbnailDownloadURL: thumbnailDownloadURl,
+                                          isSeen: false)
+                        
+                        let val = ["messageId": msg.messageId,
+                                   "senderId": msg.senderId,
+                                   "senderName": self.currUser?.displayName,
+                                   "receiverId": msg.receiverId,
+                                   "strSentDate": msg.strSentDate,
+                                   "type": msg.type,
+                                   "textContent": msg.textContent,
+                                   "downloadURL": msg.downloadURL,
+                                   "thumbnailDownloadURL": msg.thumbnailDownloadURL,
+                                   "isSeen": msg.isSeen] as [String : Any]
+                        
+                        self.dbRef.child("Messages").child(self.senderRoom).child(key!).setValue(val)
+                        self.dbRef.child("Messages").child(self.receiverRoom).child(key!).setValue(val)
+                        
+                        
+                        self.dbRef.child("Users").child(self.currUser!.senderId).removeAllObservers()
+                        self.dbRef.child("Users").child(self.otherUser!.senderId).removeAllObservers()
+                        
+                        self.delegate?.removeAllUser()
+                        
+                        let dictTimeStamp = ["timeStamp": NSDate().timeIntervalSince1970]
+                        self.dbRef.child("Users").child(self.currUser!.senderId).updateChildValues(dictTimeStamp)
+                        self.dbRef.child("Users").child(self.otherUser!.senderId).updateChildValues(dictTimeStamp)
+                        
+                        self.messageInputBar.inputTextView.text = ""
+                        
+                        self.delegate?.reloadUserList()
+                    }
+                }
+            }
+        }
+    }
+    
+    func generateThumbnail(url: URL) -> UIImage? {
+        do {
+            let asset = AVURLAsset(url: url)
+            let imageGenerator = AVAssetImageGenerator(asset: asset)
+            imageGenerator.appliesPreferredTrackTransform = true
+            
+            let cgImage = try imageGenerator.copyCGImage(at: .zero,
+                                                         actualTime: nil)
+            
+            var thumbnailImage =  UIImage(cgImage: cgImage)
+            
+            // TAO NUT CONTINUE VIDEO CHO THUMBNAIL CHO VIDEO
+            let iconContinueVideo = UIImage(named: "ic_continue_video")
+            
+            UIGraphicsBeginImageContextWithOptions(thumbnailImage.size, false, 0.0)
+            thumbnailImage.draw(in: CGRect(x: 0, y: 0, width: thumbnailImage.size.width, height: thumbnailImage.size.height))
+            iconContinueVideo?.draw(in: CGRect(x: thumbnailImage.size.width / 2 - 70, y: thumbnailImage.size.height / 2 - 70, width: 150, height: 150))
+            
+            let newImg = UIGraphicsGetImageFromCurrentImageContext()
+            UIGraphicsEndImageContext()
+            
+            thumbnailImage = newImg!
+            
+            return thumbnailImage
+        } catch {
+            print(error.localizedDescription)
+            return nil
         }
     }
 }
@@ -388,15 +530,6 @@ extension ChatVC : MessagesDataSource, MessagesLayoutDelegate, MessagesDisplayDe
                 attributes: [NSAttributedString.Key.font: UIFont.preferredFont(forTextStyle: .caption2)])
         }
     }
-    
-    //    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-    //        let msg = arrMessage[indexPath.section]
-    //        if  msg.type == "image" {
-    //            let vc = MediaViewVC(nibName: "MediaViewVC", bundle: nil)
-    //            vc.mediaView.sd_setImage(with: URL(string: msg.downloadURL))
-    //            navigationController?.pushViewController(vc, animated: true)
-    //        }
-    //    }
 }
 
 extension ChatVC : InputBarAccessoryViewDelegate {
@@ -415,6 +548,7 @@ extension ChatVC : InputBarAccessoryViewDelegate {
                           textContent: text,
                           sentDate: currDate,
                           downloadURL: "",
+                          thumbnailDownloadURL: "",
                           isSeen: false)
         
         let val = ["messageId": msg.messageId,
@@ -425,6 +559,7 @@ extension ChatVC : InputBarAccessoryViewDelegate {
                    "type": msg.type,
                    "textContent": msg.textContent,
                    "downloadURL": msg.downloadURL,
+                   "thumbnailDownloadURL": msg.thumbnailDownloadURL,
                    "isSeen": msg.isSeen] as [String : Any]
         
         dbRef.child("Messages").child(senderRoom).child(key!).setValue(val)
@@ -451,9 +586,16 @@ extension ChatVC : InputBarAccessoryViewDelegate {
 extension ChatVC : MessageCellDelegate {
     func didTapImage(in cell: MessageCollectionViewCell) {
         let indexPath = messagesCollectionView.indexPath(for: cell)
-        let vc = MediaViewVC(nibName: "MediaViewVC", bundle: nil)
-        vc.mediaView.sd_setImage(with: URL(string: "\(arrMessage[indexPath!.section].downloadURL)"))
-        navigationController?.pushViewController(vc, animated: true)
+        let msg = arrMessage[indexPath!.section]
+        if msg.type == IMAGE {
+            let vc = ImageViewVC(nibName: "ImageViewVC", bundle: nil)
+            vc.mediaView.sd_setImage(with: URL(string: "\(msg.downloadURL)"))
+            navigationController?.pushViewController(vc, animated: true)
+        } else if msg.type == VIDEO {
+            let vc = VideoViewVC(nibName: "VideoViewVC", bundle: nil)
+            vc.videoURL = msg.downloadURL
+            navigationController?.pushViewController(vc, animated: true)
+        }
     }
 }
 

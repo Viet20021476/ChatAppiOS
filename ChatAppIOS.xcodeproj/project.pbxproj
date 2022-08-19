@@ -26,8 +26,18 @@
 		02A8789628ABB26700C4CB2D /* EditInfoAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02A8789528ABB26700C4CB2D /* EditInfoAlert.swift */; };
 		02A8789A28AD0F0000C4CB2D /* YPImagePicker in Frameworks */ = {isa = PBXBuildFile; productRef = 02A8789928AD0F0000C4CB2D /* YPImagePicker */; };
 		02A8789C28AD228500C4CB2D /* Media.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02A8789B28AD228400C4CB2D /* Media.swift */; };
-		02A8789F28AD460800C4CB2D /* MediaViewVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02A8789D28AD460800C4CB2D /* MediaViewVC.swift */; };
-		02A878A028AD460800C4CB2D /* MediaViewVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 02A8789E28AD460800C4CB2D /* MediaViewVC.xib */; };
+		02A8789F28AD460800C4CB2D /* ImageViewVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02A8789D28AD460800C4CB2D /* ImageViewVC.swift */; };
+		02A878A028AD460800C4CB2D /* ImageViewVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 02A8789E28AD460800C4CB2D /* ImageViewVC.xib */; };
+		02A878AD28AE42F800C4CB2D /* VideoPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02A878AC28AE42F800C4CB2D /* VideoPlayer.swift */; };
+		02A878B228AE432F00C4CB2D /* PlayBackView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 02A878B028AE432F00C4CB2D /* PlayBackView.xib */; };
+		02A878B328AE432F00C4CB2D /* PlayBackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02A878B128AE432F00C4CB2D /* PlayBackView.swift */; };
+		02A878BB28AE447D00C4CB2D /* UIView+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02A878B728AE447D00C4CB2D /* UIView+Extensions.swift */; };
+		02A878BC28AE447D00C4CB2D /* AVPlayer+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02A878B828AE447D00C4CB2D /* AVPlayer+Extensions.swift */; };
+		02A878BD28AE447D00C4CB2D /* UIViewController+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02A878B928AE447D00C4CB2D /* UIViewController+Extensions.swift */; };
+		02A878BE28AE447D00C4CB2D /* CMTime+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02A878BA28AE447D00C4CB2D /* CMTime+Extensions.swift */; };
+		02A878BF28AE4E1400C4CB2D /* VideoPlayer.xib in Resources */ = {isa = PBXBuildFile; fileRef = 02A878AE28AE42FD00C4CB2D /* VideoPlayer.xib */; };
+		02A878C228AE5CC900C4CB2D /* VideoViewVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02A878C028AE5CC900C4CB2D /* VideoViewVC.swift */; };
+		02A878C328AE5CC900C4CB2D /* VideoViewVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 02A878C128AE5CC900C4CB2D /* VideoViewVC.xib */; };
 		02C7915D28A53D4800E3EE7B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02C7915C28A53D4800E3EE7B /* AppDelegate.swift */; };
 		02C7915F28A53D4800E3EE7B /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02C7915E28A53D4800E3EE7B /* SceneDelegate.swift */; };
 		02C7916428A53D4800E3EE7B /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 02C7916228A53D4800E3EE7B /* Main.storyboard */; };
@@ -67,8 +77,18 @@
 		02A8789328AB902200C4CB2D /* InfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoView.swift; sourceTree = "<group>"; };
 		02A8789528ABB26700C4CB2D /* EditInfoAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditInfoAlert.swift; sourceTree = "<group>"; };
 		02A8789B28AD228400C4CB2D /* Media.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Media.swift; sourceTree = "<group>"; };
-		02A8789D28AD460800C4CB2D /* MediaViewVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaViewVC.swift; sourceTree = "<group>"; };
-		02A8789E28AD460800C4CB2D /* MediaViewVC.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MediaViewVC.xib; sourceTree = "<group>"; };
+		02A8789D28AD460800C4CB2D /* ImageViewVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageViewVC.swift; sourceTree = "<group>"; };
+		02A8789E28AD460800C4CB2D /* ImageViewVC.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ImageViewVC.xib; sourceTree = "<group>"; };
+		02A878AC28AE42F800C4CB2D /* VideoPlayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoPlayer.swift; sourceTree = "<group>"; };
+		02A878AE28AE42FD00C4CB2D /* VideoPlayer.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = VideoPlayer.xib; sourceTree = "<group>"; };
+		02A878B028AE432F00C4CB2D /* PlayBackView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PlayBackView.xib; sourceTree = "<group>"; };
+		02A878B128AE432F00C4CB2D /* PlayBackView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayBackView.swift; sourceTree = "<group>"; };
+		02A878B728AE447D00C4CB2D /* UIView+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIView+Extensions.swift"; sourceTree = "<group>"; };
+		02A878B828AE447D00C4CB2D /* AVPlayer+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "AVPlayer+Extensions.swift"; sourceTree = "<group>"; };
+		02A878B928AE447D00C4CB2D /* UIViewController+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIViewController+Extensions.swift"; sourceTree = "<group>"; };
+		02A878BA28AE447D00C4CB2D /* CMTime+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CMTime+Extensions.swift"; sourceTree = "<group>"; };
+		02A878C028AE5CC900C4CB2D /* VideoViewVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoViewVC.swift; sourceTree = "<group>"; };
+		02A878C128AE5CC900C4CB2D /* VideoViewVC.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = VideoViewVC.xib; sourceTree = "<group>"; };
 		02C7915928A53D4800E3EE7B /* ChatAppIOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ChatAppIOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		02C7915C28A53D4800E3EE7B /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		02C7915E28A53D4800E3EE7B /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -126,6 +146,35 @@
 			path = Utility;
 			sourceTree = "<group>";
 		};
+		02A878AB28AE42E700C4CB2D /* VideoPlayer */ = {
+			isa = PBXGroup;
+			children = (
+				02A878AE28AE42FD00C4CB2D /* VideoPlayer.xib */,
+				02A878AC28AE42F800C4CB2D /* VideoPlayer.swift */,
+			);
+			path = VideoPlayer;
+			sourceTree = "<group>";
+		};
+		02A878AF28AE431400C4CB2D /* PlayBack */ = {
+			isa = PBXGroup;
+			children = (
+				02A878B128AE432F00C4CB2D /* PlayBackView.swift */,
+				02A878B028AE432F00C4CB2D /* PlayBackView.xib */,
+			);
+			path = PlayBack;
+			sourceTree = "<group>";
+		};
+		02A878B628AE446A00C4CB2D /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				02A878B828AE447D00C4CB2D /* AVPlayer+Extensions.swift */,
+				02A878BA28AE447D00C4CB2D /* CMTime+Extensions.swift */,
+				02A878B728AE447D00C4CB2D /* UIView+Extensions.swift */,
+				02A878B928AE447D00C4CB2D /* UIViewController+Extensions.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
 		02C7915028A53D4800E3EE7B = {
 			isa = PBXGroup;
 			children = (
@@ -145,6 +194,9 @@
 		02C7915B28A53D4800E3EE7B /* ChatAppIOS */ = {
 			isa = PBXGroup;
 			children = (
+				02A878B628AE446A00C4CB2D /* Extensions */,
+				02A878AF28AE431400C4CB2D /* PlayBack */,
+				02A878AB28AE42E700C4CB2D /* VideoPlayer */,
 				02A8789028AB887C00C4CB2D /* Utility */,
 				02280D3428A60420008EA27A /* Cell */,
 				02C7918128A53F3100E3EE7B /* Resources */,
@@ -196,8 +248,10 @@
 				02A8788C28AAA73F00C4CB2D /* ProfileVC.swift */,
 				02A8788D28AAA73F00C4CB2D /* ProfileVC.xib */,
 				02A8789528ABB26700C4CB2D /* EditInfoAlert.swift */,
-				02A8789D28AD460800C4CB2D /* MediaViewVC.swift */,
-				02A8789E28AD460800C4CB2D /* MediaViewVC.xib */,
+				02A8789D28AD460800C4CB2D /* ImageViewVC.swift */,
+				02A8789E28AD460800C4CB2D /* ImageViewVC.xib */,
+				02A878C028AE5CC900C4CB2D /* VideoViewVC.swift */,
+				02A878C128AE5CC900C4CB2D /* VideoViewVC.xib */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -304,13 +358,16 @@
 			files = (
 				02C7916928A53D4800E3EE7B /* LaunchScreen.storyboard in Resources */,
 				02A8788F28AAA73F00C4CB2D /* ProfileVC.xib in Resources */,
-				02A878A028AD460800C4CB2D /* MediaViewVC.xib in Resources */,
+				02A878A028AD460800C4CB2D /* ImageViewVC.xib in Resources */,
 				02C791A128A5608500E3EE7B /* GoogleService-Info.plist in Resources */,
+				02A878C328AE5CC900C4CB2D /* VideoViewVC.xib in Resources */,
 				02280D4928A780AC008EA27A /* Todo in Resources */,
 				02280D3F28A64872008EA27A /* ChatVC.xib in Resources */,
 				02280D3828A60443008EA27A /* UserCell.xib in Resources */,
 				02280D3128A5F112008EA27A /* HomeVC.xib in Resources */,
+				02A878BF28AE4E1400C4CB2D /* VideoPlayer.xib in Resources */,
 				02C7916628A53D4800E3EE7B /* Assets.xcassets in Resources */,
+				02A878B228AE432F00C4CB2D /* PlayBackView.xib in Resources */,
 				02C7916428A53D4800E3EE7B /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -324,10 +381,16 @@
 			files = (
 				02A8789C28AD228500C4CB2D /* Media.swift in Sources */,
 				02A8788E28AAA73F00C4CB2D /* ProfileVC.swift in Sources */,
+				02A878BB28AE447D00C4CB2D /* UIView+Extensions.swift in Sources */,
 				02C7918928A5405A00E3EE7B /* InitialScreenVC.swift in Sources */,
 				02280D3028A5F112008EA27A /* HomeVC.swift in Sources */,
 				02A8789228AB888C00C4CB2D /* Util.swift in Sources */,
 				02A8789428AB902200C4CB2D /* InfoView.swift in Sources */,
+				02A878BE28AE447D00C4CB2D /* CMTime+Extensions.swift in Sources */,
+				02A878B328AE432F00C4CB2D /* PlayBackView.swift in Sources */,
+				02A878BC28AE447D00C4CB2D /* AVPlayer+Extensions.swift in Sources */,
+				02A878C228AE5CC900C4CB2D /* VideoViewVC.swift in Sources */,
+				02A878AD28AE42F800C4CB2D /* VideoPlayer.swift in Sources */,
 				02C7918D28A5442000E3EE7B /* LoginVC.swift in Sources */,
 				02C7918428A53F8800E3EE7B /* BaseViewController.swift in Sources */,
 				02C791AC28A565DA00E3EE7B /* ForgotPasswordVC.swift in Sources */,
@@ -338,7 +401,8 @@
 				02280D3728A60443008EA27A /* UserCell.swift in Sources */,
 				02280D3328A5F420008EA27A /* Constant.swift in Sources */,
 				02C7915D28A53D4800E3EE7B /* AppDelegate.swift in Sources */,
-				02A8789F28AD460800C4CB2D /* MediaViewVC.swift in Sources */,
+				02A878BD28AE447D00C4CB2D /* UIViewController+Extensions.swift in Sources */,
+				02A8789F28AD460800C4CB2D /* ImageViewVC.swift in Sources */,
 				02280D3E28A64872008EA27A /* ChatVC.swift in Sources */,
 				02C7915F28A53D4800E3EE7B /* SceneDelegate.swift in Sources */,
 				02280D4428A64A12008EA27A /* Message.swift in Sources */,

@@ -29,7 +29,7 @@ class HomeVC: BaseViewController {
         ivBack.isHidden = true
         setupViews()
         getData()
-                
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -155,9 +155,21 @@ extension HomeVC : UITableViewDelegate, UITableViewDataSource {
                 let dict = data.value as? [String: Any]
                 let msg = Message(dict: dict!)
                 if msg.senderId == self.currUser?.senderId {
-                    cell.lbLastMsg.text = "You: \(msg.textContent)"
+                    if msg.type == IMAGE {
+                        cell.lbLastMsg.text = "You: Sent an image"
+                    } else if msg.type == VIDEO {
+                        cell.lbLastMsg.text = "You: Sent a video"
+                    } else {
+                        cell.lbLastMsg.text = "You: \(msg.textContent)"
+                    }
                 } else {
-                    cell.lbLastMsg.text = msg.textContent
+                    if msg.type == IMAGE {
+                        cell.lbLastMsg.text = "Sent an image"
+                    } else if msg.type == VIDEO {
+                        cell.lbLastMsg.text = "Sent a video"
+                    } else {
+                        cell.lbLastMsg.text = msg.textContent
+                    }
                 }
             }
             self.stopAnimating()
