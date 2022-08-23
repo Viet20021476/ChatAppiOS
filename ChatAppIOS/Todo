@@ -2,12 +2,23 @@
 
 - Seen tin nhắn -> chưa real time, phải thoát ra vào lại mới check được seen chưa
 - Dấu chấm xanh, chữ đậm khi chưa đọc
-- Loading khi gửi ảnh
-- Zoom image
+- Loading khi mới vào đoạn chat
+- Audio, location message -> Basically done
+- Notification
+- Send friend request
 
 
 
 -Problem:
 + Khi đăng ký xong load lần đầu không hiện indicator
+
 + Chưa hide keyboard được trong chatVC
+
 + Thứ tự hiển thị tin nhắn chưa đúng, tin nhắn text ở trên tin nhắn image, video -> Có thể do image, video cần thời gian để load??
+    -> Solution: add message -> sort array by sent date -> reload data => works but costly??
+    
++ Gửi nhiều ảnh/video 1 lúc thứ tự gửi có thể sai tuỳ thuộc vào size ảnh/video
+
++ Vị trí của mình có thể chưa chính xác, test trên điện thoại thật?
+    
+    

@@ -2,14 +2,18 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string></string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string></string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
-	<string>Chat app want to access you photo gallery to save image</string>
+	<string></string>
 	<key>NSMicrophoneUsageDescription</key>
-	<string>Chat app want to access you photo gallery</string>
+	<string></string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Chat app want to access you photo gallery</string>
+	<string></string>
 	<key>NSCameraUsageDescription</key>
-	<string>Chat app want to access you photo gallery</string>
+	<string></string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>

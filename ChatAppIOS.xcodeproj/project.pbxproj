@@ -19,6 +19,11 @@
 		02280D4428A64A12008EA27A /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02280D4328A64A12008EA27A /* Message.swift */; };
 		02280D4728A65F23008EA27A /* InputBarAccessoryView in Frameworks */ = {isa = PBXBuildFile; productRef = 02280D4628A65F23008EA27A /* InputBarAccessoryView */; };
 		02280D4928A780AC008EA27A /* Todo in Resources */ = {isa = PBXBuildFile; fileRef = 02280D4828A780AC008EA27A /* Todo */; };
+		027B0AC728B3815500512DC5 /* Location.swift in Sources */ = {isa = PBXBuildFile; fileRef = 027B0AC628B3815500512DC5 /* Location.swift */; };
+		027B0AC928B3824E00512DC5 /* LocationPickerVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 027B0AC828B3824E00512DC5 /* LocationPickerVC.swift */; };
+		027B0ACC28B3D71200512DC5 /* AudioRecorderVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 027B0ACA28B3D71200512DC5 /* AudioRecorderVC.swift */; };
+		027B0ACF28B48BB300512DC5 /* Audio.swift in Sources */ = {isa = PBXBuildFile; fileRef = 027B0ACE28B48BB300512DC5 /* Audio.swift */; };
+		027B0AD128B4A72100512DC5 /* AudioController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 027B0AD028B4A72100512DC5 /* AudioController.swift */; };
 		02A8788E28AAA73F00C4CB2D /* ProfileVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02A8788C28AAA73F00C4CB2D /* ProfileVC.swift */; };
 		02A8788F28AAA73F00C4CB2D /* ProfileVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 02A8788D28AAA73F00C4CB2D /* ProfileVC.xib */; };
 		02A8789228AB888C00C4CB2D /* Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02A8789128AB888C00C4CB2D /* Util.swift */; };
@@ -71,6 +76,11 @@
 		02280D3D28A64872008EA27A /* ChatVC.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ChatVC.xib; sourceTree = "<group>"; };
 		02280D4328A64A12008EA27A /* Message.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
 		02280D4828A780AC008EA27A /* Todo */ = {isa = PBXFileReference; lastKnownFileType = text; path = Todo; sourceTree = "<group>"; };
+		027B0AC628B3815500512DC5 /* Location.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Location.swift; sourceTree = "<group>"; };
+		027B0AC828B3824E00512DC5 /* LocationPickerVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationPickerVC.swift; sourceTree = "<group>"; };
+		027B0ACA28B3D71200512DC5 /* AudioRecorderVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioRecorderVC.swift; sourceTree = "<group>"; };
+		027B0ACE28B48BB300512DC5 /* Audio.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Audio.swift; sourceTree = "<group>"; };
+		027B0AD028B4A72100512DC5 /* AudioController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioController.swift; sourceTree = "<group>"; };
 		02A8788C28AAA73F00C4CB2D /* ProfileVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileVC.swift; sourceTree = "<group>"; };
 		02A8788D28AAA73F00C4CB2D /* ProfileVC.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ProfileVC.xib; sourceTree = "<group>"; };
 		02A8789128AB888C00C4CB2D /* Util.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Util.swift; sourceTree = "<group>"; };
@@ -138,6 +148,14 @@
 			path = Cell;
 			sourceTree = "<group>";
 		};
+		027B0AD228B4D38700512DC5 /* AudioController */ = {
+			isa = PBXGroup;
+			children = (
+				027B0AD028B4A72100512DC5 /* AudioController.swift */,
+			);
+			path = AudioController;
+			sourceTree = "<group>";
+		};
 		02A8789028AB887C00C4CB2D /* Utility */ = {
 			isa = PBXGroup;
 			children = (
@@ -194,6 +212,7 @@
 		02C7915B28A53D4800E3EE7B /* ChatAppIOS */ = {
 			isa = PBXGroup;
 			children = (
+				027B0AD228B4D38700512DC5 /* AudioController */,
 				02A878B628AE446A00C4CB2D /* Extensions */,
 				02A878AF28AE431400C4CB2D /* PlayBack */,
 				02A878AB28AE42E700C4CB2D /* VideoPlayer */,
@@ -221,6 +240,8 @@
 				02C7919C28A55D8C00E3EE7B /* User.swift */,
 				02280D4328A64A12008EA27A /* Message.swift */,
 				02A8789B28AD228400C4CB2D /* Media.swift */,
+				027B0AC628B3815500512DC5 /* Location.swift */,
+				027B0ACE28B48BB300512DC5 /* Audio.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -228,6 +249,11 @@
 		02C7917128A53D5E00E3EE7B /* View */ = {
 			isa = PBXGroup;
 			children = (
+				02280D2F28A5F112008EA27A /* HomeVC.xib */,
+				02280D3D28A64872008EA27A /* ChatVC.xib */,
+				02A8788D28AAA73F00C4CB2D /* ProfileVC.xib */,
+				02A8789E28AD460800C4CB2D /* ImageViewVC.xib */,
+				02A878C128AE5CC900C4CB2D /* VideoViewVC.xib */,
 				02C7916228A53D4800E3EE7B /* Main.storyboard */,
 			);
 			path = View;
@@ -242,16 +268,13 @@
 				02C7918C28A5442000E3EE7B /* LoginVC.swift */,
 				02C791AB28A565DA00E3EE7B /* ForgotPasswordVC.swift */,
 				02280D2E28A5F112008EA27A /* HomeVC.swift */,
-				02280D2F28A5F112008EA27A /* HomeVC.xib */,
 				02280D3C28A64872008EA27A /* ChatVC.swift */,
-				02280D3D28A64872008EA27A /* ChatVC.xib */,
 				02A8788C28AAA73F00C4CB2D /* ProfileVC.swift */,
-				02A8788D28AAA73F00C4CB2D /* ProfileVC.xib */,
 				02A8789528ABB26700C4CB2D /* EditInfoAlert.swift */,
 				02A8789D28AD460800C4CB2D /* ImageViewVC.swift */,
-				02A8789E28AD460800C4CB2D /* ImageViewVC.xib */,
 				02A878C028AE5CC900C4CB2D /* VideoViewVC.swift */,
-				02A878C128AE5CC900C4CB2D /* VideoViewVC.xib */,
+				027B0AC828B3824E00512DC5 /* LocationPickerVC.swift */,
+				027B0ACA28B3D71200512DC5 /* AudioRecorderVC.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -385,19 +408,24 @@
 				02C7918928A5405A00E3EE7B /* InitialScreenVC.swift in Sources */,
 				02280D3028A5F112008EA27A /* HomeVC.swift in Sources */,
 				02A8789228AB888C00C4CB2D /* Util.swift in Sources */,
+				027B0AC928B3824E00512DC5 /* LocationPickerVC.swift in Sources */,
+				027B0AC728B3815500512DC5 /* Location.swift in Sources */,
 				02A8789428AB902200C4CB2D /* InfoView.swift in Sources */,
 				02A878BE28AE447D00C4CB2D /* CMTime+Extensions.swift in Sources */,
 				02A878B328AE432F00C4CB2D /* PlayBackView.swift in Sources */,
 				02A878BC28AE447D00C4CB2D /* AVPlayer+Extensions.swift in Sources */,
 				02A878C228AE5CC900C4CB2D /* VideoViewVC.swift in Sources */,
+				027B0AD128B4A72100512DC5 /* AudioController.swift in Sources */,
 				02A878AD28AE42F800C4CB2D /* VideoPlayer.swift in Sources */,
 				02C7918D28A5442000E3EE7B /* LoginVC.swift in Sources */,
 				02C7918428A53F8800E3EE7B /* BaseViewController.swift in Sources */,
 				02C791AC28A565DA00E3EE7B /* ForgotPasswordVC.swift in Sources */,
 				02C7918B28A5441500E3EE7B /* RegisterVC.swift in Sources */,
 				02C7919D28A55D8C00E3EE7B /* User.swift in Sources */,
+				027B0ACF28B48BB300512DC5 /* Audio.swift in Sources */,
 				02A8789628ABB26700C4CB2D /* EditInfoAlert.swift in Sources */,
 				02C7918F28A5447E00E3EE7B /* InputView.swift in Sources */,
+				027B0ACC28B3D71200512DC5 /* AudioRecorderVC.swift in Sources */,
 				02280D3728A60443008EA27A /* UserCell.swift in Sources */,
 				02280D3328A5F420008EA27A /* Constant.swift in Sources */,
 				02C7915D28A53D4800E3EE7B /* AppDelegate.swift in Sources */,

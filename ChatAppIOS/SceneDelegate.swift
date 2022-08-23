@@ -7,11 +7,12 @@
 
 import UIKit
 import FirebaseDatabase
+import FirebaseAuth
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
     var window: UIWindow?
-    
+    var userDefault = UserDefaults()
     
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         // Use this method to optionally configure and attach the UIWindow `window` to the provided UIWindowScene `scene`.
@@ -26,6 +27,18 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let viewController = InitialScreenVC()
         let navViewController = UINavigationController(rootViewController: viewController)
         window?.rootViewController = navViewController
+        
+        if let info = userDefault.object(forKey: ACCOUNT) as? String {
+            let arrInfo = info.split(separator: " ")
+            let email = String(arrInfo[0])
+            let password = String(arrInfo[1])
+            
+            Auth.auth().signIn(withEmail: email, password: password)
+            
+            let homeVC = HomeVC(nibName: "HomeVC", bundle: nil)
+            navViewController.pushViewController(homeVC, animated: true)
+        } else {
+        }
     }
     
     func sceneDidDisconnect(_ scene: UIScene) {
@@ -46,9 +59,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     func sceneWillResignActive(_ scene: UIScene) {
         // Called when the scene will move from an active state to an inactive state.
         // This may occur due to temporary interruptions (ex. an incoming phone call).
-        Database.database().reference().child("Users").child(globalCurrUser!.senderId).child("beingInRoom").setValue("")
-        Database.database().reference().child("Users").child(globalCurrUser!.senderId).child("isOnline").setValue(false)
-        Database.database().reference().child("Users").child(globalCurrUser!.senderId).child("lastOnline").setValue(Util.getStringFromDate(format: "HH:mm:ss dd/MM/YYYY", date:Date()))
+        if let tGlobalCurrUser = globalCurrUser {
+            Database.database().reference().child("Users").child(tGlobalCurrUser.senderId).child("beingInRoom").setValue("")
+            Database.database().reference().child("Users").child(tGlobalCurrUser.senderId).child("isOnline").setValue(false)
+            Database.database().reference().child("Users").child(tGlobalCurrUser.senderId).child("lastOnline").setValue(Util.getStringFromDate(format: "HH:mm:ss dd/MM/YYYY", date:Date()))
+        }
     }
     
     func sceneWillEnterForeground(_ scene: UIScene) {

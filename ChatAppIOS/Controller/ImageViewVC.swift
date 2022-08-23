@@ -9,6 +9,7 @@ import UIKit
 
 class ImageViewVC: BaseViewController {
     
+    var scrollView = UIScrollView()
     var mediaView = UIImageView()
 
     override func viewDidLoad() {
@@ -21,15 +22,31 @@ class ImageViewVC: BaseViewController {
     
     func setupView() {
         ivBack.isHidden = true
-        view.addSubview(mediaView)
+
+        view.addSubview(scrollView)
+        scrollView.translatesAutoresizingMaskIntoConstraints = false
+        
+        scrollView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
+        scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
+        scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
+        scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+        
+        
+        
+        scrollView.addSubview(mediaView)
         mediaView.translatesAutoresizingMaskIntoConstraints = false
         
         mediaView.contentMode = .scaleAspectFit
         
-        mediaView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20).isActive = true
-        mediaView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
-        mediaView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
-        mediaView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -20).isActive = true
+        mediaView.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor).isActive = true
+        mediaView.centerYAnchor.constraint(equalTo: scrollView.centerYAnchor).isActive = true
+        mediaView.widthAnchor.constraint(equalToConstant: screenSize.width).isActive = true
+        mediaView.clipsToBounds = false
+        
+        scrollView.minimumZoomScale = 1.0
+        scrollView.maximumZoomScale = 4.0
+                
+        scrollView.delegate = self
     }
     
     func setupRightBarBtnItem() {
@@ -52,4 +69,10 @@ class ImageViewVC: BaseViewController {
         view.makeToast("Save image successfully")
     }
 
+}
+
+extension ImageViewVC : UIScrollViewDelegate {
+    func viewForZooming(in scrollView: UIScrollView) -> UIView? {
+        return mediaView
+    }
 }

@@ -7,6 +7,7 @@
 
 import UIKit
 import MessageKit
+import NVActivityIndicatorView
 import FirebaseAuth
 import FirebaseDatabase
 import FirebaseStorage
@@ -14,6 +15,7 @@ import InputBarAccessoryView
 import YPImagePicker
 import SDWebImage
 import AVFoundation
+import CoreLocation
 
 protocol ChatVCDelegate {
     func removeAllUser()
@@ -25,11 +27,15 @@ class ChatVC: MessagesViewController {
     
     var delegate: ChatVCDelegate?
     
+    let viewIndicator = UIView()
+    var loadingIndicator: NVActivityIndicatorView?
+    
     var titleLbName = UILabel()
     var titleImgOnOff = UIImageView()
     var titleLbOnOff = UILabel()
     
     let dbRef = Database.database().reference()
+    let storageRef = Storage.storage().reference()
     
     var currUser: User?
     var otherUser: User?
@@ -44,10 +50,15 @@ class ChatVC: MessagesViewController {
     
     var imgPicker = YPImagePicker()
     var btnPickImg = InputBarButtonItem()
+    var btnMoreChoice = InputBarButtonItem()
     
     let currDate = Date()
     var imageCache: SDImageCache = SDImageCache()
     var thumbnailImg = UIImage()
+    
+    let locationManager = CLLocationManager()
+    var audioController: AudioController?
+    var isPlayingSound = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -56,8 +67,10 @@ class ChatVC: MessagesViewController {
         navigationController?.navigationBar.isHidden = false
         UINavigationBar.appearance().titleTextAttributes = [NSAttributedString.Key.foregroundColor : UIColor.red ] // Title color
         
+        
         setupRightBarBtnItem()
         customInputView()
+        setupIndicator()
         
         senderRoom = "\(currUser?.senderId as! String)\(otherUser?.senderId as! String)"
         receiverRoom = "\(otherUser?.senderId as! String)\(currUser?.senderId as! String)"
@@ -70,6 +83,8 @@ class ChatVC: MessagesViewController {
         messagesCollectionView.messageCellDelegate = self
         
         messageInputBar.delegate = self
+        
+        audioController = AudioController(messageCollectionView: messagesCollectionView)
         
         dbRef.child("Users").child(currUser!.senderId).child("beingInRoom").setValue(senderRoom)
         dbRef.child("Users").child(currUser!.senderId).child("beingInRoom").observe(.value) { snapshot in
@@ -86,6 +101,24 @@ class ChatVC: MessagesViewController {
     override func viewDidDisappear(_ animated: Bool) {
         dbRef.child("Users").child(currUser!.senderId).child("beingInRoom").setValue("")
         currUser?.beingInRoom = ""
+    }
+    
+    func setupIndicator() {
+        viewIndicator.backgroundColor = .black.withAlphaComponent(0.6)
+        viewIndicator.layer.cornerRadius = 10
+        viewIndicator.layer.masksToBounds = true
+        view.addSubview(viewIndicator)
+        viewIndicator.translatesAutoresizingMaskIntoConstraints = false
+        viewIndicator.widthAnchor.constraint(equalToConstant: 60).isActive = true
+        viewIndicator.heightAnchor.constraint(equalToConstant: 60).isActive = true
+        viewIndicator.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        viewIndicator.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
+        viewIndicator.isHidden = true
+        
+        let frame = CGRect(x: 15, y: 15, width: 30, height: 30)
+        loadingIndicator = NVActivityIndicatorView(frame: frame, type: .lineScale, color: .white, padding: 0)
+        viewIndicator.addSubview(loadingIndicator!)
+        
     }
     
     func setupRightBarBtnItem() {
@@ -113,7 +146,7 @@ class ChatVC: MessagesViewController {
                 self.titleImgOnOff.image = UIImage(named: "gray_dot")
                 self.dbRef.child("Users").child(self.otherUser!.senderId).child("lastOnline").observe(.value) { snapshot in
                     let lastOn = snapshot.value as! String
-                    self.titleLbOnOff.text = "Offline, last online: \(lastOn)"
+                    self.titleLbOnOff.text = "Last online: \(lastOn)"
                 }
             }
         }
@@ -164,9 +197,15 @@ class ChatVC: MessagesViewController {
                         } completed: { img, data, err, type, bool1, url in
                             msg.kind = .photo(Media(url: URL(string: msg.downloadURL)!, image: img!, placeholderImage: UIImage(named: "ic_pickimg")!, size: CGSize(width: 200, height: 200)))
                             self.arrMessage.append(msg)
-                            self.messagesCollectionView.insertSections([self.arrMessage.count - 1])
+                            self.sortArrMsgBySentDate()
+                            self.messagesCollectionView.reloadData()
                             self.messagesCollectionView.scrollToLastItem()
+                            
+                            if self.arrMessage.count == self.numberOfMsg {
+                                self.stopAnimating()
+                            }
                         }
+                        
                     } else if msg.type == VIDEO {
                         // LUU ANH THUMBNAIL CUA VIDEO VAO CACHE
                         SDWebImageManager.shared.loadImage(with: URL(string: msg.thumbnailDownloadURL),
@@ -174,15 +213,37 @@ class ChatVC: MessagesViewController {
                         } completed: { img, data, err, type, bool1, url in
                             msg.kind = .photo(Media(url: URL(string: msg.thumbnailDownloadURL)!, image: img!, placeholderImage: UIImage(named: "ic_pickimg")!, size: CGSize(width: 200, height: 200)))
                             self.arrMessage.append(msg)
-                            self.messagesCollectionView.insertSections([self.arrMessage.count - 1])
+                            self.sortArrMsgBySentDate()
+                            self.messagesCollectionView.reloadData()
                             self.messagesCollectionView.scrollToLastItem()
+                            
+                            if self.arrMessage.count == self.numberOfMsg {
+                                self.stopAnimating()
+                            }
                         }
+                    } else if msg.type == LOCATION {
+                        let arrCoordinates = msg.location.split(separator: " ")
+                        let latitude = Double(arrCoordinates[0])!
+                        let longitude = Double(arrCoordinates[1])!
+                        msg.kind = .location(Location(location: CLLocation(latitude: latitude, longitude: longitude), size: CGSize(width: 200, height: 200)))
+                        self.arrMessage.append(msg)
+                        self.sortArrMsgBySentDate()
+                        self.messagesCollectionView.reloadData()
+                        self.messagesCollectionView.scrollToLastItem()
+                    } else if msg.type == AUDIO {
+                        msg.kind = .audio(Audio(url: URL(string: msg.downloadURL)!, duration: 10, size: CGSize(width: 200, height: 30)))
+                        self.arrMessage.append(msg)
+                        self.sortArrMsgBySentDate()
+                        self.messagesCollectionView.reloadData()
+                        self.messagesCollectionView.scrollToLastItem()
                     } else if msg.type == TEXT {
                         msg.kind = .text(msg.textContent)
                         self.arrMessage.append(msg)
-                        self.messagesCollectionView.insertSections([self.arrMessage.count - 1])
+                        self.sortArrMsgBySentDate()
+                        self.messagesCollectionView.reloadData()
                         self.messagesCollectionView.scrollToLastItem()
                     }
+                    
                     if msg.receiverId == self.currUser?.senderId && self.currUser!.beingInRoom != "" {
                         msg.isSeen = true
                         self.dbRef.child("Messages").child(self.senderRoom).child(msg.messageId).child("isSeen").setValue(true)
@@ -229,12 +290,14 @@ class ChatVC: MessagesViewController {
         messageInputBar.sendButton.imageView?.layer.cornerRadius = 10
         messageInputBar.sendButton.backgroundColor = .clear
         
-        messageInputBar.middleContentViewPadding = UIEdgeInsets(top: 0, left: 15, bottom: 0, right: 0)
+        messageInputBar.middleContentViewPadding = UIEdgeInsets(top: 0, left: 5, bottom: 0, right: 0)
         
         btnPickImg = makeButton(image: UIImage(named: "ic_pickimg")!)
-        let items = [btnPickImg]
+        btnMoreChoice = makeButton(image: UIImage(named: "4dots")!)
         
-        messageInputBar.setLeftStackViewWidthConstant(to: 40, animated: true)
+        let items = [btnMoreChoice, btnPickImg]
+        
+        messageInputBar.setLeftStackViewWidthConstant(to: 80, animated: true)
         messageInputBar.setStackViewItems(items, forStack: .left, animated: true)
     }
     
@@ -259,9 +322,11 @@ class ChatVC: MessagesViewController {
                 for item in items {
                     switch item {
                     case .photo(let photo):
+                        self.startAnimating()
                         self.uploadImageToStorage(image: photo.image)
                         
                     case .video(let video):
+                        self.startAnimating()
                         self.thumbnailImg = self.generateThumbnail(url: video.url)!
                         self.uploadVideoToStorage(file: video.url)
                     }
@@ -270,14 +335,47 @@ class ChatVC: MessagesViewController {
             }
             self.present(self.imgPicker, animated: true, completion: nil)
         }
+        
+        btnMoreChoice.onSelected { _ in
+            let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+            let actionLocation = UIAlertAction(title: "Location", style: .default) { ac in
+                // Ask for Authorisation from the User.
+                if self.locationManager.authorizationStatus == .notDetermined {
+                    self.locationManager.requestAlwaysAuthorization()
+                    // For use in foreground
+                    self.locationManager.requestWhenInUseAuthorization()
+                    
+                } else if self.locationManager.authorizationStatus == .denied {
+                    self.requestAccessToLocationAgain()
+                    return
+                }
+                
+                
+                if CLLocationManager.locationServicesEnabled() {
+                    self.locationManager.delegate = self
+                    self.locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
+                    self.locationManager.startUpdatingLocation()
+                }
+            }
+            let actionAudio = UIAlertAction(title: "Audio", style: .default) { ac in
+                let vc = AudioRecorderVC()
+                vc.delegate = self
+                self.navigationController?.pushViewController(vc, animated: true)
+            }
+            let actionCancel = UIAlertAction(title: "Cancel", style: .cancel)
+            
+            alert.addAction(actionLocation)
+            alert.addAction(actionAudio)
+            alert.addAction(actionCancel)
+            
+            self.present(alert, animated: true)
+        }
     }
     
     func uploadImageToStorage(image: UIImage) {
-        var downloadURl = ""
-        let storageRef = Storage.storage().reference()
         
         let date = Util.getStringFromDate(format: "YYYY,MM dd,HH:mm:ss", date: currDate)
-        let imgName = date
+        let imgName = "\(date) \(UUID().uuidString)"
         
         let data = image.jpegData(compressionQuality: 0.3)
         // DUONG DAN CHO THU MUC CHUA IMAGE
@@ -306,6 +404,7 @@ class ChatVC: MessagesViewController {
                                           type: IMAGE,
                                           textContent: "",
                                           sentDate: self.currDate,
+                                          location: "",
                                           downloadURL: "\(url!)",
                                           thumbnailDownloadURL: "",
                                           isSeen: false)
@@ -317,6 +416,7 @@ class ChatVC: MessagesViewController {
                                    "strSentDate": msg.strSentDate,
                                    "type": msg.type,
                                    "textContent": msg.textContent,
+                                   "location": msg.location,
                                    "downloadURL": msg.downloadURL,
                                    "thumbnailDownloadURL": "",
                                    "isSeen": msg.isSeen] as [String : Any]
@@ -337,7 +437,6 @@ class ChatVC: MessagesViewController {
                         self.messageInputBar.inputTextView.text = ""
                         
                         self.delegate?.reloadUserList()
-                        downloadURl = "\(url!)"
                     }
                 }
                 
@@ -347,15 +446,15 @@ class ChatVC: MessagesViewController {
     
     func uploadVideoToStorage(file: URL) {
         var thumbnailDownloadURl = ""
-        let storageRef = Storage.storage().reference()
         
         let date = Util.getStringFromDate(format: "YYYY,MM dd,HH:mm:ss", date: currDate)
         let videoName = date
+        let randomUUID = UUID().uuidString
         
         let dataVideo = try! Data(contentsOf: file)
         // DUONG DAN CHO THU MUC CHUA VIDEO
         let videoStorageRef = storageRef
-        let videoSpecificPath = videoStorageRef.child(senderRoom).child("Video \(date)").child(videoName)
+        let videoSpecificPath = videoStorageRef.child(senderRoom).child("Video \(randomUUID)").child(videoName)
         
         let metaDataVideo = StorageMetadata()
         metaDataVideo.contentType = "video/mp4"
@@ -364,7 +463,7 @@ class ChatVC: MessagesViewController {
         let meteDataThumbnail = StorageMetadata()
         meteDataThumbnail.contentType = "image/jpeg"
         
-        let thumbnailImageSpecificPath = videoStorageRef.child(senderRoom).child("Video \(date)").child("thumbnail")
+        let thumbnailImageSpecificPath = videoStorageRef.child(senderRoom).child("Video \(randomUUID)").child("thumbnail")
         
         thumbnailImageSpecificPath.putData(dataThumbnail!, metadata: meteDataThumbnail) { meta, err in
             if err != nil {
@@ -399,6 +498,7 @@ class ChatVC: MessagesViewController {
                                           type: VIDEO,
                                           textContent: "",
                                           sentDate: self.currDate,
+                                          location: "",
                                           downloadURL: "\(url!)",
                                           thumbnailDownloadURL: thumbnailDownloadURl,
                                           isSeen: false)
@@ -410,6 +510,7 @@ class ChatVC: MessagesViewController {
                                    "strSentDate": msg.strSentDate,
                                    "type": msg.type,
                                    "textContent": msg.textContent,
+                                   "location": msg.location,
                                    "downloadURL": msg.downloadURL,
                                    "thumbnailDownloadURL": msg.thumbnailDownloadURL,
                                    "isSeen": msg.isSeen] as [String : Any]
@@ -464,6 +565,39 @@ class ChatVC: MessagesViewController {
             print(error.localizedDescription)
             return nil
         }
+    }
+    
+    func sortArrMsgBySentDate() {
+        arrMessage.sort { msg1, msg2 in
+            msg1.sentDate < msg2.sentDate
+        }
+    }
+    
+    func startAnimating() {
+        viewIndicator.isHidden = false
+        view.isUserInteractionEnabled = false
+        loadingIndicator?.startAnimating()
+    }
+    
+    func stopAnimating() {
+        viewIndicator.isHidden = true
+        view.isUserInteractionEnabled = true
+        loadingIndicator?.stopAnimating()
+    }
+    
+    func requestAccessToLocationAgain() {
+        let alert = UIAlertController(title: "Change your location authorization in the settings to send your location", message: nil, preferredStyle: .alert)
+        let actionOK = UIAlertAction(title: "OK", style: .default) { ac in
+            if let url = NSURL(string:UIApplication.openSettingsURLString) {
+                UIApplication.shared.openURL(url as URL)
+            }
+        }
+        let actionCancel = UIAlertAction(title: "Cancel", style: .default)
+        
+        alert.addAction(actionOK)
+        alert.addAction(actionCancel)
+        
+        present(alert, animated: true)
     }
 }
 
@@ -547,6 +681,7 @@ extension ChatVC : InputBarAccessoryViewDelegate {
                           type: MessageKind.text(text).msgKind,
                           textContent: text,
                           sentDate: currDate,
+                          location: "",
                           downloadURL: "",
                           thumbnailDownloadURL: "",
                           isSeen: false)
@@ -558,6 +693,7 @@ extension ChatVC : InputBarAccessoryViewDelegate {
                    "strSentDate": msg.strSentDate,
                    "type": msg.type,
                    "textContent": msg.textContent,
+                   "location": msg.location,
                    "downloadURL": msg.downloadURL,
                    "thumbnailDownloadURL": msg.thumbnailDownloadURL,
                    "isSeen": msg.isSeen] as [String : Any]
@@ -584,6 +720,42 @@ extension ChatVC : InputBarAccessoryViewDelegate {
 }
 
 extension ChatVC : MessageCellDelegate {
+    
+    func didTapMessage(in cell: MessageCollectionViewCell) {
+        let indexPath = messagesCollectionView.indexPath(for: cell)
+        let msg = arrMessage[indexPath!.section]
+        
+        
+        switch msg.kind {
+        case .location(let locationData):
+            let coordinates = locationData.location.coordinate
+            let vc = LocationPickerVC()
+            vc.coordinates = coordinates
+            vc.isPickable = false
+            vc.title = "Location"
+            
+            self.navigationController?.pushViewController(vc, animated: true)
+        case .audio(let audio):
+            if audioController?.state == .stopped {
+                audioController!.playSound(for: msg, in: cell as! AudioMessageCell)
+            } else if audioController?.state == .playing {
+                audioController?.pauseSound(for: msg, in: cell as! AudioMessageCell)
+            } else if audioController?.state == .pause {
+                audioController?.resumeSound()
+            }
+//            if !isPlayingSound  {
+//                audioController!.playSound(for: msg, in: cell as! AudioMessageCell)
+//                isPlayingSound = true
+//            } else {
+//                audioController?.pauseSound(for: msg, in: cell as! AudioMessageCell)
+//                isPlayingSound = false
+//            }
+
+        default:
+            print("do nothing")
+        }
+    }
+    
     func didTapImage(in cell: MessageCollectionViewCell) {
         let indexPath = messagesCollectionView.indexPath(for: cell)
         let msg = arrMessage[indexPath!.section]
@@ -595,6 +767,150 @@ extension ChatVC : MessageCellDelegate {
             let vc = VideoViewVC(nibName: "VideoViewVC", bundle: nil)
             vc.videoURL = msg.downloadURL
             navigationController?.pushViewController(vc, animated: true)
+        }
+    }
+    
+    func didTapBackground(in cell: MessageCollectionViewCell) {
+        view.endEditing(true)
+    }
+}
+
+extension ChatVC: LocationPickerVCDelegate {
+    func getLocation(coordinates: CLLocationCoordinate2D) {
+        let key = dbRef.childByAutoId().key
+        let currDate = Date()
+        let date = Util.getStringFromDate(format: "YYYY,MM dd,HH:mm:ss", date: currDate)
+        
+        let latitude = coordinates.latitude
+        let longitude = coordinates.longitude
+        
+        let msg = Message(sender: currUser!,
+                          messageId: key!,
+                          senderId: currUser!.senderId,
+                          receiverId: otherUser!.senderId,
+                          strSentDate: date,
+                          kind: .location(Location(location: CLLocation(latitude: latitude, longitude: longitude), size: CGSize(width: 200, height: 200))),
+                          type: LOCATION,
+                          textContent: "",
+                          sentDate: currDate,
+                          location: "\(latitude) \(longitude)",
+                          downloadURL: "",
+                          thumbnailDownloadURL: "",
+                          isSeen: false)
+        
+        let val = ["messageId": msg.messageId,
+                   "senderId": msg.senderId,
+                   "senderName": currUser?.displayName,
+                   "receiverId": msg.receiverId,
+                   "strSentDate": msg.strSentDate,
+                   "type": msg.type,
+                   "textContent": msg.textContent,
+                   "location": msg.location,
+                   "downloadURL": msg.downloadURL,
+                   "thumbnailDownloadURL": msg.thumbnailDownloadURL,
+                   "isSeen": msg.isSeen] as [String : Any]
+        
+        dbRef.child("Messages").child(senderRoom).child(key!).setValue(val)
+        dbRef.child("Messages").child(receiverRoom).child(key!).setValue(val)
+        
+        
+        dbRef.child("Users").child(currUser!.senderId).removeAllObservers()
+        dbRef.child("Users").child(otherUser!.senderId).removeAllObservers()
+        
+        delegate?.removeAllUser()
+        
+        let dictTimeStamp = ["timeStamp": NSDate().timeIntervalSince1970]
+        dbRef.child("Users").child(currUser!.senderId).updateChildValues(dictTimeStamp)
+        dbRef.child("Users").child(otherUser!.senderId).updateChildValues(dictTimeStamp)
+        
+        messageInputBar.inputTextView.text = ""
+        
+        delegate?.reloadUserList()
+    }
+}
+
+extension ChatVC : CLLocationManagerDelegate {
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        self.locationManager.stopUpdatingLocation()
+        
+        guard let locValue: CLLocationCoordinate2D = manager.location?.coordinate else { return }
+        let vc = LocationPickerVC()
+        vc.coordinates = locValue
+        vc.isPickable = true
+        vc.delegate = self
+        
+        self.navigationController?.pushViewController(vc, animated: true)
+        
+    }
+}
+
+extension ChatVC : AudioRecorderVCDelegate {
+    func uploadAudioToStorage(file: URL) {
+        startAnimating()
+        let dataAudio = try! Data(contentsOf: file)
+        let date = Util.getStringFromDate(format: "YYYY,MM dd,HH:mm:ss", date: Date())
+        let audioName = "\(date)  \(UUID().uuidString)"
+        let audioSpecificPath = storageRef.child(senderRoom).child(audioName)
+        let metaData = StorageMetadata()
+        metaData.contentType = "audio/mp3"
+        
+        audioSpecificPath.putData(dataAudio, metadata: metaData) { meta, err in
+            if err != nil {
+                return
+            } else {
+                audioSpecificPath.downloadURL { url, err in
+                    if err != nil {
+                        return
+                    } else {
+                        // POST DATA
+                        let key = self.dbRef.childByAutoId().key
+                        let msg = Message(sender: self.currUser!,
+                                          messageId: key!,
+                                          senderId: self.currUser!.senderId,
+                                          receiverId: self.otherUser!.senderId,
+                                          strSentDate: date,
+                                          kind: .audio(Audio(url: url!, duration: 10, size: CGSize(width: 200, height: 200))),
+                                          type: AUDIO,
+                                          textContent: "",
+                                          sentDate: self.currDate,
+                                          location: "",
+                                          downloadURL: "\(url!)",
+                                          thumbnailDownloadURL: "",
+                                          isSeen: false)
+                        
+                        let val = ["messageId": msg.messageId,
+                                   "senderId": msg.senderId,
+                                   "senderName": self.currUser?.displayName,
+                                   "receiverId": msg.receiverId,
+                                   "strSentDate": msg.strSentDate,
+                                   "type": msg.type,
+                                   "textContent": msg.textContent,
+                                   "location": msg.location,
+                                   "downloadURL": msg.downloadURL,
+                                   "thumbnailDownloadURL": "",
+                                   "isSeen": msg.isSeen] as [String : Any]
+                        
+                        self.dbRef.child("Messages").child(self.senderRoom).child(key!).setValue(val)
+                        self.dbRef.child("Messages").child(self.receiverRoom).child(key!).setValue(val)
+                        
+                        
+                        self.dbRef.child("Users").child(self.currUser!.senderId).removeAllObservers()
+                        self.dbRef.child("Users").child(self.otherUser!.senderId).removeAllObservers()
+                        
+                        self.delegate?.removeAllUser()
+                        
+                        let dictTimeStamp = ["timeStamp": NSDate().timeIntervalSince1970]
+                        self.dbRef.child("Users").child(self.currUser!.senderId).updateChildValues(dictTimeStamp)
+                        self.dbRef.child("Users").child(self.otherUser!.senderId).updateChildValues(dictTimeStamp)
+                        
+                        self.messageInputBar.inputTextView.text = ""
+                        
+                        self.delegate?.reloadUserList()
+                        
+                        self.stopAnimating()
+                    }
+                }
+            }
         }
     }
 }

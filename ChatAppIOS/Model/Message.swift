@@ -8,7 +8,8 @@
 import Foundation
 import MessageKit
 
-class Message : MessageType {
+class Message : MessageType, Comparable {
+
     var sender: SenderType
     var senderId = ""
     var receiverId: String = ""
@@ -24,8 +25,9 @@ class Message : MessageType {
     var isSeen = false
     var downloadURL = ""
     var thumbnailDownloadURL = ""
+    var location = ""
     
-    init(sender: SenderType, messageId: String, senderId: String, receiverId: String, strSentDate: String, kind: MessageKind, type: String, textContent: String, sentDate: Date, downloadURL: String, thumbnailDownloadURL: String, isSeen: Bool) {
+    init(sender: SenderType, messageId: String, senderId: String, receiverId: String, strSentDate: String, kind: MessageKind, type: String, textContent: String, sentDate: Date,location: String, downloadURL: String, thumbnailDownloadURL: String, isSeen: Bool) {
         self.sender = sender
         self.messageId = messageId
         self.senderId = senderId
@@ -35,6 +37,7 @@ class Message : MessageType {
         self.type = type
         self.textContent = textContent
         self.sentDate = sentDate
+        self.location = location
         self.downloadURL = downloadURL
         self.thumbnailDownloadURL = thumbnailDownloadURL
         self.isSeen = isSeen
@@ -48,14 +51,23 @@ class Message : MessageType {
         self.strSentDate = dict["strSentDate"] as! String
         self.type = dict["type"] as! String
         self.textContent = dict["textContent"] as! String
+        self.location = dict["location"] as! String
         self.downloadURL = dict["downloadURL"] as! String
         self.thumbnailDownloadURL = dict["thumbnailDownloadURL"] as! String
         self.isSeen = dict["isSeen"] as! Bool
         
         self.sender = User(dict: ["id": "userId", "email": "email", "avatar": "avatar", "name": "name", "timeStamp": 0.0, "beingInRoom": "room", "isOnline": false, "lastOnline": "", "birthDate": "", "phoneNumber": "", "feeling": ""])
         self.kind = .text("")
-                
     }
+    
+    static func < (lhs: Message, rhs: Message) -> Bool {
+        return lhs.sentDate < rhs.sentDate
+    }
+    
+    static func == (lhs: Message, rhs: Message) -> Bool {
+        return lhs.sentDate == rhs.sentDate
+    }
+    
 }
 
 extension MessageKind {

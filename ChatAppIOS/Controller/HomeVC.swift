@@ -37,7 +37,9 @@ class HomeVC: BaseViewController {
     }
     
     override func viewDidAppear(_ animated: Bool) {
-        dbRef.child("Users").child(currUser!.senderId).child("beingInRoom").setValue("")
+        if currUser != nil {
+            dbRef.child("Users").child(currUser!.senderId).child("beingInRoom").setValue("")
+        }
     }
     
     func setupViews() {
@@ -159,6 +161,11 @@ extension HomeVC : UITableViewDelegate, UITableViewDataSource {
                         cell.lbLastMsg.text = "You: Sent an image"
                     } else if msg.type == VIDEO {
                         cell.lbLastMsg.text = "You: Sent a video"
+                    } else if msg.type == LOCATION {
+                        cell.lbLastMsg.text = "You: Sent a location"
+                    } else if msg.type == AUDIO {
+                        cell.lbLastMsg.text = "You: Sent an audio"
+                        
                     } else {
                         cell.lbLastMsg.text = "You: \(msg.textContent)"
                     }
@@ -167,6 +174,10 @@ extension HomeVC : UITableViewDelegate, UITableViewDataSource {
                         cell.lbLastMsg.text = "Sent an image"
                     } else if msg.type == VIDEO {
                         cell.lbLastMsg.text = "Sent a video"
+                    } else if msg.type == LOCATION {
+                        cell.lbLastMsg.text = "Sent a location"
+                    }else if msg.type == AUDIO {
+                        cell.lbLastMsg.text = "Sent an audio"
                     } else {
                         cell.lbLastMsg.text = msg.textContent
                     }
