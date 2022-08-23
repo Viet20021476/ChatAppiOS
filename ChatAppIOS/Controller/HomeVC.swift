@@ -133,6 +133,7 @@ extension HomeVC : UITableViewDelegate, UITableViewDataSource {
         
         cell.imgAvatar.sd_setImage(with: URL(string: data.avatar))
         cell.lbName.text = data.displayName
+        cell.imgNotSeen.isHidden = true
         
         dbRef.child("Users").child(data.senderId).child("isOnline").observe(.value) { snapshot in
             let isOn = snapshot.value as! Bool
@@ -153,7 +154,7 @@ extension HomeVC : UITableViewDelegate, UITableViewDataSource {
         dbRef.child("Messages").child(senderRoom).observe(.childAdded) { snapshot in
             self.startAnimating()
             self.dbRef.child("Messages").child(senderRoom).child(snapshot.key).observe(.value) { data in
-                self.dbRef.child("Messages").child(senderRoom).child(snapshot.key).removeAllObservers()
+                //self.dbRef.child("Messages").child(senderRoom).child(snapshot.key).removeAllObservers()
                 let dict = data.value as? [String: Any]
                 let msg = Message(dict: dict!)
                 if msg.senderId == self.currUser?.senderId {
@@ -165,18 +166,28 @@ extension HomeVC : UITableViewDelegate, UITableViewDataSource {
                         cell.lbLastMsg.text = "You: Sent a location"
                     } else if msg.type == AUDIO {
                         cell.lbLastMsg.text = "You: Sent an audio"
-                        
                     } else {
                         cell.lbLastMsg.text = "You: \(msg.textContent)"
                     }
                 } else {
+                    self.dbRef.child("Messages").child(senderRoom).child(msg.messageId).child("isSeen").observe(.value) { data in
+                        let isSeen = data.value as! Bool
+                        if isSeen {
+                            cell.lbLastMsg.font = .systemFont(ofSize: 17)
+                            cell.imgNotSeen.isHidden = true
+                        }
+                    }
+                    if !msg.isSeen {
+                        cell.lbLastMsg.font = .boldSystemFont(ofSize: 17)
+                        cell.imgNotSeen.isHidden = false
+                    }
                     if msg.type == IMAGE {
                         cell.lbLastMsg.text = "Sent an image"
                     } else if msg.type == VIDEO {
                         cell.lbLastMsg.text = "Sent a video"
                     } else if msg.type == LOCATION {
                         cell.lbLastMsg.text = "Sent a location"
-                    }else if msg.type == AUDIO {
+                    } else if msg.type == AUDIO {
                         cell.lbLastMsg.text = "Sent an audio"
                     } else {
                         cell.lbLastMsg.text = msg.textContent
@@ -185,6 +196,8 @@ extension HomeVC : UITableViewDelegate, UITableViewDataSource {
             }
             self.stopAnimating()
         }
+        
+        
         
         return cell
     }
@@ -195,6 +208,10 @@ extension HomeVC : UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let cell = tableUser.cellForRow(at: indexPath) as! UserCell
+        cell.lbLastMsg.font = .systemFont(ofSize: 17)
+        cell.imgNotSeen.isHidden = true
+        
         let vc = ChatVC(nibName: "ChatVC", bundle: nil)
         vc.currUser = currUser
         vc.otherUser = arrUser[indexPath.row]

@@ -701,7 +701,6 @@ extension ChatVC : InputBarAccessoryViewDelegate {
         dbRef.child("Messages").child(senderRoom).child(key!).setValue(val)
         dbRef.child("Messages").child(receiverRoom).child(key!).setValue(val)
         
-        
         dbRef.child("Users").child(currUser!.senderId).removeAllObservers()
         dbRef.child("Users").child(otherUser!.senderId).removeAllObservers()
         
@@ -735,7 +734,7 @@ extension ChatVC : MessageCellDelegate {
             vc.title = "Location"
             
             self.navigationController?.pushViewController(vc, animated: true)
-        case .audio(let audio):
+        case .audio(_):
             if audioController?.state == .stopped {
                 audioController!.playSound(for: msg, in: cell as! AudioMessageCell)
             } else if audioController?.state == .playing {
@@ -743,14 +742,6 @@ extension ChatVC : MessageCellDelegate {
             } else if audioController?.state == .pause {
                 audioController?.resumeSound()
             }
-//            if !isPlayingSound  {
-//                audioController!.playSound(for: msg, in: cell as! AudioMessageCell)
-//                isPlayingSound = true
-//            } else {
-//                audioController?.pauseSound(for: msg, in: cell as! AudioMessageCell)
-//                isPlayingSound = false
-//            }
-
         default:
             print("do nothing")
         }

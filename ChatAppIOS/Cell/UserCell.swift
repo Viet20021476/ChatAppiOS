@@ -13,7 +13,7 @@ class UserCell: UITableViewCell {
     @IBOutlet weak var imgOnOff: UIImageView!
     @IBOutlet weak var lbName: UILabel!
     @IBOutlet weak var lbLastMsg: UILabel!
-    
+    @IBOutlet weak var imgNotSeen: UIImageView!
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code

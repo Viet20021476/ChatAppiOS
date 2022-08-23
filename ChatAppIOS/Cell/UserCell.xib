@@ -42,15 +42,24 @@
                             <constraint firstAttribute="height" constant="20" id="gLD-Us-wt5"/>
                         </constraints>
                     </imageView>
+                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="blue_dot_not_seen" translatesAutoresizingMaskIntoConstraints="NO" id="m09-jK-B9e">
+                        <rect key="frame" x="280" y="34" width="30" height="30"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="30" id="Isa-1r-S9s"/>
+                            <constraint firstAttribute="height" constant="30" id="jwu-Rl-Lxc"/>
+                        </constraints>
+                    </imageView>
                 </subviews>
                 <constraints>
                     <constraint firstItem="TMc-qn-eBr" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="14" id="27Y-gs-Vdo"/>
                     <constraint firstItem="vBY-0q-MuW" firstAttribute="bottom" secondItem="TMc-qn-eBr" secondAttribute="bottom" id="BHc-v2-CAx"/>
+                    <constraint firstItem="m09-jK-B9e" firstAttribute="centerY" secondItem="TMc-qn-eBr" secondAttribute="centerY" id="CjH-zT-W5p"/>
                     <constraint firstItem="qwl-Od-0Vw" firstAttribute="trailing" secondItem="TMc-qn-eBr" secondAttribute="trailing" id="G6z-xZ-prQ"/>
                     <constraint firstItem="vBY-0q-MuW" firstAttribute="leading" secondItem="5r9-dC-5T8" secondAttribute="leading" id="IP3-Er-JeD"/>
                     <constraint firstItem="5r9-dC-5T8" firstAttribute="top" secondItem="TMc-qn-eBr" secondAttribute="top" id="KVD-nw-Iy4"/>
                     <constraint firstItem="vBY-0q-MuW" firstAttribute="trailing" secondItem="5r9-dC-5T8" secondAttribute="trailing" id="S2E-TU-SCv"/>
                     <constraint firstItem="5r9-dC-5T8" firstAttribute="leading" secondItem="TMc-qn-eBr" secondAttribute="trailing" constant="15" id="dnv-2g-9TG"/>
+                    <constraint firstAttribute="trailing" secondItem="m09-jK-B9e" secondAttribute="trailing" constant="10" id="eAA-fD-TMq"/>
                     <constraint firstItem="TMc-qn-eBr" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="5" id="hba-9z-OW3"/>
                     <constraint firstAttribute="bottom" secondItem="TMc-qn-eBr" secondAttribute="bottom" constant="14" id="o4i-8m-zvM"/>
                     <constraint firstItem="qwl-Od-0Vw" firstAttribute="bottom" secondItem="TMc-qn-eBr" secondAttribute="bottom" id="v56-lp-Qzo"/>
@@ -59,6 +68,7 @@
             <viewLayoutGuide key="safeArea" id="njF-e1-oar"/>
             <connections>
                 <outlet property="imgAvatar" destination="TMc-qn-eBr" id="UpW-5P-qJZ"/>
+                <outlet property="imgNotSeen" destination="m09-jK-B9e" id="GWl-xX-Ght"/>
                 <outlet property="imgOnOff" destination="qwl-Od-0Vw" id="i2W-IA-wtN"/>
                 <outlet property="lbLastMsg" destination="vBY-0q-MuW" id="7bU-LD-dbw"/>
                 <outlet property="lbName" destination="5r9-dC-5T8" id="QCJ-uZ-Sst"/>
@@ -66,4 +76,7 @@
             <point key="canvasLocation" x="137.68115942028987" y="36.160714285714285"/>
         </tableViewCell>
     </objects>
+    <resources>
+        <image name="blue_dot_not_seen" width="562" height="444"/>
+    </resources>
 </document>
