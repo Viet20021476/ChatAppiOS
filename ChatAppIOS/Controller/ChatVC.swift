@@ -52,7 +52,6 @@ class ChatVC: MessagesViewController {
     var btnPickImg = InputBarButtonItem()
     var btnMoreChoice = InputBarButtonItem()
     
-    let currDate = Date()
     var imageCache: SDImageCache = SDImageCache()
     var thumbnailImg = UIImage()
     
@@ -122,18 +121,29 @@ class ChatVC: MessagesViewController {
     }
     
     func setupRightBarBtnItem() {
-        let rightItemBtn = UIButton(type: .custom)
-        rightItemBtn.translatesAutoresizingMaskIntoConstraints = false
-        rightItemBtn.setImage(UIImage(systemName: "info.circle"), for: .normal)
-        rightItemBtn.contentVerticalAlignment = .fill
-        rightItemBtn.contentHorizontalAlignment = .fill
-        rightItemBtn.imageEdgeInsets = UIEdgeInsets(top: 5, left: 5, bottom: 5, right: 5)
-        rightItemBtn.widthAnchor.constraint(equalToConstant: 40).isActive = true
-        rightItemBtn.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        let infoItemBtn = UIButton(type: .custom)
+        infoItemBtn.translatesAutoresizingMaskIntoConstraints = false
+        infoItemBtn.setImage(UIImage(named: "information"), for: .normal)
+        infoItemBtn.contentVerticalAlignment = .fill
+        infoItemBtn.contentHorizontalAlignment = .fill
+        infoItemBtn.imageEdgeInsets = UIEdgeInsets(top: 5, left: 5, bottom: 5, right: 5)
+        infoItemBtn.widthAnchor.constraint(equalToConstant: 40).isActive = true
+        infoItemBtn.heightAnchor.constraint(equalToConstant: 40).isActive = true
         
-        navigationItem.rightBarButtonItem = UIBarButtonItem(customView: rightItemBtn)
+        let phoneItemBtn = UIButton(type: .custom)
+        phoneItemBtn.translatesAutoresizingMaskIntoConstraints = false
+        phoneItemBtn.setImage(UIImage(named: "phone"), for: .normal)
+        phoneItemBtn.contentVerticalAlignment = .fill
+        phoneItemBtn.contentHorizontalAlignment = .fill
+        phoneItemBtn.imageEdgeInsets = UIEdgeInsets(top: 5, left: 5, bottom: 5, right: 5)
+        phoneItemBtn.widthAnchor.constraint(equalToConstant: 40).isActive = true
+        phoneItemBtn.heightAnchor.constraint(equalToConstant: 40).isActive = true
         
-        rightItemBtn.addTarget(self, action: #selector(getToOtherUserProfile), for: .touchUpInside)
+        
+        navigationItem.rightBarButtonItems = [infoItemBtn.toBarButtonItem()!, phoneItemBtn.toBarButtonItem()!]
+        
+        phoneItemBtn.addTarget(self, action: #selector(makePhoneCall), for: .touchUpInside)
+        infoItemBtn.addTarget(self, action: #selector(getToOtherUserProfile), for: .touchUpInside)
     }
     
     func setupOnlineState() {
@@ -185,10 +195,18 @@ class ChatVC: MessagesViewController {
     
     
     func getMsgData() {
+        refHandleSenderMsgCount = dbRef.child("Messages").child(senderRoom).observe(.value) { snapshot in
+            self.numberOfMsg = Int(snapshot.childrenCount)
+        }
+        
+        
         dbRef.child("Messages").child(senderRoom).observe(.childAdded) { snapshot in
             self.dbRef.child("Messages").child(self.senderRoom).child(snapshot.key).observe(.value) { data in
                 self.dbRef.child("Messages").child(self.senderRoom).child(snapshot.key).removeAllObservers()
                 if let dict = data.value as? [String: Any] {
+                    if self.numberOfMsg != 0 {
+                        self.startAnimating()
+                    }
                     let msg = Message(dict: dict)
                     msg.sender = User(senderId: msg.senderId, displayName: msg.senderName)
                     if msg.type == IMAGE {
@@ -230,18 +248,30 @@ class ChatVC: MessagesViewController {
                         self.sortArrMsgBySentDate()
                         self.messagesCollectionView.reloadData()
                         self.messagesCollectionView.scrollToLastItem()
+                        
+                        if self.arrMessage.count == self.numberOfMsg {
+                            self.stopAnimating()
+                        }
                     } else if msg.type == AUDIO {
                         msg.kind = .audio(Audio(url: URL(string: msg.downloadURL)!, duration: 10, size: CGSize(width: 200, height: 30)))
                         self.arrMessage.append(msg)
                         self.sortArrMsgBySentDate()
                         self.messagesCollectionView.reloadData()
                         self.messagesCollectionView.scrollToLastItem()
+                        
+                        if self.arrMessage.count == self.numberOfMsg {
+                            self.stopAnimating()
+                        }
                     } else if msg.type == TEXT {
                         msg.kind = .text(msg.textContent)
                         self.arrMessage.append(msg)
                         self.sortArrMsgBySentDate()
                         self.messagesCollectionView.reloadData()
                         self.messagesCollectionView.scrollToLastItem()
+                        
+                        if self.arrMessage.count == self.numberOfMsg {
+                            self.stopAnimating()
+                        }
                     }
                     
                     if msg.receiverId == self.currUser?.senderId && self.currUser!.beingInRoom != "" {
@@ -254,11 +284,6 @@ class ChatVC: MessagesViewController {
                 }
             }
         }
-        
-        refHandleSenderMsgCount = dbRef.child("Messages").child(senderRoom).observe(.value) { snapshot in
-            self.numberOfMsg = Int(snapshot.childrenCount)
-        }
-        
         
     }
     
@@ -274,6 +299,16 @@ class ChatVC: MessagesViewController {
             return true
         }
         return false
+    }
+    
+    @objc func makePhoneCall() {
+        startAnimating()
+        dbRef.child("Users").child(otherUser!.senderId).child("phoneNumber").observe(.value) { snapshot in
+            guard let phoneNumber = snapshot.value as? String else {return}
+            guard let number = URL(string: "tel://" + phoneNumber) else { return }
+            UIApplication.shared.open(number)
+            self.stopAnimating()
+        }
     }
     
     @objc func getToOtherUserProfile() {
@@ -312,7 +347,7 @@ class ChatVC: MessagesViewController {
     
     func handleEvent() {
         var config = YPImagePickerConfiguration()
-        config.library.maxNumberOfItems = 3
+        config.library.maxNumberOfItems = 2
         config.screens = [.library, .photo, .video]
         config.library.mediaType = .photoAndVideo
         imgPicker = YPImagePicker(configuration: config)
@@ -374,7 +409,7 @@ class ChatVC: MessagesViewController {
     
     func uploadImageToStorage(image: UIImage) {
         
-        let date = Util.getStringFromDate(format: "YYYY,MM dd,HH:mm:ss", date: currDate)
+        let date = Util.getStringFromDate(format: "YYYY,MM dd,HH:mm:ss", date: Date())
         let imgName = "\(date) \(UUID().uuidString)"
         
         let data = image.jpegData(compressionQuality: 0.3)
@@ -403,7 +438,7 @@ class ChatVC: MessagesViewController {
                                           kind: .photo(Media(url: url!, image: image, placeholderImage: image, size: CGSize(width: 200, height: 200))),
                                           type: IMAGE,
                                           textContent: "",
-                                          sentDate: self.currDate,
+                                          sentDate: Date(),
                                           location: "",
                                           downloadURL: "\(url!)",
                                           thumbnailDownloadURL: "",
@@ -447,7 +482,7 @@ class ChatVC: MessagesViewController {
     func uploadVideoToStorage(file: URL) {
         var thumbnailDownloadURl = ""
         
-        let date = Util.getStringFromDate(format: "YYYY,MM dd,HH:mm:ss", date: currDate)
+        let date = Util.getStringFromDate(format: "YYYY,MM dd,HH:mm:ss", date: Date())
         let videoName = date
         let randomUUID = UUID().uuidString
         
@@ -497,7 +532,7 @@ class ChatVC: MessagesViewController {
                                           kind: .video(Media(url: url!, image: UIImage(named: "img_video_placeholder")!, placeholderImage: UIImage(named: "img_video_placeholder")!, size: CGSize(width: 200, height: 200))),
                                           type: VIDEO,
                                           textContent: "",
-                                          sentDate: self.currDate,
+                                          sentDate: Date(),
                                           location: "",
                                           downloadURL: "\(url!)",
                                           thumbnailDownloadURL: thumbnailDownloadURl,
@@ -635,7 +670,7 @@ extension ChatVC : MessagesDataSource, MessagesLayoutDelegate, MessagesDisplayDe
     
     func backgroundColor(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> UIColor {
         if message.sender.senderId == currUser?.senderId {
-            return #colorLiteral(red: 0.8078431487, green: 0.02745098062, blue: 0.3333333433, alpha: 1)
+            return #colorLiteral(red: 0.09133880585, green: 0.7034819722, blue: 0.9843640924, alpha: 1)
         }
         return .lightGray.withAlphaComponent(0.4)
     }
@@ -863,7 +898,7 @@ extension ChatVC : AudioRecorderVCDelegate {
                                           kind: .audio(Audio(url: url!, duration: 10, size: CGSize(width: 200, height: 200))),
                                           type: AUDIO,
                                           textContent: "",
-                                          sentDate: self.currDate,
+                                          sentDate: Date(),
                                           location: "",
                                           downloadURL: "\(url!)",
                                           thumbnailDownloadURL: "",

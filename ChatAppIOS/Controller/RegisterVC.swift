@@ -38,6 +38,10 @@ class RegisterVC: BaseViewController {
         setupViews()
         setupEvent()
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+    }
   
     func setupViews() {
         navigationController?.navigationBar.isHidden = true
@@ -350,7 +354,7 @@ class RegisterVC: BaseViewController {
                                     return
                                 } else {
                                     // POST DATA
-                                    let value = ["id": userId, "email": res?.user.email, "avatar": "\(url!)", "name": name, "timeStamp": 0, "beingInRoom": "", "isOnline": false, "lastOnline": "", "birthDate": "", "phoneNumber": "", "feeling": ""] as [String : Any]
+                                    let value = ["id": userId, "email": res?.user.email, "avatar": "\(url!)", "name": name, "timeStamp": 0, "beingInRoom": "", "isOnline": false, "lastOnline": "", "birthDate": "", "phoneNumber": "", "feeling": "", "friends": "", "friendsRequest": ""] as [String : Any]
                                     self.dbRef.child("Users").child(userId!).setValue(value)
                                 }
                             }

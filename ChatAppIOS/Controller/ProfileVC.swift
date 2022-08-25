@@ -192,6 +192,7 @@ class ProfileVC: BaseViewController {
         infoFeeling.imgEdit.addGestureRecognizer(tapEditFeelingGes)
         
         if isOtherUserProfile {
+            imgAvatar.isUserInteractionEnabled = false
             infoName.imgEdit.isHidden = true
             infoBirthDate.imgEdit.isHidden = true
             infoEmail.imgEdit.isHidden = true
@@ -200,6 +201,16 @@ class ProfileVC: BaseViewController {
             btnEdit.isHidden = true
             btnLogout.isHidden = true
             ivBack.isHidden = true
+            
+            // De thay doi thong tin real time
+            startAnimating()
+            dbRef.child("Users").child(currUser!.senderId).observe(.value) { snapshot in
+                if let dict = snapshot.value as? [String: Any] {
+                    self.currUser = User(dict: dict)
+                    self.bindData()
+                    self.stopAnimating()
+                }
+            }
         }
     }
     
@@ -245,7 +256,26 @@ class ProfileVC: BaseViewController {
     
     @objc func tapOnConfirmEdit() {
         startAnimating()
-        if changePic {
+        
+        let newName = self.infoName.tfInfo.text
+        let newBirthDate = self.infoBirthDate.tfInfo.text
+        let newEmail = self.infoEmail.tfInfo.text
+        let newPNumber = self.infoPhoneNumber.tfInfo.text
+        let newFeeling = self.infoFeeling.tfInfo.text
+        
+        
+        if !changePic {
+            
+            self.dbRef.child("Users").child(self.currUser!.senderId).child("name").setValue(newName)
+            self.dbRef.child("Users").child(self.currUser!.senderId).child("birthDate").setValue(newBirthDate)
+            self.dbRef.child("Users").child(self.currUser!.senderId).child("email").setValue(newEmail)
+            self.dbRef.child("Users").child(self.currUser!.senderId).child("phoneNumber").setValue(newPNumber)
+            self.dbRef.child("Users").child(self.currUser!.senderId).child("feeling").setValue(newFeeling)
+            
+            self.navigationController?.popViewController(animated: true)
+            self.stopAnimating()
+            return
+        } else {
             storageRef.child("Profile picture").child(currUser!.senderId).delete { err in
                 if err != nil {
                     self.popupAlert(alertTitle: "An error occurred", acTitle: "OK")
@@ -272,11 +302,6 @@ class ProfileVC: BaseViewController {
                         self.stopAnimating()
                         return
                     } else {
-                        let newName = self.infoName.tfInfo.text
-                        let newBirthDate = self.infoBirthDate.tfInfo.text
-                        let newEmail = self.infoEmail.tfInfo.text
-                        let newPNumber = self.infoPhoneNumber.tfInfo.text
-                        let newFeeling = self.infoFeeling.tfInfo.text
                         
                         self.dbRef.child("Users").child(self.currUser!.senderId).child("avatar").setValue("\(url!)")
                         self.dbRef.child("Users").child(self.currUser!.senderId).child("name").setValue(newName)

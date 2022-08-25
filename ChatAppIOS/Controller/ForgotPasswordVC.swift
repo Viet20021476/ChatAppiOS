@@ -18,7 +18,7 @@ class ForgotPasswordVC: BaseViewController {
         // Do any additional setup after loading the view.
         setupViews()
     }
-    
+
     func setupViews() {
         ivBack.isHidden = false
         setupEmailInput()

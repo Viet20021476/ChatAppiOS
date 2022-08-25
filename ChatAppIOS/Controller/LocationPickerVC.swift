@@ -13,7 +13,7 @@ protocol LocationPickerVCDelegate {
     func getLocation(coordinates: CLLocationCoordinate2D)
 }
 
-class LocationPickerVC: UIViewController {
+class LocationPickerVC: BaseViewController {
     
     var delegate: LocationPickerVCDelegate?
     

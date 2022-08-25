@@ -1,11 +1,10 @@
 
 
 - Seen tin nhắn -> chưa real time, phải thoát ra vào lại mới check được seen chưa
-- Dấu chấm xanh, chữ đậm khi chưa đọc
-- Loading khi mới vào đoạn chat
+- Dấu chấm xanh, chữ đậm khi chưa đọc -> done
+- Loading khi mới vào đoạn chat -> done
 - Audio, location message -> Basically done
 - Notification -> Chưa làm được, phải trả phí
-- Send friend request
 
 
 
@@ -18,7 +17,3 @@
     -> Solution: add message -> sort array by sent date -> reload data => works but costly??
     
 + Gửi nhiều ảnh/video 1 lúc thứ tự gửi có thể sai tuỳ thuộc vào size ảnh/video
-
-+ Vị trí của mình có thể chưa chính xác, test trên điện thoại thật?
-    
-    

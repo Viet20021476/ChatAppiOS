@@ -14,17 +14,20 @@ class HomeVC: BaseViewController {
     
     @IBOutlet weak var imgAvatar: UIImageView!
     @IBOutlet weak var lbName: UILabel!
-    @IBOutlet weak var tableUser: UITableView!
+    @IBOutlet weak var tableFriends: UITableView!
     
+    @IBOutlet weak var imgNoti: UIImageView!
+    @IBOutlet weak var imgAddFriend: UIImageView!
     var lastMsg = ""
     
-    var arrUser = [User]()
+    var arrFriends = [User]()
+    var numOfNoti = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         // Do any additional setup after loading the view.
-        view.backgroundColor = #colorLiteral(red: 0.8078431487, green: 0.02745098062, blue: 0.3333333433, alpha: 1)
+        view.backgroundColor = #colorLiteral(red: 0.09133880585, green: 0.7034819722, blue: 0.9843640924, alpha: 1)
         view.removeGestureRecognizer(tapGesture!)
         ivBack.isHidden = true
         setupViews()
@@ -35,6 +38,7 @@ class HomeVC: BaseViewController {
     override func viewWillAppear(_ animated: Bool) {
         navigationController?.navigationBar.isHidden = true
     }
+
     
     override func viewDidAppear(_ animated: Bool) {
         if currUser != nil {
@@ -44,12 +48,14 @@ class HomeVC: BaseViewController {
     
     func setupViews() {
         setupImgAvatar()
+        setupRightBarItem()
         setupViewUserList()
         setupTableUser()
     }
     func getData() {
         getCurrUserData()
         getUserListData()
+        checkFriendRequestAndNoti()
     }
     
     func setupImgAvatar() {
@@ -64,6 +70,13 @@ class HomeVC: BaseViewController {
         imgAvatar.addGestureRecognizer(profileTapGes)
     }
     
+    func setupRightBarItem() {
+        let tapAddGes = UITapGestureRecognizer(target: self, action: #selector(tapOnAddFriend))
+        imgAddFriend.addGestureRecognizer(tapAddGes)
+        let tapNotiGes = UITapGestureRecognizer(target: self, action: #selector(tapOnSeeNoti))
+        imgNoti.addGestureRecognizer(tapNotiGes)
+    }
+    
     func setupViewUserList() {
         viewUserList.clipsToBounds = true
         viewUserList.layer.cornerRadius = 40
@@ -71,13 +84,13 @@ class HomeVC: BaseViewController {
     }
     
     func setupTableUser() {
-        tableUser.delegate = self
-        tableUser.dataSource = self
+        tableFriends.delegate = self
+        tableFriends.dataSource = self
         
-        tableUser.backgroundColor = .clear
+        tableFriends.backgroundColor = .clear
         
         let nib = UINib(nibName: "UserCell", bundle: nil)
-        tableUser.register(nib, forCellReuseIdentifier: "userCell")
+        tableFriends.register(nib, forCellReuseIdentifier: "userCell")
     }
     
     func getCurrUserData() {
@@ -96,22 +109,55 @@ class HomeVC: BaseViewController {
     }
     
     func getUserListData() {
-        dbRef.child("Users").observe(.childAdded) { snapshot in
-            self.dbRef.child("Users").child(snapshot.key).observe(.value) { data in
+        
+        dbRef.child("Users").child(auth.currentUser!.uid).child("friends").observe(.childAdded) { snapshot in
+            self.dbRef.child("Users").child(self.auth.currentUser!.uid).child("friends").child(snapshot.key).observe(.value) { data in
+                guard let dict = data.value as? [String: Any] else {return}
                 
-                let dict = data.value as? [String: Any]
-                let user = User(dict: dict!)
-                if user.senderId != self.currUser?.senderId {
-                    self.arrUser.append(user)
-                    //                    self.tableUser.insertRows(at: [IndexPath.init(row: self.arrUser.count - 1, section: 0)], with: .automatic)
-                    self.sortArrUserByTimestamp()
-                    self.tableUser.reloadData()
-                    self.dbRef.child("Users").child(snapshot.key).removeAllObservers()
-                }
+                let user = User(dict: dict)
+                self.arrFriends.append(user)
+                self.sortArrUserByTimestamp()
+                self.tableFriends.reloadData()
+                self.dbRef.child("Users").child(self.auth.currentUser!.uid).child("friends").child(snapshot.key).removeAllObservers()
                 
             }
+            
             self.stopAnimating()
+
+            
+            self.dbRef.child("Users").child(self.auth.currentUser!.uid).child("friends").observe(.childRemoved) { snapshot in
+                guard let removedIdx = self.arrFriends.firstIndex(where: {$0.senderId == snapshot.key}) else {return}
+                self.arrFriends.remove(at: removedIdx)
+                self.tableFriends.reloadData()
+                
+            }
         }
+        
+    }
+    
+    func checkFriendRequestAndNoti() {
+        
+        dbRef.child("Users").child(auth.currentUser!.uid).child("friends").observe(.value) { snapshot in
+            do {
+                let val = try snapshot.value as? String
+                if val == "" {
+                    self.stopAnimating()
+                    return
+                }
+            } catch {
+                return
+            }
+        }
+        
+        dbRef.child("Users").child(auth.currentUser!.uid).child("friendsRequest").observe(.value) { snapshot in
+            if snapshot.childrenCount != 0 {
+                self.numOfNoti = Int(snapshot.childrenCount)
+                self.imgNoti.image = UIImage(named: "bellWithNoti")
+            } else {
+                self.imgNoti.image = UIImage(named: "bell")
+            }
+        }
+        stopAnimating()
     }
     
     @objc func getToProfile() {
@@ -120,16 +166,33 @@ class HomeVC: BaseViewController {
         navigationController?.pushViewController(vc, animated: true)
     }
     
+    @objc func tapOnAddFriend() {
+        let vc = SendFriendRequestAlert()
+        vc.modalPresentationStyle = .overFullScreen
+        present(vc, animated: true)
+    }
+    
+    @objc func tapOnSeeNoti() {
+        if numOfNoti == 0 {
+            let vc = NotHaveFRVC(nibName: "NotHaveFRVC", bundle: nil)
+            present(vc, animated: true)
+            
+        } else {
+            let vc = FriendRequestVC(nibName: "FriendRequestVC", bundle: nil)
+            vc.delegate = self
+            present(vc, animated: true)
+        }
+    }
 }
 
 extension HomeVC : UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return arrUser.count
+        return arrFriends.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableUser.dequeueReusableCell(withIdentifier: "userCell") as! UserCell
-        let data = arrUser[indexPath.row]
+        let cell = tableFriends.dequeueReusableCell(withIdentifier: "userCell") as! UserCell
+        let data = arrFriends[indexPath.row]
         
         cell.imgAvatar.sd_setImage(with: URL(string: data.avatar))
         cell.lbName.text = data.displayName
@@ -155,8 +218,10 @@ extension HomeVC : UITableViewDelegate, UITableViewDataSource {
             self.startAnimating()
             self.dbRef.child("Messages").child(senderRoom).child(snapshot.key).observe(.value) { data in
                 //self.dbRef.child("Messages").child(senderRoom).child(snapshot.key).removeAllObservers()
-                let dict = data.value as? [String: Any]
-                let msg = Message(dict: dict!)
+                guard let dict = data.value as? [String: Any] else {return}
+                // Check for the situation deleteing friends
+                
+                let msg = Message(dict: dict)
                 if msg.senderId == self.currUser?.senderId {
                     if msg.type == IMAGE {
                         cell.lbLastMsg.text = "You: Sent an image"
@@ -171,7 +236,7 @@ extension HomeVC : UITableViewDelegate, UITableViewDataSource {
                     }
                 } else {
                     self.dbRef.child("Messages").child(senderRoom).child(msg.messageId).child("isSeen").observe(.value) { data in
-                        let isSeen = data.value as! Bool
+                        guard let isSeen = data.value as? Bool else {return}
                         if isSeen {
                             cell.lbLastMsg.font = .systemFont(ofSize: 17)
                             cell.imgNotSeen.isHidden = true
@@ -196,9 +261,6 @@ extension HomeVC : UITableViewDelegate, UITableViewDataSource {
             }
             self.stopAnimating()
         }
-        
-        
-        
         return cell
     }
     
@@ -208,27 +270,55 @@ extension HomeVC : UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let cell = tableUser.cellForRow(at: indexPath) as! UserCell
+        let cell = tableFriends.cellForRow(at: indexPath) as! UserCell
         cell.lbLastMsg.font = .systemFont(ofSize: 17)
         cell.imgNotSeen.isHidden = true
         
         let vc = ChatVC(nibName: "ChatVC", bundle: nil)
         vc.currUser = currUser
-        vc.otherUser = arrUser[indexPath.row]
-        vc.title = arrUser[indexPath.row].displayName
+        vc.otherUser = arrFriends[indexPath.row]
+        vc.title = arrFriends[indexPath.row].displayName
         vc.delegate = self
         navigationController?.pushViewController(vc, animated: true)
-        tableUser.deselectRow(at: indexPath, animated: true)
+        tableFriends.deselectRow(at: indexPath, animated: true)
+    }
+    
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete {
+            let alert = UIAlertController(title: "Are you sure to delete this friend?", message: nil, preferredStyle: .alert)
+            
+            let actionYes = UIAlertAction(title: "Yes", style: .destructive) { ac in
+                let otherUserId = self.arrFriends[indexPath.row].senderId
+                self.arrFriends.remove(at: indexPath.row)
+                self.tableFriends.reloadData()
+                
+                // Delete relationship
+                self.dbRef.child("Users").child(self.currUser!.senderId).child("friends").child(otherUserId).removeValue()
+                self.dbRef.child("Users").child(otherUserId).child("friends").child(self.currUser!.senderId).removeValue()
+                
+                // Delete messages of the two
+                let senderRoom = "\(self.currUser!.senderId)\(otherUserId)"
+                let receiverRoom = "\(otherUserId)\(self.currUser!.senderId)"
+                
+                self.dbRef.child("Messages").child(senderRoom).removeValue()
+                self.dbRef.child("Messages").child(receiverRoom).removeValue()
+            }
+            let actionNo = UIAlertAction(title: "No", style: .default)
+            
+            alert.addAction(actionYes)
+            alert.addAction(actionNo)
+            present(alert, animated: true)
+        }
     }
 }
 
 extension HomeVC : ChatVCDelegate {
     func removeAllUser() {
-        arrUser.removeAll()
+        arrFriends.removeAll()
     }
     
     func sortArrUserByTimestamp() {
-        arrUser.sort { user1, user2 in
+        arrFriends.sort { user1, user2 in
             user1.timeStamp > user2.timeStamp
         }
     }
@@ -237,4 +327,10 @@ extension HomeVC : ChatVCDelegate {
         getUserListData()
     }
     
+}
+
+extension HomeVC : FriendRequestVCDelegate {
+    func decreaseNumOfNoti() {
+        numOfNoti -= 1
+    }
 }

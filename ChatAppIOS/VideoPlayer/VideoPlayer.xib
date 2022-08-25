@@ -20,11 +20,8 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gWG-e0-Hg3">
-                    <rect key="frame" x="0.0" y="336.5" width="414" height="233"/>
+                    <rect key="frame" x="0.0" y="44" width="414" height="818"/>
                     <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                    <constraints>
-                        <constraint firstAttribute="width" secondItem="gWG-e0-Hg3" secondAttribute="height" multiplier="16:9" id="9Cb-kF-a4h"/>
-                    </constraints>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="kFa-AC-ang" customClass="PlayBackView" customModule="ChatAppIOS" customModuleProvider="target">
                     <rect key="frame" x="16" y="799" width="382" height="47"/>
@@ -42,6 +39,7 @@
             <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
             <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <constraints>
+                <constraint firstItem="gWG-e0-Hg3" firstAttribute="top" secondItem="vUN-kp-3ea" secondAttribute="top" id="1a0-o5-BDa"/>
                 <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="kFa-AC-ang" secondAttribute="trailing" constant="16" id="54J-bk-j3A"/>
                 <constraint firstItem="vUN-kp-3ea" firstAttribute="bottom" secondItem="kFa-AC-ang" secondAttribute="bottom" constant="16" id="9ro-kw-4MN"/>
                 <constraint firstItem="gWG-e0-Hg3" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" id="B6J-dE-L1u"/>

@@ -20,6 +20,8 @@ class User : SenderType {
     var birthDate = ""
     var phoneNumber = ""
     var feeling = ""
+    var friends = [User]()
+    var friendsRequest = [FriendRequest]()
     
     init(dict: [String: Any]) {
         self.senderId = dict["id"] as! String
@@ -33,6 +35,8 @@ class User : SenderType {
         self.birthDate = dict["birthDate"] as! String
         self.phoneNumber = dict["phoneNumber"] as! String
         self.feeling = dict["feeling"] as! String
+        //self.friends = dict["friends"] as! [User]
+        //self.friendsRequest = dict["friendsRequest"] as! [FriendRequest]
     }
     
     init(senderId: String, displayName: String) {

@@ -19,6 +19,8 @@
 		02280D4428A64A12008EA27A /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02280D4328A64A12008EA27A /* Message.swift */; };
 		02280D4728A65F23008EA27A /* InputBarAccessoryView in Frameworks */ = {isa = PBXBuildFile; productRef = 02280D4628A65F23008EA27A /* InputBarAccessoryView */; };
 		02280D4928A780AC008EA27A /* Todo in Resources */ = {isa = PBXBuildFile; fileRef = 02280D4828A780AC008EA27A /* Todo */; };
+		022A9B5528B733E800086E18 /* NotHaveFRVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 022A9B5328B733E800086E18 /* NotHaveFRVC.swift */; };
+		022A9B5628B733E800086E18 /* NotHaveFRVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 022A9B5428B733E800086E18 /* NotHaveFRVC.xib */; };
 		027B0AC728B3815500512DC5 /* Location.swift in Sources */ = {isa = PBXBuildFile; fileRef = 027B0AC628B3815500512DC5 /* Location.swift */; };
 		027B0AC928B3824E00512DC5 /* LocationPickerVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 027B0AC828B3824E00512DC5 /* LocationPickerVC.swift */; };
 		027B0ACC28B3D71200512DC5 /* AudioRecorderVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 027B0ACA28B3D71200512DC5 /* AudioRecorderVC.swift */; };
@@ -64,6 +66,12 @@
 		02C791A828A560D300E3EE7B /* FirebaseDatabase in Frameworks */ = {isa = PBXBuildFile; productRef = 02C791A728A560D300E3EE7B /* FirebaseDatabase */; };
 		02C791AA28A560D300E3EE7B /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = 02C791A928A560D300E3EE7B /* FirebaseStorage */; };
 		02C791AC28A565DA00E3EE7B /* ForgotPasswordVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02C791AB28A565DA00E3EE7B /* ForgotPasswordVC.swift */; };
+		02F5665D28B610A600E55515 /* FriendRequestCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02F5665B28B610A600E55515 /* FriendRequestCell.swift */; };
+		02F5665E28B610A600E55515 /* FriendRequestCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 02F5665C28B610A600E55515 /* FriendRequestCell.xib */; };
+		02F5666028B612FD00E55515 /* FriendRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02F5665F28B612FD00E55515 /* FriendRequest.swift */; };
+		02F5666328B619DB00E55515 /* FriendRequestVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02F5666128B619DB00E55515 /* FriendRequestVC.swift */; };
+		02F5666428B619DB00E55515 /* FriendRequestVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 02F5666228B619DB00E55515 /* FriendRequestVC.xib */; };
+		02F5666628B6281E00E55515 /* SendFriendRequestAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02F5666528B6281E00E55515 /* SendFriendRequestAlert.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -76,6 +84,8 @@
 		02280D3D28A64872008EA27A /* ChatVC.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ChatVC.xib; sourceTree = "<group>"; };
 		02280D4328A64A12008EA27A /* Message.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
 		02280D4828A780AC008EA27A /* Todo */ = {isa = PBXFileReference; lastKnownFileType = text; path = Todo; sourceTree = "<group>"; };
+		022A9B5328B733E800086E18 /* NotHaveFRVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotHaveFRVC.swift; sourceTree = "<group>"; };
+		022A9B5428B733E800086E18 /* NotHaveFRVC.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = NotHaveFRVC.xib; sourceTree = "<group>"; };
 		027B0AC628B3815500512DC5 /* Location.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Location.swift; sourceTree = "<group>"; };
 		027B0AC828B3824E00512DC5 /* LocationPickerVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationPickerVC.swift; sourceTree = "<group>"; };
 		027B0ACA28B3D71200512DC5 /* AudioRecorderVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioRecorderVC.swift; sourceTree = "<group>"; };
@@ -114,6 +124,12 @@
 		02C7919C28A55D8C00E3EE7B /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		02C791A028A5608500E3EE7B /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		02C791AB28A565DA00E3EE7B /* ForgotPasswordVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForgotPasswordVC.swift; sourceTree = "<group>"; };
+		02F5665B28B610A600E55515 /* FriendRequestCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendRequestCell.swift; sourceTree = "<group>"; };
+		02F5665C28B610A600E55515 /* FriendRequestCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = FriendRequestCell.xib; sourceTree = "<group>"; };
+		02F5665F28B612FD00E55515 /* FriendRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendRequest.swift; sourceTree = "<group>"; };
+		02F5666128B619DB00E55515 /* FriendRequestVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendRequestVC.swift; sourceTree = "<group>"; };
+		02F5666228B619DB00E55515 /* FriendRequestVC.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = FriendRequestVC.xib; sourceTree = "<group>"; };
+		02F5666528B6281E00E55515 /* SendFriendRequestAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendFriendRequestAlert.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -144,6 +160,8 @@
 			children = (
 				02280D3528A60443008EA27A /* UserCell.swift */,
 				02280D3628A60443008EA27A /* UserCell.xib */,
+				02F5665B28B610A600E55515 /* FriendRequestCell.swift */,
+				02F5665C28B610A600E55515 /* FriendRequestCell.xib */,
 			);
 			path = Cell;
 			sourceTree = "<group>";
@@ -242,6 +260,7 @@
 				02A8789B28AD228400C4CB2D /* Media.swift */,
 				027B0AC628B3815500512DC5 /* Location.swift */,
 				027B0ACE28B48BB300512DC5 /* Audio.swift */,
+				02F5665F28B612FD00E55515 /* FriendRequest.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -249,6 +268,8 @@
 		02C7917128A53D5E00E3EE7B /* View */ = {
 			isa = PBXGroup;
 			children = (
+				022A9B5428B733E800086E18 /* NotHaveFRVC.xib */,
+				02F5666228B619DB00E55515 /* FriendRequestVC.xib */,
 				02280D2F28A5F112008EA27A /* HomeVC.xib */,
 				02280D3D28A64872008EA27A /* ChatVC.xib */,
 				02A8788D28AAA73F00C4CB2D /* ProfileVC.xib */,
@@ -275,6 +296,9 @@
 				02A878C028AE5CC900C4CB2D /* VideoViewVC.swift */,
 				027B0AC828B3824E00512DC5 /* LocationPickerVC.swift */,
 				027B0ACA28B3D71200512DC5 /* AudioRecorderVC.swift */,
+				02F5666128B619DB00E55515 /* FriendRequestVC.swift */,
+				02F5666528B6281E00E55515 /* SendFriendRequestAlert.swift */,
+				022A9B5328B733E800086E18 /* NotHaveFRVC.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -383,7 +407,9 @@
 				02A8788F28AAA73F00C4CB2D /* ProfileVC.xib in Resources */,
 				02A878A028AD460800C4CB2D /* ImageViewVC.xib in Resources */,
 				02C791A128A5608500E3EE7B /* GoogleService-Info.plist in Resources */,
+				02F5666428B619DB00E55515 /* FriendRequestVC.xib in Resources */,
 				02A878C328AE5CC900C4CB2D /* VideoViewVC.xib in Resources */,
+				022A9B5628B733E800086E18 /* NotHaveFRVC.xib in Resources */,
 				02280D4928A780AC008EA27A /* Todo in Resources */,
 				02280D3F28A64872008EA27A /* ChatVC.xib in Resources */,
 				02280D3828A60443008EA27A /* UserCell.xib in Resources */,
@@ -392,6 +418,7 @@
 				02C7916628A53D4800E3EE7B /* Assets.xcassets in Resources */,
 				02A878B228AE432F00C4CB2D /* PlayBackView.xib in Resources */,
 				02C7916428A53D4800E3EE7B /* Main.storyboard in Resources */,
+				02F5665E28B610A600E55515 /* FriendRequestCell.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -403,21 +430,26 @@
 			buildActionMask = 2147483647;
 			files = (
 				02A8789C28AD228500C4CB2D /* Media.swift in Sources */,
+				02F5666328B619DB00E55515 /* FriendRequestVC.swift in Sources */,
 				02A8788E28AAA73F00C4CB2D /* ProfileVC.swift in Sources */,
 				02A878BB28AE447D00C4CB2D /* UIView+Extensions.swift in Sources */,
 				02C7918928A5405A00E3EE7B /* InitialScreenVC.swift in Sources */,
 				02280D3028A5F112008EA27A /* HomeVC.swift in Sources */,
 				02A8789228AB888C00C4CB2D /* Util.swift in Sources */,
 				027B0AC928B3824E00512DC5 /* LocationPickerVC.swift in Sources */,
+				02F5665D28B610A600E55515 /* FriendRequestCell.swift in Sources */,
 				027B0AC728B3815500512DC5 /* Location.swift in Sources */,
+				02F5666628B6281E00E55515 /* SendFriendRequestAlert.swift in Sources */,
 				02A8789428AB902200C4CB2D /* InfoView.swift in Sources */,
 				02A878BE28AE447D00C4CB2D /* CMTime+Extensions.swift in Sources */,
+				022A9B5528B733E800086E18 /* NotHaveFRVC.swift in Sources */,
 				02A878B328AE432F00C4CB2D /* PlayBackView.swift in Sources */,
 				02A878BC28AE447D00C4CB2D /* AVPlayer+Extensions.swift in Sources */,
 				02A878C228AE5CC900C4CB2D /* VideoViewVC.swift in Sources */,
 				027B0AD128B4A72100512DC5 /* AudioController.swift in Sources */,
 				02A878AD28AE42F800C4CB2D /* VideoPlayer.swift in Sources */,
 				02C7918D28A5442000E3EE7B /* LoginVC.swift in Sources */,
+				02F5666028B612FD00E55515 /* FriendRequest.swift in Sources */,
 				02C7918428A53F8800E3EE7B /* BaseViewController.swift in Sources */,
 				02C791AC28A565DA00E3EE7B /* ForgotPasswordVC.swift in Sources */,
 				02C7918B28A5441500E3EE7B /* RegisterVC.swift in Sources */,
@@ -583,9 +615,18 @@
 				DEVELOPMENT_TEAM = FY9CG36ADK;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ChatAppIOS/Info.plist;
+				INFOPLIST_KEY_NSCameraUsageDescription = "";
+				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "";
+				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
+				INFOPLIST_KEY_UIRequiresFullScreen = YES;
+				INFOPLIST_KEY_UIStatusBarHidden = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeRight UIInterfaceOrientationLandscapeLeft";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -611,9 +652,18 @@
 				DEVELOPMENT_TEAM = FY9CG36ADK;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ChatAppIOS/Info.plist;
+				INFOPLIST_KEY_NSCameraUsageDescription = "";
+				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "";
+				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
+				INFOPLIST_KEY_UIRequiresFullScreen = YES;
+				INFOPLIST_KEY_UIStatusBarHidden = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeRight UIInterfaceOrientationLandscapeLeft";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				LD_RUNPATH_SEARCH_PATHS = (

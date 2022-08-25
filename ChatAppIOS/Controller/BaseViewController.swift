@@ -30,7 +30,7 @@ class BaseViewController: UIViewController {
     
     var userDefault = UserDefaults()
     var tapGesture: UITapGestureRecognizer?
-    
+        
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -38,6 +38,11 @@ class BaseViewController: UIViewController {
         setupIndicator()
         setupIvBack()
         setupCons()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        Util.lockOrientation(.portrait)
     }
     
     func setupIvBack() {
@@ -145,8 +150,6 @@ class BaseViewController: UIViewController {
         
         return dateFormatter.string(from: date)
     }
-    
-    
 }
 
 extension UITextField {
@@ -216,6 +219,12 @@ extension String {
         let start = index(startIndex, offsetBy: range.lowerBound)
         let end = index(start, offsetBy: range.upperBound - range.lowerBound)
         return String(self[start ..< end])
+    }
+}
+
+extension UIButton {
+    func toBarButtonItem() -> UIBarButtonItem? {
+        return UIBarButtonItem(customView: self)
     }
 }
 

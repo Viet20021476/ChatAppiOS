@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import FirebaseDatabase
 
 let ACCOUNT = "account"
 let TEXT = "text"
@@ -16,3 +17,6 @@ let AUDIO = "audio"
 let NAVIGATION_BAR_HEIGHT = 44
 
 var globalCurrUser: User?
+var globalArrUser = [User]()
+
+

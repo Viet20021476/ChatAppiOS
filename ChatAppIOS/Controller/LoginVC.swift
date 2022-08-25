@@ -27,6 +27,11 @@ class LoginVC: BaseViewController {
         // Do any additional setup after loading the view.
         setupViews()
         setupEvent()
+        getAllUsers()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
     }
     
     func setupViews() {
@@ -130,7 +135,7 @@ class LoginVC: BaseViewController {
         btnLogin.addTarget(self, action: #selector(tapToLogin), for: .touchUpInside)
         
         view.bringSubviewToFront(viewIndicator)
-
+        
     }
     
     func setupLbForgotNRegister() {
@@ -200,7 +205,7 @@ class LoginVC: BaseViewController {
             navigationController?.pushViewController(registerVC, animated: true)
         }
     }
-
+    
     @objc func tapToLogin() {
         view.endEditing(true)
         startAnimating()
@@ -237,7 +242,41 @@ class LoginVC: BaseViewController {
         }
     }
     
+    func getAllUsers() {
+        dbRef.child("Users").observe(.childAdded) { snapshot in
+            self.dbRef.child("Users").child(snapshot.key).observe(.value) { data in
+                let dict = data.value as? [String: Any]
+                let user = User(dict: dict!)
+                globalArrUser.append(user)
+                self.dbRef.child("Users").child(snapshot.key).removeAllObservers()
+            }
+        }
+    }
     
+    
+    func reloadUserInfo() {
+        dbRef.child("Users").child(auth.currentUser!.uid).observe(.value) { snapshot in
+            if let idx = globalArrUser.firstIndex(where: {$0.senderId == snapshot.key}) {
+                self.dbRef.child("Users").child(snapshot.key).child("name").observe(.value) { data in
+                    globalArrUser[idx].displayName = data.value as! String
+                }
+                self.dbRef.child("Users").child(snapshot.key).child("birthDate").observe(.value) { data in
+                    globalArrUser[idx].birthDate = data.value as! String
+                }
+                self.dbRef.child("Users").child(snapshot.key).child("email").observe(.value) { data in
+                    globalArrUser[idx].email = data.value as! String
+                }
+                self.dbRef.child("Users").child(snapshot.key).child("phoneNumber").observe(.value) { data in
+                    globalArrUser[idx].phoneNumber = data.value as! String
+                }
+                self.dbRef.child("Users").child(snapshot.key).child("feeling").observe(.value) { data in
+                    globalArrUser[idx].feeling = data.value as! String
+                }
+            }
+        }
+    }
+    
+
     
 }
 

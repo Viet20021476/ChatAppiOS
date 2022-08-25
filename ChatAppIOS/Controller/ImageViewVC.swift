@@ -20,6 +20,10 @@ class ImageViewVC: BaseViewController {
         setupRightBarBtnItem()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        Util.lockOrientation(.all)
+    }
+    
     func setupView() {
         ivBack.isHidden = true
 

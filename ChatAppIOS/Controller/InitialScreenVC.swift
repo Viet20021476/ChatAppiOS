@@ -25,6 +25,10 @@ class InitialScreenVC: BaseViewController {
         setupViews()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+    }
+    
     func setupViews() {
         setupBackground()
         setupLogoView()

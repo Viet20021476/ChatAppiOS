@@ -21,6 +21,7 @@ class VideoViewVC: BaseViewController {
     // MARK: - Override Methods
     
     override func viewDidLoad() {
+        ivBack.isHidden = true
         super.viewDidLoad()
         setupRightBarBtnItem()
         config()
@@ -32,6 +33,7 @@ class VideoViewVC: BaseViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         setNeedsStatusBarAppearanceUpdate()
+        Util.lockOrientation(.all)
     }
     
     override func viewDidDisappear(_ animated: Bool) {

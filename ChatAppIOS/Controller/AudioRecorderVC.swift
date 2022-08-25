@@ -41,7 +41,7 @@ class AudioRecorderVC: BaseViewController {
         setupView()
         setupSession()
     }
-    
+
     func setupView() {
         ivBack.isHidden = true
         view.addSubview(lbTimeCounter)
