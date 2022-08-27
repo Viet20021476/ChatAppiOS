@@ -3,8 +3,8 @@
 ![p2](https://user-images.githubusercontent.com/78094729/187018092-ea3229f3-8691-45ef-bdeb-badf304a44a4.jpg)
 
 #### - Features:
-        - Sign in, sign up
-        - Add, delete friends
-        - Send text, image, video, audio, location messages
-        - See and edit profile
+       - Sign in, sign up
+       - Add, delete friends
+       - Send text, image, video, audio, location messages
+       - See and edit profile
   
