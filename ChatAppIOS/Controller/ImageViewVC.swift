@@ -56,7 +56,7 @@ class ImageViewVC: BaseViewController {
     func setupRightBarBtnItem() {
         let rightItemBtn = UIButton(type: .custom)
         rightItemBtn.translatesAutoresizingMaskIntoConstraints = false
-        rightItemBtn.setImage(UIImage(systemName: "square.and.arrow.down"), for: .normal)
+        rightItemBtn.setImage(UIImage(named: "download"), for: .normal)
         rightItemBtn.contentVerticalAlignment = .fill
         rightItemBtn.contentHorizontalAlignment = .fill
         rightItemBtn.imageEdgeInsets = UIEdgeInsets(top: 5, left: 5, bottom: 5, right: 5)

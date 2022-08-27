@@ -7,6 +7,8 @@
 
 import UIKit
 import SDWebImage
+import Firebase
+import FirebaseDatabase
 
 class HomeVC: BaseViewController {
     
@@ -38,7 +40,7 @@ class HomeVC: BaseViewController {
     override func viewWillAppear(_ animated: Bool) {
         navigationController?.navigationBar.isHidden = true
     }
-
+    
     
     override func viewDidAppear(_ animated: Bool) {
         if currUser != nil {
@@ -115,24 +117,28 @@ class HomeVC: BaseViewController {
                 guard let dict = data.value as? [String: Any] else {return}
                 
                 let user = User(dict: dict)
-                self.arrFriends.append(user)
+                
+                if !self.arrFriends.contains(user) {
+                    self.arrFriends.append(user)
+                } else {
+                    guard let idx = self.arrFriends.firstIndex(of: user) else {return}
+                    self.arrFriends[idx].timeStamp = user.timeStamp
+                }
                 self.sortArrUserByTimestamp()
                 self.tableFriends.reloadData()
-                self.dbRef.child("Users").child(self.auth.currentUser!.uid).child("friends").child(snapshot.key).removeAllObservers()
-                
             }
             
             self.stopAnimating()
-
             
-            self.dbRef.child("Users").child(self.auth.currentUser!.uid).child("friends").observe(.childRemoved) { snapshot in
-                guard let removedIdx = self.arrFriends.firstIndex(where: {$0.senderId == snapshot.key}) else {return}
-                self.arrFriends.remove(at: removedIdx)
-                self.tableFriends.reloadData()
-                
-            }
         }
         
+        
+        // Neu gap loi thi cho vao trong
+        self.dbRef.child("Users").child(self.auth.currentUser!.uid).child("friends").observe(.childRemoved) { snapshot in
+            guard let removedIdx = self.arrFriends.firstIndex(where: {$0.senderId == snapshot.key}) else {return}
+            self.arrFriends.remove(at: removedIdx)
+            self.tableFriends.reloadData()
+        }
     }
     
     func checkFriendRequestAndNoti() {
@@ -214,50 +220,60 @@ extension HomeVC : UITableViewDelegate, UITableViewDataSource {
         
         let senderRoom = "\(currUser?.senderId as! String)\(data.senderId)"
         
-        dbRef.child("Messages").child(senderRoom).observe(.childAdded) { snapshot in
-            self.startAnimating()
-            self.dbRef.child("Messages").child(senderRoom).child(snapshot.key).observe(.value) { data in
-                //self.dbRef.child("Messages").child(senderRoom).child(snapshot.key).removeAllObservers()
-                guard let dict = data.value as? [String: Any] else {return}
-                // Check for the situation deleteing friends
-                
-                let msg = Message(dict: dict)
-                if msg.senderId == self.currUser?.senderId {
-                    if msg.type == IMAGE {
-                        cell.lbLastMsg.text = "You: Sent an image"
-                    } else if msg.type == VIDEO {
-                        cell.lbLastMsg.text = "You: Sent a video"
-                    } else if msg.type == LOCATION {
-                        cell.lbLastMsg.text = "You: Sent a location"
-                    } else if msg.type == AUDIO {
-                        cell.lbLastMsg.text = "You: Sent an audio"
-                    } else {
-                        cell.lbLastMsg.text = "You: \(msg.textContent)"
-                    }
+        dbRef.child("Messages").child(senderRoom).child("LastMsg").child("lastmsg").observe(.value) { data in
+            
+            guard let dict = data.value as? [String: Any] else {return}
+            // Check for the situation deleteing friends
+            let msg = Message(dict: dict)
+            if msg.senderId == self.currUser?.senderId {
+                cell.lbLastMsg.font = .systemFont(ofSize: 17)
+                if msg.type == IMAGE {
+                    cell.lbLastMsg.text = "You: Sent an image"
+                } else if msg.type == VIDEO {
+                    cell.lbLastMsg.text = "You: Sent a video"
+                } else if msg.type == LOCATION {
+                    cell.lbLastMsg.text = "You: Sent a location"
+                } else if msg.type == AUDIO {
+                    cell.lbLastMsg.text = "You: Sent an audio"
                 } else {
-                    self.dbRef.child("Messages").child(senderRoom).child(msg.messageId).child("isSeen").observe(.value) { data in
-                        guard let isSeen = data.value as? Bool else {return}
-                        if isSeen {
-                            cell.lbLastMsg.font = .systemFont(ofSize: 17)
-                            cell.imgNotSeen.isHidden = true
-                        }
-                    }
-                    if !msg.isSeen {
-                        cell.lbLastMsg.font = .boldSystemFont(ofSize: 17)
-                        cell.imgNotSeen.isHidden = false
-                    }
-                    if msg.type == IMAGE {
-                        cell.lbLastMsg.text = "Sent an image"
-                    } else if msg.type == VIDEO {
-                        cell.lbLastMsg.text = "Sent a video"
-                    } else if msg.type == LOCATION {
-                        cell.lbLastMsg.text = "Sent a location"
-                    } else if msg.type == AUDIO {
-                        cell.lbLastMsg.text = "Sent an audio"
-                    } else {
-                        cell.lbLastMsg.text = msg.textContent
+                    cell.lbLastMsg.text = "You: \(msg.textContent)"
+                }
+            } else {
+                if !msg.isSeen {
+                    cell.lbLastMsg.font = .boldSystemFont(ofSize: 17)
+                    cell.imgNotSeen.isHidden = false
+                }
+                self.dbRef.child("Messages").child(senderRoom).child("LastMsg").child("lastmsg").child("isSeen").observe(.value) { data in
+                    guard let isSeen = data.value as? Bool else {return}
+                    if isSeen {
+                        cell.lbLastMsg.font = .systemFont(ofSize: 17)
+                        cell.imgNotSeen.isHidden = true
                     }
                 }
+                
+                //                self.dbRef.child("Messages").child(senderRoom).child(msg.messageId).child("isSeen").observe(.value) { data in
+                //                    guard let isSeen = data.value as? Bool else {return}
+                //                    if isSeen {
+                //                        cell.lbLastMsg.font = .systemFont(ofSize: 17)
+                //                        cell.imgNotSeen.isHidden = true
+                //                    }
+                //                }
+                //                if !msg.isSeen {
+                //                    cell.lbLastMsg.font = .boldSystemFont(ofSize: 17)
+                //                    cell.imgNotSeen.isHidden = false
+                //                }
+                if msg.type == IMAGE {
+                    cell.lbLastMsg.text = "Sent an image"
+                } else if msg.type == VIDEO {
+                    cell.lbLastMsg.text = "Sent a video"
+                } else if msg.type == LOCATION {
+                    cell.lbLastMsg.text = "Sent a location"
+                } else if msg.type == AUDIO {
+                    cell.lbLastMsg.text = "Sent an audio"
+                } else {
+                    cell.lbLastMsg.text = msg.textContent
+                }
+                
             }
             self.stopAnimating()
         }

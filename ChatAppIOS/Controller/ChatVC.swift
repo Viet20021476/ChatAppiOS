@@ -9,8 +9,8 @@ import UIKit
 import MessageKit
 import NVActivityIndicatorView
 import FirebaseAuth
-import FirebaseDatabase
 import FirebaseStorage
+import FirebaseDatabase
 import InputBarAccessoryView
 import YPImagePicker
 import SDWebImage
@@ -59,14 +59,18 @@ class ChatVC: MessagesViewController {
     var audioController: AudioController?
     var isPlayingSound = false
     
+    var timeStampRef:DatabaseReference?
+    var currentTimeStamp: TimeInterval?
+    
     override func viewDidLoad() {
+        
         super.viewDidLoad()
         
         // Do any additional setup after loading the view.
         navigationController?.navigationBar.isHidden = false
         UINavigationBar.appearance().titleTextAttributes = [NSAttributedString.Key.foregroundColor : UIColor.red ] // Title color
         
-        
+        setupServerTimestamp()
         setupRightBarBtnItem()
         customInputView()
         setupIndicator()
@@ -81,6 +85,10 @@ class ChatVC: MessagesViewController {
         messagesCollectionView.messagesDisplayDelegate = self
         messagesCollectionView.messageCellDelegate = self
         
+        let tapHideKeyboardGes = UITapGestureRecognizer(target: self, action: #selector(hideKeyboard))
+        //messagesCollectionView.addGestureRecognizer(tapHideKeyboardGes)
+        
+        
         messageInputBar.delegate = self
         
         audioController = AudioController(messageCollectionView: messagesCollectionView)
@@ -90,6 +98,11 @@ class ChatVC: MessagesViewController {
             self.dbRef.child("Users").child(self.currUser!.senderId).child("beingInRoom").removeAllObservers()
             self.currUser?.beingInRoom = snapshot.value as! String
         }
+        
+        refHandleSenderMsgCount = dbRef.child("Messages").child(senderRoom).observe(.value) { snapshot in
+            self.numberOfMsg = Int(snapshot.childrenCount) - 1
+        }
+        
         setupTitleView()
         getMsgData()
         setupOnlineState()
@@ -195,75 +208,28 @@ class ChatVC: MessagesViewController {
     
     
     func getMsgData() {
-        refHandleSenderMsgCount = dbRef.child("Messages").child(senderRoom).observe(.value) { snapshot in
-            self.numberOfMsg = Int(snapshot.childrenCount)
-        }
-        
         
         dbRef.child("Messages").child(senderRoom).observe(.childAdded) { snapshot in
+            if snapshot.key == "LastMsg" {
+                return
+            }
             self.dbRef.child("Messages").child(self.senderRoom).child(snapshot.key).observe(.value) { data in
                 self.dbRef.child("Messages").child(self.senderRoom).child(snapshot.key).removeAllObservers()
-                if let dict = data.value as? [String: Any] {
-                    if self.numberOfMsg != 0 {
-                        self.startAnimating()
-                    }
-                    let msg = Message(dict: dict)
-                    msg.sender = User(senderId: msg.senderId, displayName: msg.senderName)
-                    if msg.type == IMAGE {
-                        SDWebImageManager.shared.loadImage(with: URL(string: msg.downloadURL),
-                                                           options: .allowInvalidSSLCertificates) { int1, int2, int3 in
-                        } completed: { img, data, err, type, bool1, url in
-                            msg.kind = .photo(Media(url: URL(string: msg.downloadURL)!, image: img!, placeholderImage: UIImage(named: "ic_pickimg")!, size: CGSize(width: 200, height: 200)))
-                            self.arrMessage.append(msg)
-                            self.sortArrMsgBySentDate()
-                            self.messagesCollectionView.reloadData()
-                            self.messagesCollectionView.scrollToLastItem()
-                            
-                            if self.arrMessage.count == self.numberOfMsg {
-                                self.stopAnimating()
-                            }
-                        }
-                        
-                    } else if msg.type == VIDEO {
-                        // LUU ANH THUMBNAIL CUA VIDEO VAO CACHE
-                        SDWebImageManager.shared.loadImage(with: URL(string: msg.thumbnailDownloadURL),
-                                                           options: .allowInvalidSSLCertificates) { int1, int2, int3 in
-                        } completed: { img, data, err, type, bool1, url in
-                            msg.kind = .photo(Media(url: URL(string: msg.thumbnailDownloadURL)!, image: img!, placeholderImage: UIImage(named: "ic_pickimg")!, size: CGSize(width: 200, height: 200)))
-                            self.arrMessage.append(msg)
-                            self.sortArrMsgBySentDate()
-                            self.messagesCollectionView.reloadData()
-                            self.messagesCollectionView.scrollToLastItem()
-                            
-                            if self.arrMessage.count == self.numberOfMsg {
-                                self.stopAnimating()
-                            }
-                        }
-                    } else if msg.type == LOCATION {
-                        let arrCoordinates = msg.location.split(separator: " ")
-                        let latitude = Double(arrCoordinates[0])!
-                        let longitude = Double(arrCoordinates[1])!
-                        msg.kind = .location(Location(location: CLLocation(latitude: latitude, longitude: longitude), size: CGSize(width: 200, height: 200)))
-                        self.arrMessage.append(msg)
-                        self.sortArrMsgBySentDate()
-                        self.messagesCollectionView.reloadData()
-                        self.messagesCollectionView.scrollToLastItem()
-                        
-                        if self.arrMessage.count == self.numberOfMsg {
-                            self.stopAnimating()
-                        }
-                    } else if msg.type == AUDIO {
-                        msg.kind = .audio(Audio(url: URL(string: msg.downloadURL)!, duration: 10, size: CGSize(width: 200, height: 30)))
-                        self.arrMessage.append(msg)
-                        self.sortArrMsgBySentDate()
-                        self.messagesCollectionView.reloadData()
-                        self.messagesCollectionView.scrollToLastItem()
-                        
-                        if self.arrMessage.count == self.numberOfMsg {
-                            self.stopAnimating()
-                        }
-                    } else if msg.type == TEXT {
-                        msg.kind = .text(msg.textContent)
+                guard let dict = data.value as? [String: Any] else {return}
+                // Check xem co phai node LastMsg khong
+                if dict["messageId"] == nil {
+                    return
+                }
+                if self.numberOfMsg != 0 {
+                    self.startAnimating()
+                }
+                let msg = Message(dict: dict)
+                msg.sender = User(senderId: msg.senderId, displayName: msg.senderName)
+                if msg.type == IMAGE {
+                    SDWebImageManager.shared.loadImage(with: URL(string: msg.downloadURL),
+                                                       options: .allowInvalidSSLCertificates) { int1, int2, int3 in
+                    } completed: { img, data, err, type, bool1, url in
+                        msg.kind = .photo(Media(url: URL(string: msg.downloadURL)!, image: img!, placeholderImage: UIImage(named: "ic_pickimg")!, size: CGSize(width: 200, height: 200)))
                         self.arrMessage.append(msg)
                         self.sortArrMsgBySentDate()
                         self.messagesCollectionView.reloadData()
@@ -274,14 +240,66 @@ class ChatVC: MessagesViewController {
                         }
                     }
                     
-                    if msg.receiverId == self.currUser?.senderId && self.currUser!.beingInRoom != "" {
-                        msg.isSeen = true
-                        self.dbRef.child("Messages").child(self.senderRoom).child(msg.messageId).child("isSeen").setValue(true)
-                        self.dbRef.child("Messages").child(self.receiverRoom).child(msg.messageId).child("isSeen").setValue(true)
+                } else if msg.type == VIDEO {
+                    // LUU ANH THUMBNAIL CUA VIDEO VAO CACHE
+                    SDWebImageManager.shared.loadImage(with: URL(string: msg.thumbnailDownloadURL),
+                                                       options: .allowInvalidSSLCertificates) { int1, int2, int3 in
+                    } completed: { img, data, err, type, bool1, url in
+                        msg.kind = .photo(Media(url: URL(string: msg.thumbnailDownloadURL)!, image: img!, placeholderImage: UIImage(named: "ic_pickimg")!, size: CGSize(width: 200, height: 200)))
+                        self.arrMessage.append(msg)
+                        self.sortArrMsgBySentDate()
+                        self.messagesCollectionView.reloadData()
+                        self.messagesCollectionView.scrollToLastItem()
                         
+                        if self.arrMessage.count == self.numberOfMsg {
+                            self.stopAnimating()
+                        }
                     }
+                } else if msg.type == LOCATION {
+                    let arrCoordinates = msg.location.split(separator: " ")
+                    let latitude = Double(arrCoordinates[0])!
+                    let longitude = Double(arrCoordinates[1])!
+                    msg.kind = .location(Location(location: CLLocation(latitude: latitude, longitude: longitude), size: CGSize(width: 200, height: 200)))
+                    self.arrMessage.append(msg)
+                    self.sortArrMsgBySentDate()
+                    self.messagesCollectionView.reloadData()
+                    self.messagesCollectionView.scrollToLastItem()
+                    
+                    if self.arrMessage.count == self.numberOfMsg {
+                        self.stopAnimating()
+                    }
+                } else if msg.type == AUDIO {
+                    msg.kind = .audio(Audio(url: URL(string: msg.downloadURL)!, duration: 10, size: CGSize(width: 200, height: 30)))
+                    self.arrMessage.append(msg)
+                    self.sortArrMsgBySentDate()
+                    self.messagesCollectionView.reloadData()
+                    self.messagesCollectionView.scrollToLastItem()
+                    
+                    if self.arrMessage.count == self.numberOfMsg {
+                        self.stopAnimating()
+                    }
+                } else if msg.type == TEXT {
+                    msg.kind = .text(msg.textContent)
+                    self.arrMessage.append(msg)
+                    self.sortArrMsgBySentDate()
+                    self.messagesCollectionView.reloadData()
+                    self.messagesCollectionView.scrollToLastItem()
+                    
+                    if self.arrMessage.count == self.numberOfMsg {
+                        self.stopAnimating()
+                    }
+                }
+                
+                if msg.receiverId == self.currUser?.senderId && self.currUser!.beingInRoom != "" {
+                    msg.isSeen = true
+                    self.dbRef.child("Messages").child(self.senderRoom).child(msg.messageId).child("isSeen").setValue(true)
+                    self.dbRef.child("Messages").child(self.receiverRoom).child(msg.messageId).child("isSeen").setValue(true)
+                    self.dbRef.child("Messages").child(self.senderRoom).child("LastMsg").child("lastmsg").child("isSeen").setValue(true)
+                    self.dbRef.child("Messages").child(self.receiverRoom).child("LastMsg").child("lastmsg").child("isSeen").setValue(true)
                     
                 }
+                
+                
             }
         }
         
@@ -459,16 +477,20 @@ class ChatVC: MessagesViewController {
                         self.dbRef.child("Messages").child(self.senderRoom).child(key!).setValue(val)
                         self.dbRef.child("Messages").child(self.receiverRoom).child(key!).setValue(val)
                         
+                        // Last message
+                        self.dbRef.child("Messages").child(self.senderRoom).child("LastMsg").child("lastmsg").setValue(val)
+                        self.dbRef.child("Messages").child(self.receiverRoom).child("LastMsg").child("lastmsg").setValue(val)
                         
                         self.dbRef.child("Users").child(self.currUser!.senderId).removeAllObservers()
                         self.dbRef.child("Users").child(self.otherUser!.senderId).removeAllObservers()
                         
                         self.delegate?.removeAllUser()
                         
-                        let dictTimeStamp = ["timeStamp": NSDate().timeIntervalSince1970]
-                        self.dbRef.child("Users").child(self.currUser!.senderId).updateChildValues(dictTimeStamp)
-                        self.dbRef.child("Users").child(self.otherUser!.senderId).updateChildValues(dictTimeStamp)
+                        self.timeStampRef!.setValue(ServerValue.timestamp())
                         
+                        self.dbRef.child("Users").child(self.currUser!.senderId).child("friends").child(self.otherUser!.senderId).child("timeStamp").setValue(self.currentTimeStamp)
+                        self.dbRef.child("Users").child(self.otherUser!.senderId).child("friends").child(self.currUser!.senderId).child("timeStamp").setValue(self.currentTimeStamp)
+                                                
                         self.messageInputBar.inputTextView.text = ""
                         
                         self.delegate?.reloadUserList()
@@ -553,15 +575,19 @@ class ChatVC: MessagesViewController {
                         self.dbRef.child("Messages").child(self.senderRoom).child(key!).setValue(val)
                         self.dbRef.child("Messages").child(self.receiverRoom).child(key!).setValue(val)
                         
+                        // Last message
+                        self.dbRef.child("Messages").child(self.senderRoom).child("LastMsg").child("lastmsg").setValue(val)
+                        self.dbRef.child("Messages").child(self.receiverRoom).child("LastMsg").child("lastmsg").setValue(val)
                         
                         self.dbRef.child("Users").child(self.currUser!.senderId).removeAllObservers()
                         self.dbRef.child("Users").child(self.otherUser!.senderId).removeAllObservers()
                         
                         self.delegate?.removeAllUser()
                         
-                        let dictTimeStamp = ["timeStamp": NSDate().timeIntervalSince1970]
-                        self.dbRef.child("Users").child(self.currUser!.senderId).updateChildValues(dictTimeStamp)
-                        self.dbRef.child("Users").child(self.otherUser!.senderId).updateChildValues(dictTimeStamp)
+                        self.timeStampRef!.setValue(ServerValue.timestamp())
+                        
+                        self.dbRef.child("Users").child(self.currUser!.senderId).child("friends").child(self.otherUser!.senderId).child("timeStamp").setValue(self.currentTimeStamp)
+                        self.dbRef.child("Users").child(self.otherUser!.senderId).child("friends").child(self.currUser!.senderId).child("timeStamp").setValue(self.currentTimeStamp)
                         
                         self.messageInputBar.inputTextView.text = ""
                         
@@ -633,6 +659,17 @@ class ChatVC: MessagesViewController {
         alert.addAction(actionCancel)
         
         present(alert, animated: true)
+    }
+    
+    func setupServerTimestamp() {
+        timeStampRef = dbRef.child("serverTimestamp")
+        timeStampRef!.setValue(ServerValue.timestamp())
+        
+        timeStampRef!.observe(.value, with: { snap in
+            if let t = snap.value as? TimeInterval {
+                self.currentTimeStamp = t/1000
+            }
+        })
     }
 }
 
@@ -736,18 +773,25 @@ extension ChatVC : InputBarAccessoryViewDelegate {
         dbRef.child("Messages").child(senderRoom).child(key!).setValue(val)
         dbRef.child("Messages").child(receiverRoom).child(key!).setValue(val)
         
-        dbRef.child("Users").child(currUser!.senderId).removeAllObservers()
-        dbRef.child("Users").child(otherUser!.senderId).removeAllObservers()
+        // Last message
+        dbRef.child("Messages").child(senderRoom).child("LastMsg").child("lastmsg").setValue(val)
+        dbRef.child("Messages").child(receiverRoom).child("LastMsg").child("lastmsg").setValue(val)
+        
+        
+        //dbRef.child("Users").child(currUser!.senderId).removeAllObservers()
+        //dbRef.child("Users").child(otherUser!.senderId).removeAllObservers()
         
         delegate?.removeAllUser()
         
-        let dictTimeStamp = ["timeStamp": NSDate().timeIntervalSince1970]
-        dbRef.child("Users").child(currUser!.senderId).updateChildValues(dictTimeStamp)
-        dbRef.child("Users").child(otherUser!.senderId).updateChildValues(dictTimeStamp)
+        timeStampRef!.setValue(ServerValue.timestamp())
+        
+        dbRef.child("Users").child(currUser!.senderId).child("friends").child(otherUser!.senderId).child("timeStamp").setValue(currentTimeStamp)
+        dbRef.child("Users").child(otherUser!.senderId).child("friends").child(currUser!.senderId).child("timeStamp").setValue(currentTimeStamp)
         
         messageInputBar.inputTextView.text = ""
         
         delegate?.reloadUserList()
+        
         
     }
     
@@ -839,15 +883,19 @@ extension ChatVC: LocationPickerVCDelegate {
         dbRef.child("Messages").child(senderRoom).child(key!).setValue(val)
         dbRef.child("Messages").child(receiverRoom).child(key!).setValue(val)
         
+        // Last message
+        self.dbRef.child("Messages").child(self.senderRoom).child("LastMsg").child("lastmsg").setValue(val)
+        self.dbRef.child("Messages").child(self.receiverRoom).child("LastMsg").child("lastmsg").setValue(val)
         
         dbRef.child("Users").child(currUser!.senderId).removeAllObservers()
         dbRef.child("Users").child(otherUser!.senderId).removeAllObservers()
         
         delegate?.removeAllUser()
         
-        let dictTimeStamp = ["timeStamp": NSDate().timeIntervalSince1970]
-        dbRef.child("Users").child(currUser!.senderId).updateChildValues(dictTimeStamp)
-        dbRef.child("Users").child(otherUser!.senderId).updateChildValues(dictTimeStamp)
+        timeStampRef!.setValue(ServerValue.timestamp())
+        
+        dbRef.child("Users").child(currUser!.senderId).child("friends").child(otherUser!.senderId).child("timeStamp").setValue(currentTimeStamp)
+        dbRef.child("Users").child(otherUser!.senderId).child("friends").child(currUser!.senderId).child("timeStamp").setValue(currentTimeStamp)
         
         messageInputBar.inputTextView.text = ""
         
@@ -919,15 +967,19 @@ extension ChatVC : AudioRecorderVCDelegate {
                         self.dbRef.child("Messages").child(self.senderRoom).child(key!).setValue(val)
                         self.dbRef.child("Messages").child(self.receiverRoom).child(key!).setValue(val)
                         
+                        // Last message
+                        self.dbRef.child("Messages").child(self.senderRoom).child("LastMsg").child("lastmsg").setValue(val)
+                        self.dbRef.child("Messages").child(self.receiverRoom).child("LastMsg").child("lastmsg").setValue(val)
                         
                         self.dbRef.child("Users").child(self.currUser!.senderId).removeAllObservers()
                         self.dbRef.child("Users").child(self.otherUser!.senderId).removeAllObservers()
                         
                         self.delegate?.removeAllUser()
                         
-                        let dictTimeStamp = ["timeStamp": NSDate().timeIntervalSince1970]
-                        self.dbRef.child("Users").child(self.currUser!.senderId).updateChildValues(dictTimeStamp)
-                        self.dbRef.child("Users").child(self.otherUser!.senderId).updateChildValues(dictTimeStamp)
+                        self.timeStampRef!.setValue(ServerValue.timestamp())
+                        
+                        self.dbRef.child("Users").child(self.currUser!.senderId).child("friends").child(self.otherUser!.senderId).child("timeStamp").setValue(self.currentTimeStamp)
+                        self.dbRef.child("Users").child(self.otherUser!.senderId).child("friends").child(self.currUser!.senderId).child("timeStamp").setValue(self.currentTimeStamp)
                         
                         self.messageInputBar.inputTextView.text = ""
                         
@@ -940,4 +992,5 @@ extension ChatVC : AudioRecorderVCDelegate {
         }
     }
 }
+
 

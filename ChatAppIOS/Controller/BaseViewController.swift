@@ -8,8 +8,8 @@
 import UIKit
 import NVActivityIndicatorView
 import FirebaseAuth
-import FirebaseDatabase
 import FirebaseStorage
+import FirebaseDatabase
 
 class BaseViewController: UIViewController {
     
@@ -27,9 +27,11 @@ class BaseViewController: UIViewController {
     
     var lightGrayFont:[NSAttributedString.Key : NSObject]?
     var redFont:[NSAttributedString.Key : NSObject]?
+    var linkFont:[NSAttributedString.Key : NSObject]?
     
     var userDefault = UserDefaults()
     var tapGesture: UITapGestureRecognizer?
+    
         
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -141,6 +143,7 @@ class BaseViewController: UIViewController {
     func setupCons() {
         lightGrayFont = [NSAttributedString.Key.foregroundColor: UIColor.lightGray, NSAttributedString.Key.font: UIFont.systemFont(ofSize: view.frame.width / 25)]
         redFont = [NSAttributedString.Key.foregroundColor: UIColor.red, NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: view.frame.width / 25)]
+        linkFont = [NSAttributedString.Key.foregroundColor: UIColor.link, NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: view.frame.width / 25)]
     }
     
     func getStringFromDate(format: String, date: Date) -> String {

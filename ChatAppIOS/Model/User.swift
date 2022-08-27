@@ -8,7 +8,7 @@
 import Foundation
 import MessageKit
 
-class User : SenderType {
+class User : SenderType, Comparable {
     var senderId = ""
     var email = ""
     var avatar = ""
@@ -43,4 +43,15 @@ class User : SenderType {
         self.senderId = senderId
         self.displayName = displayName
     }
+    
+    static func == (lhs: User, rhs: User) -> Bool {
+        return lhs.senderId == rhs.senderId
+    }
+    
+    static func < (lhs: User, rhs: User) -> Bool {
+        return true
+    }
+    
+
+    
 }

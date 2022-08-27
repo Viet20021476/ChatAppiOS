@@ -13,7 +13,6 @@
 		02280D3728A60443008EA27A /* UserCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02280D3528A60443008EA27A /* UserCell.swift */; };
 		02280D3828A60443008EA27A /* UserCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 02280D3628A60443008EA27A /* UserCell.xib */; };
 		02280D3B28A60710008EA27A /* SDWebImage in Frameworks */ = {isa = PBXBuildFile; productRef = 02280D3A28A60710008EA27A /* SDWebImage */; };
-		02280D3E28A64872008EA27A /* ChatVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02280D3C28A64872008EA27A /* ChatVC.swift */; };
 		02280D3F28A64872008EA27A /* ChatVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 02280D3D28A64872008EA27A /* ChatVC.xib */; };
 		02280D4228A64983008EA27A /* MessageKit in Frameworks */ = {isa = PBXBuildFile; productRef = 02280D4128A64983008EA27A /* MessageKit */; };
 		02280D4428A64A12008EA27A /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02280D4328A64A12008EA27A /* Message.swift */; };
@@ -47,7 +46,6 @@
 		02A878C328AE5CC900C4CB2D /* VideoViewVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 02A878C128AE5CC900C4CB2D /* VideoViewVC.xib */; };
 		02C7915D28A53D4800E3EE7B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02C7915C28A53D4800E3EE7B /* AppDelegate.swift */; };
 		02C7915F28A53D4800E3EE7B /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02C7915E28A53D4800E3EE7B /* SceneDelegate.swift */; };
-		02C7916428A53D4800E3EE7B /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 02C7916228A53D4800E3EE7B /* Main.storyboard */; };
 		02C7916628A53D4800E3EE7B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 02C7916528A53D4800E3EE7B /* Assets.xcassets */; };
 		02C7916928A53D4800E3EE7B /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 02C7916728A53D4800E3EE7B /* LaunchScreen.storyboard */; };
 		02C7918028A53ED800E3EE7B /* IQKeyboardManagerSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 02C7917F28A53ED800E3EE7B /* IQKeyboardManagerSwift */; };
@@ -63,9 +61,13 @@
 		02C791A128A5608500E3EE7B /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 02C791A028A5608500E3EE7B /* GoogleService-Info.plist */; };
 		02C791A428A560D300E3EE7B /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 02C791A328A560D300E3EE7B /* FirebaseAnalytics */; };
 		02C791A628A560D300E3EE7B /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 02C791A528A560D300E3EE7B /* FirebaseAuth */; };
-		02C791A828A560D300E3EE7B /* FirebaseDatabase in Frameworks */ = {isa = PBXBuildFile; productRef = 02C791A728A560D300E3EE7B /* FirebaseDatabase */; };
 		02C791AA28A560D300E3EE7B /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = 02C791A928A560D300E3EE7B /* FirebaseStorage */; };
 		02C791AC28A565DA00E3EE7B /* ForgotPasswordVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02C791AB28A565DA00E3EE7B /* ForgotPasswordVC.swift */; };
+		02C91F7D28B897DA003A76A2 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 02C7916228A53D4800E3EE7B /* Main.storyboard */; };
+		02C91F8328B8A3D8003A76A2 /* ChatVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02280D3C28A64872008EA27A /* ChatVC.swift */; };
+		02C91F8528B8A461003A76A2 /* FirebaseDatabase in Frameworks */ = {isa = PBXBuildFile; productRef = 02C91F8428B8A461003A76A2 /* FirebaseDatabase */; };
+		02E6878128B9D1450071A12A /* TermsAndConditionVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02E6877F28B9D1450071A12A /* TermsAndConditionVC.swift */; };
+		02E6878228B9D1450071A12A /* TermsAndConditionVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 02E6878028B9D1450071A12A /* TermsAndConditionVC.xib */; };
 		02F5665D28B610A600E55515 /* FriendRequestCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02F5665B28B610A600E55515 /* FriendRequestCell.swift */; };
 		02F5665E28B610A600E55515 /* FriendRequestCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 02F5665C28B610A600E55515 /* FriendRequestCell.xib */; };
 		02F5666028B612FD00E55515 /* FriendRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02F5665F28B612FD00E55515 /* FriendRequest.swift */; };
@@ -124,6 +126,8 @@
 		02C7919C28A55D8C00E3EE7B /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		02C791A028A5608500E3EE7B /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		02C791AB28A565DA00E3EE7B /* ForgotPasswordVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForgotPasswordVC.swift; sourceTree = "<group>"; };
+		02E6877F28B9D1450071A12A /* TermsAndConditionVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TermsAndConditionVC.swift; sourceTree = "<group>"; };
+		02E6878028B9D1450071A12A /* TermsAndConditionVC.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TermsAndConditionVC.xib; sourceTree = "<group>"; };
 		02F5665B28B610A600E55515 /* FriendRequestCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendRequestCell.swift; sourceTree = "<group>"; };
 		02F5665C28B610A600E55515 /* FriendRequestCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = FriendRequestCell.xib; sourceTree = "<group>"; };
 		02F5665F28B612FD00E55515 /* FriendRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendRequest.swift; sourceTree = "<group>"; };
@@ -143,10 +147,10 @@
 				02280D4728A65F23008EA27A /* InputBarAccessoryView in Frameworks */,
 				02C7919828A54F4C00E3EE7B /* LTHRadioButton in Frameworks */,
 				02C791A428A560D300E3EE7B /* FirebaseAnalytics in Frameworks */,
+				02C91F8528B8A461003A76A2 /* FirebaseDatabase in Frameworks */,
 				02C791AA28A560D300E3EE7B /* FirebaseStorage in Frameworks */,
 				02A8789A28AD0F0000C4CB2D /* YPImagePicker in Frameworks */,
 				02280D3B28A60710008EA27A /* SDWebImage in Frameworks */,
-				02C791A828A560D300E3EE7B /* FirebaseDatabase in Frameworks */,
 				02C7918728A53FDC00E3EE7B /* NVActivityIndicatorView in Frameworks */,
 				02280D4228A64983008EA27A /* MessageKit in Frameworks */,
 			);
@@ -155,6 +159,13 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0222E5F728B8825200F3A7E4 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		02280D3428A60420008EA27A /* Cell */ = {
 			isa = PBXGroup;
 			children = (
@@ -216,6 +227,7 @@
 			children = (
 				02C7915B28A53D4800E3EE7B /* ChatAppIOS */,
 				02C7915A28A53D4800E3EE7B /* Products */,
+				0222E5F728B8825200F3A7E4 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -268,6 +280,7 @@
 		02C7917128A53D5E00E3EE7B /* View */ = {
 			isa = PBXGroup;
 			children = (
+				02E6878028B9D1450071A12A /* TermsAndConditionVC.xib */,
 				022A9B5428B733E800086E18 /* NotHaveFRVC.xib */,
 				02F5666228B619DB00E55515 /* FriendRequestVC.xib */,
 				02280D2F28A5F112008EA27A /* HomeVC.xib */,
@@ -299,6 +312,7 @@
 				02F5666128B619DB00E55515 /* FriendRequestVC.swift */,
 				02F5666528B6281E00E55515 /* SendFriendRequestAlert.swift */,
 				022A9B5328B733E800086E18 /* NotHaveFRVC.swift */,
+				02E6877F28B9D1450071A12A /* TermsAndConditionVC.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -343,12 +357,12 @@
 				02C7919A28A551A800E3EE7B /* Toast */,
 				02C791A328A560D300E3EE7B /* FirebaseAnalytics */,
 				02C791A528A560D300E3EE7B /* FirebaseAuth */,
-				02C791A728A560D300E3EE7B /* FirebaseDatabase */,
 				02C791A928A560D300E3EE7B /* FirebaseStorage */,
 				02280D3A28A60710008EA27A /* SDWebImage */,
 				02280D4128A64983008EA27A /* MessageKit */,
 				02280D4628A65F23008EA27A /* InputBarAccessoryView */,
 				02A8789928AD0F0000C4CB2D /* YPImagePicker */,
+				02C91F8428B8A461003A76A2 /* FirebaseDatabase */,
 			);
 			productName = ChatAppIOS;
 			productReference = 02C7915928A53D4800E3EE7B /* ChatAppIOS.app */;
@@ -412,12 +426,13 @@
 				022A9B5628B733E800086E18 /* NotHaveFRVC.xib in Resources */,
 				02280D4928A780AC008EA27A /* Todo in Resources */,
 				02280D3F28A64872008EA27A /* ChatVC.xib in Resources */,
+				02E6878228B9D1450071A12A /* TermsAndConditionVC.xib in Resources */,
 				02280D3828A60443008EA27A /* UserCell.xib in Resources */,
 				02280D3128A5F112008EA27A /* HomeVC.xib in Resources */,
+				02C91F7D28B897DA003A76A2 /* Main.storyboard in Resources */,
 				02A878BF28AE4E1400C4CB2D /* VideoPlayer.xib in Resources */,
 				02C7916628A53D4800E3EE7B /* Assets.xcassets in Resources */,
 				02A878B228AE432F00C4CB2D /* PlayBackView.xib in Resources */,
-				02C7916428A53D4800E3EE7B /* Main.storyboard in Resources */,
 				02F5665E28B610A600E55515 /* FriendRequestCell.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -440,6 +455,7 @@
 				02F5665D28B610A600E55515 /* FriendRequestCell.swift in Sources */,
 				027B0AC728B3815500512DC5 /* Location.swift in Sources */,
 				02F5666628B6281E00E55515 /* SendFriendRequestAlert.swift in Sources */,
+				02C91F8328B8A3D8003A76A2 /* ChatVC.swift in Sources */,
 				02A8789428AB902200C4CB2D /* InfoView.swift in Sources */,
 				02A878BE28AE447D00C4CB2D /* CMTime+Extensions.swift in Sources */,
 				022A9B5528B733E800086E18 /* NotHaveFRVC.swift in Sources */,
@@ -450,6 +466,7 @@
 				02A878AD28AE42F800C4CB2D /* VideoPlayer.swift in Sources */,
 				02C7918D28A5442000E3EE7B /* LoginVC.swift in Sources */,
 				02F5666028B612FD00E55515 /* FriendRequest.swift in Sources */,
+				02E6878128B9D1450071A12A /* TermsAndConditionVC.swift in Sources */,
 				02C7918428A53F8800E3EE7B /* BaseViewController.swift in Sources */,
 				02C791AC28A565DA00E3EE7B /* ForgotPasswordVC.swift in Sources */,
 				02C7918B28A5441500E3EE7B /* RegisterVC.swift in Sources */,
@@ -463,7 +480,6 @@
 				02C7915D28A53D4800E3EE7B /* AppDelegate.swift in Sources */,
 				02A878BD28AE447D00C4CB2D /* UIViewController+Extensions.swift in Sources */,
 				02A8789F28AD460800C4CB2D /* ImageViewVC.swift in Sources */,
-				02280D3E28A64872008EA27A /* ChatVC.swift in Sources */,
 				02C7915F28A53D4800E3EE7B /* SceneDelegate.swift in Sources */,
 				02280D4428A64A12008EA27A /* Message.swift in Sources */,
 			);
@@ -828,15 +844,15 @@
 			package = 02C791A228A560D300E3EE7B /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseAuth;
 		};
-		02C791A728A560D300E3EE7B /* FirebaseDatabase */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 02C791A228A560D300E3EE7B /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
-			productName = FirebaseDatabase;
-		};
 		02C791A928A560D300E3EE7B /* FirebaseStorage */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 02C791A228A560D300E3EE7B /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseStorage;
+		};
+		02C91F8428B8A461003A76A2 /* FirebaseDatabase */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 02C791A228A560D300E3EE7B /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseDatabase;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

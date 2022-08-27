@@ -108,7 +108,7 @@ class RegisterVC: BaseViewController {
         lbRegisterHeading.trailingAnchor.constraint(equalTo: contentView.trailingAnchor).isActive = true
         
         lbRegisterHeading.text = "Register"
-        lbRegisterHeading.textColor = .red
+        lbRegisterHeading.textColor = .link
         lbRegisterHeading.font = .boldSystemFont(ofSize: 40)
         
         lbRegisterHeading.sizeToFit()
@@ -202,10 +202,10 @@ class RegisterVC: BaseViewController {
         btnRegister.setTitleColor(UIColor.white, for: .normal)
         btnRegister.titleLabel?.font = .boldSystemFont(ofSize: 18)
         
-        btnRegister.backgroundColor = .red
+        btnRegister.backgroundColor = .link
         
         roundCorner(views: [btnRegister], radius: 30)
-        btnRegister.layer.borderColor = UIColor.red.cgColor
+        btnRegister.layer.borderColor = UIColor.link.cgColor
         
         btnRegister.addTarget(self, action: #selector(tapToRegister), for: .touchUpInside)
         
@@ -221,7 +221,7 @@ class RegisterVC: BaseViewController {
         
         lbTerms.text = "By Sign up, you agree our Terms and Conditions"
         
-        lbTerms.attributedText = colorString(string: lbTerms.text!, startFrom: "Terms", normalFont: lightGrayFont!, anotherColorFont: redFont!)
+        lbTerms.attributedText = colorString(string: lbTerms.text!, startFrom: "Terms", normalFont: lightGrayFont!, anotherColorFont: linkFont!)
         
         
         contentView.addSubview(imgLine)
@@ -245,7 +245,7 @@ class RegisterVC: BaseViewController {
         lbAl.bottomAnchor.constraint(equalTo: contentView.bottomAnchor,constant: -5).isActive = true
         
         lbAl.text = "Already have an account? Login"
-        lbAl.attributedText = colorString(string: lbAl.text!, startFrom: "Login", normalFont: lightGrayFont!, anotherColorFont: redFont!)
+        lbAl.attributedText = colorString(string: lbAl.text!, startFrom: "Login", normalFont: lightGrayFont!, anotherColorFont: linkFont!)
         
         // HANDLE LATER
         //        contentView.layoutIfNeeded()
@@ -267,7 +267,8 @@ class RegisterVC: BaseViewController {
     }
     
     @objc func navToTerms() {
-        print("Reading Terms and Conditions.....")
+        let vc = TermsAndConditionVC(nibName: "TermsAndConditionVC", bundle: nil)
+        present(vc, animated: true)
     }
     
     @objc func navToLogin() {

@@ -18,7 +18,7 @@ class LoginVC: BaseViewController {
     var imgLine = UIImageView()
     var lbRegister = UILabel()
     var lbSave = UILabel()
-    var radiBtnSave = LTHRadioButton(diameter: 30, selectedColor: .red)
+    var radiBtnSave = LTHRadioButton(diameter: 30, selectedColor: .link)
     var saveSelected = false
     
     override func viewDidLoad() {
@@ -27,7 +27,6 @@ class LoginVC: BaseViewController {
         // Do any additional setup after loading the view.
         setupViews()
         setupEvent()
-        getAllUsers()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -54,7 +53,7 @@ class LoginVC: BaseViewController {
         lbLoginHeading.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
         
         lbLoginHeading.text = "Login"
-        lbLoginHeading.textColor = .red
+        lbLoginHeading.textColor = .link
         lbLoginHeading.font = .boldSystemFont(ofSize: 40)
         
         lbLoginHeading.sizeToFit()
@@ -125,12 +124,12 @@ class LoginVC: BaseViewController {
         btnLogin.setTitleColor(UIColor.white, for: .normal)
         btnLogin.titleLabel?.font = .boldSystemFont(ofSize: 18)
         
-        btnLogin.backgroundColor = .red
+        btnLogin.backgroundColor = .link
         
         btnLogin.layer.cornerRadius = 30
         btnLogin.layer.masksToBounds = true
         btnLogin.layer.borderWidth = 1
-        btnLogin.layer.borderColor = UIColor.red.cgColor
+        btnLogin.layer.borderColor = UIColor.link.cgColor
         
         btnLogin.addTarget(self, action: #selector(tapToLogin), for: .touchUpInside)
         
@@ -147,7 +146,7 @@ class LoginVC: BaseViewController {
         
         lbForgot.text = "Cant't login? Forgot Password"
         
-        lbForgot.attributedText = colorString(string: lbForgot.text!, startFrom: "Forgot", normalFont: lightGrayFont!, anotherColorFont: redFont!)
+        lbForgot.attributedText = colorString(string: lbForgot.text!, startFrom: "Forgot", normalFont: lightGrayFont!, anotherColorFont: linkFont!)
         
         
         view.addSubview(imgLine)
@@ -170,7 +169,7 @@ class LoginVC: BaseViewController {
         
         lbRegister.text = "Don't have an account? Register"
         
-        lbRegister.attributedText = colorString(string: lbRegister.text!, startFrom: "Register", normalFont: lightGrayFont!, anotherColorFont: redFont!)
+        lbRegister.attributedText = colorString(string: lbRegister.text!, startFrom: "Register", normalFont: lightGrayFont!, anotherColorFont: linkFont!)
     }
     
     func setupEvent() {
@@ -241,43 +240,6 @@ class LoginVC: BaseViewController {
             
         }
     }
-    
-    func getAllUsers() {
-        dbRef.child("Users").observe(.childAdded) { snapshot in
-            self.dbRef.child("Users").child(snapshot.key).observe(.value) { data in
-                let dict = data.value as? [String: Any]
-                let user = User(dict: dict!)
-                globalArrUser.append(user)
-                self.dbRef.child("Users").child(snapshot.key).removeAllObservers()
-            }
-        }
-    }
-    
-    
-    func reloadUserInfo() {
-        dbRef.child("Users").child(auth.currentUser!.uid).observe(.value) { snapshot in
-            if let idx = globalArrUser.firstIndex(where: {$0.senderId == snapshot.key}) {
-                self.dbRef.child("Users").child(snapshot.key).child("name").observe(.value) { data in
-                    globalArrUser[idx].displayName = data.value as! String
-                }
-                self.dbRef.child("Users").child(snapshot.key).child("birthDate").observe(.value) { data in
-                    globalArrUser[idx].birthDate = data.value as! String
-                }
-                self.dbRef.child("Users").child(snapshot.key).child("email").observe(.value) { data in
-                    globalArrUser[idx].email = data.value as! String
-                }
-                self.dbRef.child("Users").child(snapshot.key).child("phoneNumber").observe(.value) { data in
-                    globalArrUser[idx].phoneNumber = data.value as! String
-                }
-                self.dbRef.child("Users").child(snapshot.key).child("feeling").observe(.value) { data in
-                    globalArrUser[idx].feeling = data.value as! String
-                }
-            }
-        }
-    }
-    
-
-    
 }
 
 

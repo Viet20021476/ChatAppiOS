@@ -23,6 +23,7 @@ class InitialScreenVC: BaseViewController {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
         setupViews()
+        getAllUsers()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -57,8 +58,7 @@ class InitialScreenVC: BaseViewController {
         viewColor.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
         viewColor.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
 
-        viewColor.backgroundColor = #colorLiteral(red: 0.963629663, green: 0.02967488207, blue: 0.4042446911, alpha: 1).withAlphaComponent(0.8)
-        viewColor.alpha = 0.5
+        viewColor.backgroundColor = #colorLiteral(red: 0.2392156869, green: 0.6745098233, blue: 0.9686274529, alpha: 1).withAlphaComponent(0.8)
     }
     
     func setupLogoView() {
@@ -70,7 +70,7 @@ class InitialScreenVC: BaseViewController {
         lbLogo.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
 
         
-        lbLogo.text = "Chatting app"
+        lbLogo.text = "ZChat App"
         lbLogo.font = .boldSystemFont(ofSize: view.frame.width / 9)
         lbLogo.textColor = .white
         
@@ -87,8 +87,8 @@ class InitialScreenVC: BaseViewController {
         btnRegister.heightAnchor.constraint(equalToConstant: 60).isActive = true
         
         btnRegister.setTitle("Register", for: .normal)
-        btnRegister.setTitleColor(UIColor.red, for: .normal)
-        btnRegister.backgroundColor = .white
+        btnRegister.setTitleColor(UIColor.link, for: .normal)
+        btnRegister.backgroundColor = UIColor.white.withAlphaComponent(0.6)
         btnRegister.titleLabel?.font = .boldSystemFont(ofSize: 20)
         
         btnRegister.addTarget(self, action: #selector(getToRegister), for: .touchUpInside)
@@ -102,8 +102,8 @@ class InitialScreenVC: BaseViewController {
         btnLogin.heightAnchor.constraint(equalTo: btnRegister.heightAnchor).isActive = true
         
         btnLogin.setTitle("Login", for: .normal)
-        btnLogin.setTitleColor(UIColor.red, for: .normal)
-        btnLogin.backgroundColor = .white
+        btnLogin.setTitleColor(UIColor.link, for: .normal)
+        btnLogin.backgroundColor = UIColor.white.withAlphaComponent(0.6)
         btnLogin.titleLabel?.font = .boldSystemFont(ofSize: 20)
         
         roundCorner(views: [btnLogin, btnRegister], radius: 30)
@@ -135,6 +135,18 @@ class InitialScreenVC: BaseViewController {
         let registerVC = RegisterVC()
         navigationController?.pushViewController(registerVC, animated: true)
 
+    }
+    
+    
+    func getAllUsers() {
+        dbRef.child("Users").observe(.childAdded) { snapshot in
+            self.dbRef.child("Users").child(snapshot.key).observe(.value) { data in
+                let dict = data.value as? [String: Any]
+                let user = User(dict: dict!)
+                globalArrUser.append(user)
+                self.dbRef.child("Users").child(snapshot.key).removeAllObservers()
+            }
+        }
     }
 
 }
