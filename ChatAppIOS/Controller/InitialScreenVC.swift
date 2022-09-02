@@ -141,8 +141,9 @@ class InitialScreenVC: BaseViewController {
     func getAllUsers() {
         dbRef.child("Users").observe(.childAdded) { snapshot in
             self.dbRef.child("Users").child(snapshot.key).observe(.value) { data in
-                let dict = data.value as? [String: Any]
-                let user = User(dict: dict!)
+                guard let dict = data.value as? [String: Any] else {return}
+                if dict["id"] == nil {return}
+                let user = User(dict: dict)
                 globalArrUser.append(user)
                 self.dbRef.child("Users").child(snapshot.key).removeAllObservers()
             }

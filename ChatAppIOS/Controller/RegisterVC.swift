@@ -42,7 +42,7 @@ class RegisterVC: BaseViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
     }
-  
+    
     func setupViews() {
         navigationController?.navigationBar.isHidden = true
         view.backgroundColor = .white
@@ -134,7 +134,7 @@ class RegisterVC: BaseViewController {
         imgAvatar.clipsToBounds = true
         
         imgAvatar.image = UIImage(named: "img_placeholder")
-                
+        
         imgAvatar.isUserInteractionEnabled = true
         let pickImgTapGes = UITapGestureRecognizer(target: self, action: #selector(pickImg))
         imgAvatar.addGestureRecognizer(pickImgTapGes)
@@ -273,14 +273,20 @@ class RegisterVC: BaseViewController {
     
     @objc func navToLogin() {
         
-        if let viewControllers = self.navigationController?.viewControllers {
-            for viewController in viewControllers {
-                
-                if viewController.isKind(of: LoginVC.self) {
-                    navigationController?.popToViewController(ofClass: LoginVC.self, animated: true)
-                    return
-                }
-            }
+        //        if let viewControllers = self.navigationController?.viewControllers {
+        //            for viewController in viewControllers {
+        //
+        //                if viewController.isKind(of: LoginVC.self) {
+        //                    navigationController?.popToViewController(ofClass: LoginVC.self, animated: true)
+        //                    return
+        //                }
+        //            }
+        //            let loginVC = LoginVC()
+        //            navigationController?.pushViewController(loginVC, animated: true)
+        //        }
+        if checkIfVCAlreadyExistsInStack(ofClass: LoginVC.self) {
+            navigationController?.popToViewController(ofClass: LoginVC.self, animated: true)
+        } else {
             let loginVC = LoginVC()
             navigationController?.pushViewController(loginVC, animated: true)
         }

@@ -490,7 +490,7 @@ class ChatVC: MessagesViewController {
                         
                         self.dbRef.child("Users").child(self.currUser!.senderId).child("friends").child(self.otherUser!.senderId).child("timeStamp").setValue(self.currentTimeStamp)
                         self.dbRef.child("Users").child(self.otherUser!.senderId).child("friends").child(self.currUser!.senderId).child("timeStamp").setValue(self.currentTimeStamp)
-                                                
+                        
                         self.messageInputBar.inputTextView.text = ""
                         
                         self.delegate?.reloadUserList()
@@ -596,54 +596,6 @@ class ChatVC: MessagesViewController {
                 }
             }
         }
-    }
-    
-    func generateThumbnail(url: URL) -> UIImage? {
-        do {
-            let asset = AVURLAsset(url: url)
-            let imageGenerator = AVAssetImageGenerator(asset: asset)
-            imageGenerator.appliesPreferredTrackTransform = true
-            
-            let cgImage = try imageGenerator.copyCGImage(at: .zero,
-                                                         actualTime: nil)
-            
-            var thumbnailImage =  UIImage(cgImage: cgImage)
-            
-            // TAO NUT CONTINUE VIDEO CHO THUMBNAIL CHO VIDEO
-            let iconContinueVideo = UIImage(named: "ic_continue_video")
-            
-            UIGraphicsBeginImageContextWithOptions(thumbnailImage.size, false, 0.0)
-            thumbnailImage.draw(in: CGRect(x: 0, y: 0, width: thumbnailImage.size.width, height: thumbnailImage.size.height))
-            iconContinueVideo?.draw(in: CGRect(x: thumbnailImage.size.width / 2 - 70, y: thumbnailImage.size.height / 2 - 70, width: 150, height: 150))
-            
-            let newImg = UIGraphicsGetImageFromCurrentImageContext()
-            UIGraphicsEndImageContext()
-            
-            thumbnailImage = newImg!
-            
-            return thumbnailImage
-        } catch {
-            print(error.localizedDescription)
-            return nil
-        }
-    }
-    
-    func sortArrMsgBySentDate() {
-        arrMessage.sort { msg1, msg2 in
-            msg1.sentDate < msg2.sentDate
-        }
-    }
-    
-    func startAnimating() {
-        viewIndicator.isHidden = false
-        view.isUserInteractionEnabled = false
-        loadingIndicator?.startAnimating()
-    }
-    
-    func stopAnimating() {
-        viewIndicator.isHidden = true
-        view.isUserInteractionEnabled = true
-        loadingIndicator?.stopAnimating()
     }
     
     func requestAccessToLocationAgain() {
@@ -908,13 +860,15 @@ extension ChatVC : CLLocationManagerDelegate {
         self.locationManager.stopUpdatingLocation()
         
         guard let locValue: CLLocationCoordinate2D = manager.location?.coordinate else { return }
-        let vc = LocationPickerVC()
-        vc.coordinates = locValue
-        vc.isPickable = true
-        vc.delegate = self
-        
-        self.navigationController?.pushViewController(vc, animated: true)
-        
+        if !checkIfVCAlreadyExistsInStack(ofClass: LocationPickerVC.self) {
+            let vc = LocationPickerVC()
+            vc.coordinates = locValue
+            vc.isPickable = true
+            vc.delegate = self
+            
+            self.navigationController?.pushViewController(vc, animated: true)
+            
+        }
     }
 }
 
@@ -991,6 +945,70 @@ extension ChatVC : AudioRecorderVCDelegate {
             }
         }
     }
+}
+
+extension ChatVC {
+    
+    func generateThumbnail(url: URL) -> UIImage? {
+        do {
+            let asset = AVURLAsset(url: url)
+            let imageGenerator = AVAssetImageGenerator(asset: asset)
+            imageGenerator.appliesPreferredTrackTransform = true
+            
+            let cgImage = try imageGenerator.copyCGImage(at: .zero,
+                                                         actualTime: nil)
+            
+            var thumbnailImage =  UIImage(cgImage: cgImage)
+            
+            // TAO NUT CONTINUE VIDEO CHO THUMBNAIL CHO VIDEO
+            let iconContinueVideo = UIImage(named: "ic_continue_video")
+            
+            UIGraphicsBeginImageContextWithOptions(thumbnailImage.size, false, 0.0)
+            thumbnailImage.draw(in: CGRect(x: 0, y: 0, width: thumbnailImage.size.width, height: thumbnailImage.size.height))
+            iconContinueVideo?.draw(in: CGRect(x: thumbnailImage.size.width / 2 - 70, y: thumbnailImage.size.height / 2 - 70, width: 150, height: 150))
+            
+            let newImg = UIGraphicsGetImageFromCurrentImageContext()
+            UIGraphicsEndImageContext()
+            
+            thumbnailImage = newImg!
+            
+            return thumbnailImage
+        } catch {
+            print(error.localizedDescription)
+            return nil
+        }
+    }
+    
+    func checkIfVCAlreadyExistsInStack(ofClass: AnyClass) -> Bool {
+        if let viewControllers = self.navigationController?.viewControllers {
+            for viewController in viewControllers {
+                if viewController.isKind(of: ofClass) {
+                    return true
+                }
+            }
+        }
+        return false
+    }
+    
+    
+    func sortArrMsgBySentDate() {
+        arrMessage.sort { msg1, msg2 in
+            msg1.sentDate < msg2.sentDate
+        }
+    }
+    
+    func startAnimating() {
+        viewIndicator.isHidden = false
+        view.isUserInteractionEnabled = false
+        loadingIndicator?.startAnimating()
+    }
+    
+    func stopAnimating() {
+        viewIndicator.isHidden = true
+        view.isUserInteractionEnabled = true
+        loadingIndicator?.stopAnimating()
+    }
+    
 }
 
 

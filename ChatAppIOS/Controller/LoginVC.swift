@@ -192,14 +192,20 @@ class LoginVC: BaseViewController {
     
     @objc func navToRegister() {
         
-        if let viewControllers = self.navigationController?.viewControllers {
-            for viewController in viewControllers {
-                
-                if viewController.isKind(of: RegisterVC.self) {
-                    navigationController?.popToViewController(ofClass: RegisterVC.self, animated: true)
-                    return
-                }
-            }
+        //        if let viewControllers = self.navigationController?.viewControllers {
+        //            for viewController in viewControllers {
+        //
+        //                if viewController.isKind(of: RegisterVC.self) {
+        //                    navigationController?.popToViewController(ofClass: RegisterVC.self, animated: true)
+        //                    return
+        //                }
+        //            }
+        //            let registerVC = RegisterVC()
+        //            navigationController?.pushViewController(registerVC, animated: true)
+        //        }
+        if checkIfVCAlreadyExistsInStack(ofClass: RegisterVC.self) {
+            navigationController?.popToViewController(ofClass: RegisterVC.self, animated: true)
+        } else {
             let registerVC = RegisterVC()
             navigationController?.pushViewController(registerVC, animated: true)
         }

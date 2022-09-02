@@ -153,6 +153,17 @@ class BaseViewController: UIViewController {
         
         return dateFormatter.string(from: date)
     }
+    
+    func checkIfVCAlreadyExistsInStack(ofClass: AnyClass) -> Bool {
+        if let viewControllers = self.navigationController?.viewControllers {
+            for viewController in viewControllers {
+                if viewController.isKind(of: ofClass) {
+                    return true
+                }
+            }
+        }
+        return false
+    }
 }
 
 extension UITextField {
