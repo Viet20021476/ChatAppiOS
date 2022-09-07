@@ -17,9 +17,9 @@
 		02280D4228A64983008EA27A /* MessageKit in Frameworks */ = {isa = PBXBuildFile; productRef = 02280D4128A64983008EA27A /* MessageKit */; };
 		02280D4428A64A12008EA27A /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02280D4328A64A12008EA27A /* Message.swift */; };
 		02280D4728A65F23008EA27A /* InputBarAccessoryView in Frameworks */ = {isa = PBXBuildFile; productRef = 02280D4628A65F23008EA27A /* InputBarAccessoryView */; };
-		02280D4928A780AC008EA27A /* Todo in Resources */ = {isa = PBXBuildFile; fileRef = 02280D4828A780AC008EA27A /* Todo */; };
 		022A9B5528B733E800086E18 /* NotHaveFRVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 022A9B5328B733E800086E18 /* NotHaveFRVC.swift */; };
 		022A9B5628B733E800086E18 /* NotHaveFRVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = 022A9B5428B733E800086E18 /* NotHaveFRVC.xib */; };
+		025D3CBB28C77EE700BD875E /* TODO in Resources */ = {isa = PBXBuildFile; fileRef = 025D3CBA28C77EE700BD875E /* TODO */; };
 		027B0AC728B3815500512DC5 /* Location.swift in Sources */ = {isa = PBXBuildFile; fileRef = 027B0AC628B3815500512DC5 /* Location.swift */; };
 		027B0AC928B3824E00512DC5 /* LocationPickerVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 027B0AC828B3824E00512DC5 /* LocationPickerVC.swift */; };
 		027B0ACC28B3D71200512DC5 /* AudioRecorderVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 027B0ACA28B3D71200512DC5 /* AudioRecorderVC.swift */; };
@@ -85,9 +85,9 @@
 		02280D3C28A64872008EA27A /* ChatVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatVC.swift; sourceTree = "<group>"; };
 		02280D3D28A64872008EA27A /* ChatVC.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ChatVC.xib; sourceTree = "<group>"; };
 		02280D4328A64A12008EA27A /* Message.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
-		02280D4828A780AC008EA27A /* Todo */ = {isa = PBXFileReference; lastKnownFileType = text; path = Todo; sourceTree = "<group>"; };
 		022A9B5328B733E800086E18 /* NotHaveFRVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotHaveFRVC.swift; sourceTree = "<group>"; };
 		022A9B5428B733E800086E18 /* NotHaveFRVC.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = NotHaveFRVC.xib; sourceTree = "<group>"; };
+		025D3CBA28C77EE700BD875E /* TODO */ = {isa = PBXFileReference; lastKnownFileType = text; path = TODO; sourceTree = "<group>"; };
 		027B0AC628B3815500512DC5 /* Location.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Location.swift; sourceTree = "<group>"; };
 		027B0AC828B3824E00512DC5 /* LocationPickerVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationPickerVC.swift; sourceTree = "<group>"; };
 		027B0ACA28B3D71200512DC5 /* AudioRecorderVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioRecorderVC.swift; sourceTree = "<group>"; };
@@ -259,7 +259,7 @@
 				02C7916A28A53D4800E3EE7B /* Info.plist */,
 				02C791A028A5608500E3EE7B /* GoogleService-Info.plist */,
 				02280D3228A5F420008EA27A /* Constant.swift */,
-				02280D4828A780AC008EA27A /* Todo */,
+				025D3CBA28C77EE700BD875E /* TODO */,
 			);
 			path = ChatAppIOS;
 			sourceTree = "<group>";
@@ -417,6 +417,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				025D3CBB28C77EE700BD875E /* TODO in Resources */,
 				02C7916928A53D4800E3EE7B /* LaunchScreen.storyboard in Resources */,
 				02A8788F28AAA73F00C4CB2D /* ProfileVC.xib in Resources */,
 				02A878A028AD460800C4CB2D /* ImageViewVC.xib in Resources */,
@@ -424,7 +425,6 @@
 				02F5666428B619DB00E55515 /* FriendRequestVC.xib in Resources */,
 				02A878C328AE5CC900C4CB2D /* VideoViewVC.xib in Resources */,
 				022A9B5628B733E800086E18 /* NotHaveFRVC.xib in Resources */,
-				02280D4928A780AC008EA27A /* Todo in Resources */,
 				02280D3F28A64872008EA27A /* ChatVC.xib in Resources */,
 				02E6878228B9D1450071A12A /* TermsAndConditionVC.xib in Resources */,
 				02280D3828A60443008EA27A /* UserCell.xib in Resources */,

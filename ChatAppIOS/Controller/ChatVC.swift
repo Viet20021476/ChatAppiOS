@@ -216,24 +216,32 @@ class ChatVC: MessagesViewController {
             self.dbRef.child("Messages").child(self.senderRoom).child(snapshot.key).observe(.value) { data in
                 self.dbRef.child("Messages").child(self.senderRoom).child(snapshot.key).removeAllObservers()
                 guard let dict = data.value as? [String: Any] else {return}
+                
                 // Check xem co phai node LastMsg khong
-                if dict["messageId"] == nil {
-                    return
-                }
+                if dict["messageId"] == nil {return}
+                
                 if self.numberOfMsg != 0 {
                     self.startAnimating()
                 }
                 let msg = Message(dict: dict)
                 msg.sender = User(senderId: msg.senderId, displayName: msg.senderName)
                 if msg.type == IMAGE {
+                    // Load truoc placeholder
+                    msg.kind = .photo(Media(url: URL(string: "https://dantri.com.vn/")!, image: UIImage(named: "ic_pickimg")!, placeholderImage: UIImage(named: "ic_pickimg")!, size: CGSize(width: 200, height: 200)))
+                    self.arrMessage.append(msg)
+                    self.messagesCollectionView.reloadData()
+                    self.messagesCollectionView.scrollToLastItem()
+                    
+                    
                     SDWebImageManager.shared.loadImage(with: URL(string: msg.downloadURL),
                                                        options: .allowInvalidSSLCertificates) { int1, int2, int3 in
+                        
                     } completed: { img, data, err, type, bool1, url in
                         msg.kind = .photo(Media(url: URL(string: msg.downloadURL)!, image: img!, placeholderImage: UIImage(named: "ic_pickimg")!, size: CGSize(width: 200, height: 200)))
-                        self.arrMessage.append(msg)
-                        self.sortArrMsgBySentDate()
+                        //self.arrMessage.append(msg)
+                        //self.sortArrMsgBySentDate()
                         self.messagesCollectionView.reloadData()
-                        self.messagesCollectionView.scrollToLastItem()
+                        //self.messagesCollectionView.scrollToLastItem()
                         
                         if self.arrMessage.count == self.numberOfMsg {
                             self.stopAnimating()
@@ -241,15 +249,21 @@ class ChatVC: MessagesViewController {
                     }
                     
                 } else if msg.type == VIDEO {
+                    // Load truoc placeholder
+                    msg.kind = .photo(Media(url: URL(string: "https://dantri.com.vn/")!, image: UIImage(named: "ic_pickimg")!, placeholderImage: UIImage(named: "ic_pickimg")!, size: CGSize(width: 200, height: 200)))
+                    self.arrMessage.append(msg)
+                    self.messagesCollectionView.reloadData()
+                    self.messagesCollectionView.scrollToLastItem()
+                    
                     // LUU ANH THUMBNAIL CUA VIDEO VAO CACHE
                     SDWebImageManager.shared.loadImage(with: URL(string: msg.thumbnailDownloadURL),
                                                        options: .allowInvalidSSLCertificates) { int1, int2, int3 in
                     } completed: { img, data, err, type, bool1, url in
                         msg.kind = .photo(Media(url: URL(string: msg.thumbnailDownloadURL)!, image: img!, placeholderImage: UIImage(named: "ic_pickimg")!, size: CGSize(width: 200, height: 200)))
-                        self.arrMessage.append(msg)
-                        self.sortArrMsgBySentDate()
+                        //self.arrMessage.append(msg)
+                        //self.sortArrMsgBySentDate()
                         self.messagesCollectionView.reloadData()
-                        self.messagesCollectionView.scrollToLastItem()
+                        //self.messagesCollectionView.scrollToLastItem()
                         
                         if self.arrMessage.count == self.numberOfMsg {
                             self.stopAnimating()
@@ -261,7 +275,7 @@ class ChatVC: MessagesViewController {
                     let longitude = Double(arrCoordinates[1])!
                     msg.kind = .location(Location(location: CLLocation(latitude: latitude, longitude: longitude), size: CGSize(width: 200, height: 200)))
                     self.arrMessage.append(msg)
-                    self.sortArrMsgBySentDate()
+                    //self.sortArrMsgBySentDate()
                     self.messagesCollectionView.reloadData()
                     self.messagesCollectionView.scrollToLastItem()
                     
@@ -271,7 +285,7 @@ class ChatVC: MessagesViewController {
                 } else if msg.type == AUDIO {
                     msg.kind = .audio(Audio(url: URL(string: msg.downloadURL)!, duration: 10, size: CGSize(width: 200, height: 30)))
                     self.arrMessage.append(msg)
-                    self.sortArrMsgBySentDate()
+                    //self.sortArrMsgBySentDate()
                     self.messagesCollectionView.reloadData()
                     self.messagesCollectionView.scrollToLastItem()
                     
@@ -281,7 +295,7 @@ class ChatVC: MessagesViewController {
                 } else if msg.type == TEXT {
                     msg.kind = .text(msg.textContent)
                     self.arrMessage.append(msg)
-                    self.sortArrMsgBySentDate()
+                    //self.sortArrMsgBySentDate()
                     self.messagesCollectionView.reloadData()
                     self.messagesCollectionView.scrollToLastItem()
                     
@@ -294,6 +308,7 @@ class ChatVC: MessagesViewController {
                     msg.isSeen = true
                     self.dbRef.child("Messages").child(self.senderRoom).child(msg.messageId).child("isSeen").setValue(true)
                     self.dbRef.child("Messages").child(self.receiverRoom).child(msg.messageId).child("isSeen").setValue(true)
+                    
                     self.dbRef.child("Messages").child(self.senderRoom).child("LastMsg").child("lastmsg").child("isSeen").setValue(true)
                     self.dbRef.child("Messages").child(self.receiverRoom).child("LastMsg").child("lastmsg").child("isSeen").setValue(true)
                     
@@ -365,7 +380,7 @@ class ChatVC: MessagesViewController {
     
     func handleEvent() {
         var config = YPImagePickerConfiguration()
-        config.library.maxNumberOfItems = 2
+        config.library.maxNumberOfItems = 4
         config.screens = [.library, .photo, .video]
         config.library.mediaType = .photoAndVideo
         imgPicker = YPImagePicker(configuration: config)

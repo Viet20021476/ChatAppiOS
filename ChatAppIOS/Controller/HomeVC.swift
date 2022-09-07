@@ -101,7 +101,7 @@ class HomeVC: BaseViewController {
         dbRef.child("Users").child(auth.currentUser!.uid).observe(.value) { snapshot in
             if let dict = snapshot.value as? [String: Any] {
                 self.currUser = User(dict: dict)
-                self.lbName.text = self.currUser?.displayName
+                self.lbName.text = self.currUser!.displayName
                 let url = URL(string: self.currUser!.avatar)
                 self.imgAvatar.sd_setImage(with: url)
                 globalCurrUser = self.currUser
@@ -203,6 +203,7 @@ extension HomeVC : UITableViewDelegate, UITableViewDataSource {
         cell.imgAvatar.sd_setImage(with: URL(string: data.avatar))
         cell.lbName.text = data.displayName
         cell.imgNotSeen.isHidden = true
+        cell.cellId = data.senderId
         
         dbRef.child("Users").child(data.senderId).child("isOnline").observe(.value) { snapshot in
             let isOn = snapshot.value as! Bool
@@ -218,14 +219,25 @@ extension HomeVC : UITableViewDelegate, UITableViewDataSource {
             self.stopAnimating()
         }
         
-        let senderRoom = "\(currUser?.senderId as! String)\(data.senderId)"
+        let senderRoom = "\(currUser!.senderId as! String)\(data.senderId)"
         
-        dbRef.child("Messages").child(senderRoom).child("LastMsg").child("lastmsg").observe(.value) { data in
+        dbRef.child("Messages").child(senderRoom).child("LastMsg").child("lastmsg").observe(.value) { snap in
             
-            guard let dict = data.value as? [String: Any] else {return}
+            guard let dict = snap.value as? [String: Any] else {return}
+            
+            // To fix weird behavior on last message display, may works
+            if dict["messageId"] == nil {return}
+            
             // Check for the situation deleteing friends
             let msg = Message(dict: dict)
-            if msg.senderId == self.currUser?.senderId {
+            
+            
+            //Problem: Khi người ở bên kia nhấn vào xem tin nhắn, Callback có vấn đề, những cell của friends không liên quan cũng được gọi khiến cho last message bị trùng lặp giữa các cell, ở dưới là 1 solution
+            if (cell.cellId != msg.senderId) && (cell.cellId != msg.receiverId) {return}
+            
+
+            
+            if msg.senderId == self.currUser!.senderId {
                 cell.lbLastMsg.font = .systemFont(ofSize: 17)
                 if msg.type == IMAGE {
                     cell.lbLastMsg.text = "You: Sent an image"
@@ -238,7 +250,7 @@ extension HomeVC : UITableViewDelegate, UITableViewDataSource {
                 } else {
                     cell.lbLastMsg.text = "You: \(msg.textContent)"
                 }
-            } else {
+            } else if msg.receiverId == self.currUser!.senderId {
                 if !msg.isSeen {
                     cell.lbLastMsg.font = .boldSystemFont(ofSize: 17)
                     cell.imgNotSeen.isHidden = false

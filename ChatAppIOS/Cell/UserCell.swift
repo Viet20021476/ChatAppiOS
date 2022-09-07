@@ -14,6 +14,7 @@ class UserCell: UITableViewCell {
     @IBOutlet weak var lbName: UILabel!
     @IBOutlet weak var lbLastMsg: UILabel!
     @IBOutlet weak var imgNotSeen: UIImageView!
+    var cellId = ""
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
