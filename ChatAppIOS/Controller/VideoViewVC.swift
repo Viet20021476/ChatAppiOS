@@ -84,7 +84,6 @@ class VideoViewVC: BaseViewController {
         alert.addAction(actionSave)
         alert.addAction(actionCancel)
         present(alert, animated: true)
-        
     }
     
 
@@ -101,7 +100,7 @@ class VideoViewVC: BaseViewController {
                                 PHAssetChangeRequest.creationRequestForAssetFromVideo(atFileURL: filePath)
                             }) { completed, error in
                                 if completed {
-                                    print("Saved to gallery !")
+                                    print("Save successfully!")
                                 } else if let error = error {
                                     print(error.localizedDescription)
                                 }

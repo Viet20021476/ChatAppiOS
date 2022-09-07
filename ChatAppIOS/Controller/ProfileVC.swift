@@ -324,7 +324,7 @@ class ProfileVC: BaseViewController {
         let alert = UIAlertController(title: "Do you want to log out?", message: nil, preferredStyle: .alert)
         let actionYes = UIAlertAction(title: "Yes", style: .destructive) { ac in
             self.dbRef.child("Users").child(self.currUser!.senderId).child("isOnline").setValue(false)
-            self.dbRef.child("Users").child(self.currUser!.senderId).child("lastOnline").setValue(self.getStringFromDate(format: "HH:mm:ss dd/MM/YYYY", date:Date()))
+            self.dbRef.child("Users").child(self.currUser!.senderId).child("lastOnline").setValue(self.getStringFromDate(format: "HH:mm dd/MM/YYYY", date:Date()))
             self.navigationController?.popToViewController(ofClass: InitialScreenVC.self, animated: true)
         }
         

@@ -8,7 +8,7 @@
 import Foundation
 import MessageKit
 
-class Message : MessageType, Comparable {
+class Message : MessageType {
 
     var sender: SenderType
     var senderId = ""
@@ -26,8 +26,9 @@ class Message : MessageType, Comparable {
     var downloadURL = ""
     var thumbnailDownloadURL = ""
     var location = ""
+    var msgTimeStamp = 0.0
     
-    init(sender: SenderType, messageId: String, senderId: String, receiverId: String, strSentDate: String, kind: MessageKind, type: String, textContent: String, sentDate: Date,location: String, downloadURL: String, thumbnailDownloadURL: String, isSeen: Bool) {
+    init(sender: SenderType, messageId: String, senderId: String, receiverId: String, strSentDate: String, kind: MessageKind, type: String, textContent: String, sentDate: Date,location: String, downloadURL: String, thumbnailDownloadURL: String, isSeen: Bool, msgTimeStamp: Double) {
         self.sender = sender
         self.messageId = messageId
         self.senderId = senderId
@@ -41,6 +42,7 @@ class Message : MessageType, Comparable {
         self.downloadURL = downloadURL
         self.thumbnailDownloadURL = thumbnailDownloadURL
         self.isSeen = isSeen
+        self.msgTimeStamp = msgTimeStamp
     }
     
     init(dict: [String: Any]) {
@@ -55,19 +57,11 @@ class Message : MessageType, Comparable {
         self.downloadURL = dict["downloadURL"] as! String
         self.thumbnailDownloadURL = dict["thumbnailDownloadURL"] as! String
         self.isSeen = dict["isSeen"] as! Bool
+        self.msgTimeStamp = dict["msgTimeStamp"] as! Double
         
         self.sender = User(dict: ["id": "userId", "email": "email", "avatar": "avatar", "name": "name", "timeStamp": 0.0, "beingInRoom": "room", "isOnline": false, "lastOnline": "", "birthDate": "", "phoneNumber": "", "feeling": "", "friends": "", "friendsRequest": ""])
         self.kind = .text("")
     }
-    
-    static func < (lhs: Message, rhs: Message) -> Bool {
-        return lhs.sentDate < rhs.sentDate
-    }
-    
-    static func == (lhs: Message, rhs: Message) -> Bool {
-        return lhs.sentDate == rhs.sentDate
-    }
-    
 }
 
 extension MessageKind {

@@ -62,7 +62,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         if let tGlobalCurrUser = globalCurrUser {
             Database.database().reference().child("Users").child(tGlobalCurrUser.senderId).child("beingInRoom").setValue("")
             Database.database().reference().child("Users").child(tGlobalCurrUser.senderId).child("isOnline").setValue(false)
-            Database.database().reference().child("Users").child(tGlobalCurrUser.senderId).child("lastOnline").setValue(Util.getStringFromDate(format: "HH:mm:ss dd/MM/YYYY", date:Date()))
+            Database.database().reference().child("Users").child(tGlobalCurrUser.senderId).child("lastOnline").setValue(Util.getStringFromDate(format: "HH:mm dd/MM/YYYY", date:Date()))
         }
     }
     

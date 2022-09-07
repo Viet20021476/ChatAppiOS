@@ -1,7 +1,6 @@
+
+- Seen message chưa real time
+
 Problem:
 - Xử lý tin nhắn chưa hiệu quả -> Have 1 solution, basically works
-- Thời gian gửi tin nhắn có thể bị sai
 
-- Last msg vẫn bị lỗi lặp?? -> Weird???
-
-- Không vào chỗ debug nhưng vẫn có last msg?

@@ -238,10 +238,7 @@ class ChatVC: MessagesViewController {
                         
                     } completed: { img, data, err, type, bool1, url in
                         msg.kind = .photo(Media(url: URL(string: msg.downloadURL)!, image: img!, placeholderImage: UIImage(named: "ic_pickimg")!, size: CGSize(width: 200, height: 200)))
-                        //self.arrMessage.append(msg)
-                        //self.sortArrMsgBySentDate()
                         self.messagesCollectionView.reloadData()
-                        //self.messagesCollectionView.scrollToLastItem()
                         
                         if self.arrMessage.count == self.numberOfMsg {
                             self.stopAnimating()
@@ -260,10 +257,8 @@ class ChatVC: MessagesViewController {
                                                        options: .allowInvalidSSLCertificates) { int1, int2, int3 in
                     } completed: { img, data, err, type, bool1, url in
                         msg.kind = .photo(Media(url: URL(string: msg.thumbnailDownloadURL)!, image: img!, placeholderImage: UIImage(named: "ic_pickimg")!, size: CGSize(width: 200, height: 200)))
-                        //self.arrMessage.append(msg)
-                        //self.sortArrMsgBySentDate()
+                        
                         self.messagesCollectionView.reloadData()
-                        //self.messagesCollectionView.scrollToLastItem()
                         
                         if self.arrMessage.count == self.numberOfMsg {
                             self.stopAnimating()
@@ -274,8 +269,8 @@ class ChatVC: MessagesViewController {
                     let latitude = Double(arrCoordinates[0])!
                     let longitude = Double(arrCoordinates[1])!
                     msg.kind = .location(Location(location: CLLocation(latitude: latitude, longitude: longitude), size: CGSize(width: 200, height: 200)))
+                    
                     self.arrMessage.append(msg)
-                    //self.sortArrMsgBySentDate()
                     self.messagesCollectionView.reloadData()
                     self.messagesCollectionView.scrollToLastItem()
                     
@@ -285,7 +280,6 @@ class ChatVC: MessagesViewController {
                 } else if msg.type == AUDIO {
                     msg.kind = .audio(Audio(url: URL(string: msg.downloadURL)!, duration: 10, size: CGSize(width: 200, height: 30)))
                     self.arrMessage.append(msg)
-                    //self.sortArrMsgBySentDate()
                     self.messagesCollectionView.reloadData()
                     self.messagesCollectionView.scrollToLastItem()
                     
@@ -295,7 +289,6 @@ class ChatVC: MessagesViewController {
                 } else if msg.type == TEXT {
                     msg.kind = .text(msg.textContent)
                     self.arrMessage.append(msg)
-                    //self.sortArrMsgBySentDate()
                     self.messagesCollectionView.reloadData()
                     self.messagesCollectionView.scrollToLastItem()
                     
@@ -317,7 +310,6 @@ class ChatVC: MessagesViewController {
                 
             }
         }
-        
     }
     
     @objc func hideKeyboard() {
@@ -475,7 +467,8 @@ class ChatVC: MessagesViewController {
                                           location: "",
                                           downloadURL: "\(url!)",
                                           thumbnailDownloadURL: "",
-                                          isSeen: false)
+                                          isSeen: false,
+                                          msgTimeStamp: 0.0)
                         
                         let val = ["messageId": msg.messageId,
                                    "senderId": msg.senderId,
@@ -487,7 +480,8 @@ class ChatVC: MessagesViewController {
                                    "location": msg.location,
                                    "downloadURL": msg.downloadURL,
                                    "thumbnailDownloadURL": "",
-                                   "isSeen": msg.isSeen] as [String : Any]
+                                   "isSeen": msg.isSeen,
+                                   "msgTimeStamp": ServerValue.timestamp()] as [String : Any]
                         
                         self.dbRef.child("Messages").child(self.senderRoom).child(key!).setValue(val)
                         self.dbRef.child("Messages").child(self.receiverRoom).child(key!).setValue(val)
@@ -573,7 +567,8 @@ class ChatVC: MessagesViewController {
                                           location: "",
                                           downloadURL: "\(url!)",
                                           thumbnailDownloadURL: thumbnailDownloadURl,
-                                          isSeen: false)
+                                          isSeen: false,
+                                          msgTimeStamp: 0.0)
                         
                         let val = ["messageId": msg.messageId,
                                    "senderId": msg.senderId,
@@ -585,7 +580,8 @@ class ChatVC: MessagesViewController {
                                    "location": msg.location,
                                    "downloadURL": msg.downloadURL,
                                    "thumbnailDownloadURL": msg.thumbnailDownloadURL,
-                                   "isSeen": msg.isSeen] as [String : Any]
+                                   "isSeen": msg.isSeen,
+                                   "msgTimeStamp": ServerValue.timestamp()] as [String : Any]
                         
                         self.dbRef.child("Messages").child(self.senderRoom).child(key!).setValue(val)
                         self.dbRef.child("Messages").child(self.receiverRoom).child(key!).setValue(val)
@@ -684,7 +680,14 @@ extension ChatVC : MessagesDataSource, MessagesLayoutDelegate, MessagesDisplayDe
     }
     
     func messageBottomLabelHeight(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> CGFloat {
-        return 20
+        let currMsg = arrMessage[indexPath.section]
+        let arrDate = currMsg.strSentDate.split(separator: ",")
+        let strHour = arrDate[2]
+        
+        if currMsg.isSeen == true && currUser?.senderId == currMsg.senderId && indexPath.section == numberOfMsg - 1 {
+            return 20
+        }
+        return 10
     }
     
     func messageBottomLabelAttributedText(for message: MessageType, at indexPath: IndexPath) -> NSAttributedString? {
@@ -697,11 +700,42 @@ extension ChatVC : MessagesDataSource, MessagesLayoutDelegate, MessagesDisplayDe
             return NSAttributedString(
                 string: "√Seen",
                 attributes: [NSAttributedString.Key.font: UIFont.preferredFont(forTextStyle: .caption2)])
-        } else {
-            return NSAttributedString(
-                string: String(strHour),
-                attributes: [NSAttributedString.Key.font: UIFont.preferredFont(forTextStyle: .caption2)])
         }
+        return nil
+    }
+    
+    
+    
+    func cellTopLabelHeight(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> CGFloat {
+        if arrMessage.count > 1 && indexPath.section > 0 {
+
+            let prevMsg = arrMessage[indexPath.section - 1]
+            let currMsg = arrMessage[indexPath.section]
+
+            if currMsg.msgTimeStamp - prevMsg.msgTimeStamp > 60000 {
+                return 40
+            }
+
+        }
+        return 0
+    }
+    
+    func cellTopLabelAttributedText(for message: MessageType, at indexPath: IndexPath) -> NSAttributedString? {
+        
+        if arrMessage.count > 1 && indexPath.section > 0 {
+
+            let prevMsg = arrMessage[indexPath.section - 1]
+            let currMsg = arrMessage[indexPath.section]
+
+            if currMsg.msgTimeStamp - prevMsg.msgTimeStamp > 60000 {
+                return NSAttributedString(
+                    string: Util.getStringFromDate(format: " dd/MM/YYYY HH:mm", date: Date(timeIntervalSince1970: currMsg.msgTimeStamp / 1000)),
+                    attributes: [NSAttributedString.Key.font: UIFont.preferredFont(forTextStyle: .caption2)])
+            }
+
+        }
+        return nil
+        
     }
 }
 
@@ -723,7 +757,8 @@ extension ChatVC : InputBarAccessoryViewDelegate {
                           location: "",
                           downloadURL: "",
                           thumbnailDownloadURL: "",
-                          isSeen: false)
+                          isSeen: false,
+                          msgTimeStamp: 0.0)
         
         let val = ["messageId": msg.messageId,
                    "senderId": msg.senderId,
@@ -735,7 +770,8 @@ extension ChatVC : InputBarAccessoryViewDelegate {
                    "location": msg.location,
                    "downloadURL": msg.downloadURL,
                    "thumbnailDownloadURL": msg.thumbnailDownloadURL,
-                   "isSeen": msg.isSeen] as [String : Any]
+                   "isSeen": msg.isSeen,
+                   "msgTimeStamp": ServerValue.timestamp()] as [String : Any]
         
         dbRef.child("Messages").child(senderRoom).child(key!).setValue(val)
         dbRef.child("Messages").child(receiverRoom).child(key!).setValue(val)
@@ -744,10 +780,7 @@ extension ChatVC : InputBarAccessoryViewDelegate {
         dbRef.child("Messages").child(senderRoom).child("LastMsg").child("lastmsg").setValue(val)
         dbRef.child("Messages").child(receiverRoom).child("LastMsg").child("lastmsg").setValue(val)
         
-        
-        //dbRef.child("Users").child(currUser!.senderId).removeAllObservers()
-        //dbRef.child("Users").child(otherUser!.senderId).removeAllObservers()
-        
+                
         delegate?.removeAllUser()
         
         timeStampRef!.setValue(ServerValue.timestamp())
@@ -833,7 +866,8 @@ extension ChatVC: LocationPickerVCDelegate {
                           location: "\(latitude) \(longitude)",
                           downloadURL: "",
                           thumbnailDownloadURL: "",
-                          isSeen: false)
+                          isSeen: false,
+                          msgTimeStamp: 0.0)
         
         let val = ["messageId": msg.messageId,
                    "senderId": msg.senderId,
@@ -845,7 +879,8 @@ extension ChatVC: LocationPickerVCDelegate {
                    "location": msg.location,
                    "downloadURL": msg.downloadURL,
                    "thumbnailDownloadURL": msg.thumbnailDownloadURL,
-                   "isSeen": msg.isSeen] as [String : Any]
+                   "isSeen": msg.isSeen,
+                   "msgTimeStamp": ServerValue.timestamp()] as [String : Any]
         
         dbRef.child("Messages").child(senderRoom).child(key!).setValue(val)
         dbRef.child("Messages").child(receiverRoom).child(key!).setValue(val)
@@ -919,7 +954,8 @@ extension ChatVC : AudioRecorderVCDelegate {
                                           location: "",
                                           downloadURL: "\(url!)",
                                           thumbnailDownloadURL: "",
-                                          isSeen: false)
+                                          isSeen: false,
+                                          msgTimeStamp: 0.0)
                         
                         let val = ["messageId": msg.messageId,
                                    "senderId": msg.senderId,
@@ -931,7 +967,8 @@ extension ChatVC : AudioRecorderVCDelegate {
                                    "location": msg.location,
                                    "downloadURL": msg.downloadURL,
                                    "thumbnailDownloadURL": "",
-                                   "isSeen": msg.isSeen] as [String : Any]
+                                   "isSeen": msg.isSeen,
+                                   "msgTimeStamp": ServerValue.timestamp()] as [String : Any]
                         
                         self.dbRef.child("Messages").child(self.senderRoom).child(key!).setValue(val)
                         self.dbRef.child("Messages").child(self.receiverRoom).child(key!).setValue(val)
@@ -1004,14 +1041,7 @@ extension ChatVC {
         }
         return false
     }
-    
-    
-    func sortArrMsgBySentDate() {
-        arrMessage.sort { msg1, msg2 in
-            msg1.sentDate < msg2.sentDate
-        }
-    }
-    
+
     func startAnimating() {
         viewIndicator.isHidden = false
         view.isUserInteractionEnabled = false

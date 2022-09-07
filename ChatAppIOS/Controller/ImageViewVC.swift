@@ -56,21 +56,30 @@ class ImageViewVC: BaseViewController {
     func setupRightBarBtnItem() {
         let rightItemBtn = UIButton(type: .custom)
         rightItemBtn.translatesAutoresizingMaskIntoConstraints = false
-        rightItemBtn.setImage(UIImage(named: "download"), for: .normal)
-        rightItemBtn.contentVerticalAlignment = .fill
-        rightItemBtn.contentHorizontalAlignment = .fill
-        rightItemBtn.imageEdgeInsets = UIEdgeInsets(top: 5, left: 5, bottom: 5, right: 5)
-        rightItemBtn.widthAnchor.constraint(equalToConstant: 40).isActive = true
-        rightItemBtn.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        
+        let attributedTitle = NSAttributedString(string: "See more",
+                                                 attributes: [NSAttributedString.Key.foregroundColor : #colorLiteral(red: 0, green: 0.5157059431, blue: 0.8492991328, alpha: 1), NSAttributedString.Key.font: UIFont.systemFont(ofSize: 19)])
+        
+        rightItemBtn.setAttributedTitle(attributedTitle, for: .normal)
         
         navigationItem.rightBarButtonItem = UIBarButtonItem(customView: rightItemBtn)
         
-        rightItemBtn.addTarget(self, action: #selector(saveToPhone), for: .touchUpInside)
+        rightItemBtn.addTarget(self, action: #selector(savePictureToPhone), for: .touchUpInside)
     }
     
-    @objc func saveToPhone() {
-        UIImageWriteToSavedPhotosAlbum(mediaView.image!, self, nil, nil)
-        view.makeToast("Save image successfully")
+    @objc func savePictureToPhone() {
+        let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        
+        let actionSave = UIAlertAction(title: "Save picture", style: .default) { ac in
+            UIImageWriteToSavedPhotosAlbum(self.mediaView.image!, self, nil, nil)
+            self.view.makeToast("Save image successfully")
+        }
+        
+        let actionCancel = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+        alert.addAction(actionSave)
+        alert.addAction(actionCancel)
+        present(alert, animated: true)
+
     }
 
 }
